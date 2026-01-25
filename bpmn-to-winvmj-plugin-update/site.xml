@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/bpmn.to.winvmj.feature_1.0.0.202601252219.jar" id="bpmn.to.winvmj.feature" version="1.0.0.202601252219"/>
+   <feature url="features/bpmn.to.winvmj.feature_1.0.0.202601252231.jar" id="bpmn.to.winvmj.feature" version="1.0.0.202601252231">
+      <category name="bpmn-to-winvmj"/>
+   </feature>
    <category-def name="bpmn-to-winvmj" label="BPMN Tools"/>
 </site>

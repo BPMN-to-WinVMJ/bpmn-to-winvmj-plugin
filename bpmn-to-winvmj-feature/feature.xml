@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="bpmn.to.winvmj.feature"
-      label="Feature"
+      label="bpmn-to-winvmj"
       version="1.0.0.qualifier">
 
    <description>
