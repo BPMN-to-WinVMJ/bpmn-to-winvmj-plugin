@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BPMN to WinVMJ Plugin
+Bundle-SymbolicName: bpmn.to.winvmj.plugin;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: bpmn.to.winvmj.plugin.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: 
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jface,
+ org.eclipse.swt,
+ org.eclipse.core.commands
+Bundle-ClassPath: .,
+ lib/bpmn-parser-1.0.0.jar
+Export-Package: 
+ bpmn.to.winvmj.plugin,
+ bpmn.to.winvmj.plugin.dialog,
+ bpmn.to.winvmj.plugin.handler

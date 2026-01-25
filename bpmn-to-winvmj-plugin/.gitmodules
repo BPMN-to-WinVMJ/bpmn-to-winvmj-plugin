@@ -1,0 +1,3 @@
+[submodule "bpmn-parser"]
+	path = bpmn-parser
+	url = https://github.com/BPMN-to-WinVMJ/bpmn-parser.git

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="bpmn.to.winvmj.feature"
+      label="Feature"
+      version="1.0.0.qualifier">
+
+   <description>
+      Plugin for PRICES IDE to generate BPMN Diagrams and parse them into WinVMJ applications.
+   </description>
+   
+   <copyright>
+      Copyright © 2024 PricesIDE. All rights reserved.
+   </copyright>
+   
+   <license url="https://opensource.org/licenses/MIT">
+      MIT License - See LICENSE file for details.
+   </license>
+   
+   <plugin
+         id="bpmn.to.winvmj.plugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
