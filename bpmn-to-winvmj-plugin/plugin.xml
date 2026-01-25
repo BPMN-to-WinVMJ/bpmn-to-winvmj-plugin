@@ -1,60 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-antrun-plugin</artifactId>
-    <version>3.1.0</version>
-    <executions>
-        <execution>
-        <phase>generate-resources</phase>
-        <configuration>
-            <target>
-            <copy todir="${basedir}/bin">
-                <fileset dir="${basedir}/../bpmn-parser/target/classes"/>
-            </copy>
-            </target>
-        </configuration>
-        <goals>
-            <goal>run</goal>
-        </goals>
-        </execution>
-    </executions>
-    <extension point="org.eclipse.ui.commands">
-    <command
-        id="bpmn.to.winvmj.plugin.commands.convert"
-        name="Convert BPMN to WinVMJ"/>
-    </extension>
+   <extension-point id="bpmn.to.winvmj.plugin.extension" name="BPMN to WinVMJ Extension" schema="schema/bpmn.to.winvmj.plugin.exsd"/>
   
-    <extension point="org.eclipse.ui.handlers">
-        <handler
+   <extension point="org.eclipse.ui.commands">
+      <command
+            id="bpmn.to.winvmj.plugin.commands.convert"
+            name="Convert BPMN to WinVMJ"/>
+   </extension>
+  
+   <extension point="org.eclipse.ui.handlers">
+      <handler
             commandId="bpmn.to.winvmj.plugin.commands.convert"
-            class="bpmn.to.winvmj.plugin.handler.OpenConverterHandler"/>
-    </extension>
+            class="bpmn.to.winvmj.plugin.handler.OpenConverterHandler">
+      </handler>
+   </extension>
   
-    <extension point="org.eclipse.ui.menus">
-        <menuContribution
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
-            <menu
-                id="bpmn.to.winvmj.plugin.menus.bpmnMenu"
-                label="BPMN Tools"
-                mnemonic="B">
-                <command
-                    commandId="bpmn.to.winvmj.plugin.commands.convert"
-                    id="bpmn.to.winvmj.plugin.menus.convertCommand"
-                    mnemonic="C"/>
-            </menu>
-        </menuContribution>
-    
-    <!-- Also add to toolbar -->
-        <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-            <toolbar
-                id="bpmn.to.winvmj.plugin.toolbars.bpmnToolbar">
+         <menu
+               id="bpmn.to.winvmj.plugin.menus.bpmnMenu"
+               label="BPMN Tools"
+               mnemonic="B">
             <command
-                commandId="bpmn.to.winvmj.plugin.commands.convert"
-                icon="icons/sample.gif"
-                tooltip="Convert BPMN to WinVMJ"/>
-            </toolbar>
-        </menuContribution>
-  </extension>
+                  commandId="bpmn.to.winvmj.plugin.commands.convert"
+                  id="bpmn.to.winvmj.plugin.menus.convertCommand"
+                  mnemonic="C"/>
+         </menu>
+      </menuContribution>
+    
+      <!-- Also add to toolbar -->
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="bpmn.to.winvmj.plugin.toolbars.bpmnToolbar">
+            <command
+                  commandId="bpmn.to.winvmj.plugin.commands.convert"
+                  icon="icons/sample.gif"
+                  tooltip="Convert BPMN to WinVMJ"/>
+         </toolbar>
+      </menuContribution>
+   </extension>
 </plugin>

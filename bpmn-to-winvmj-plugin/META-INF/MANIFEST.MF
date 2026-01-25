@@ -4,7 +4,7 @@ Bundle-Name: BPMN to WinVMJ Plugin
 Bundle-SymbolicName: bpmn.to.winvmj.plugin;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: bpmn.to.winvmj.plugin.Activator
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: 
  org.eclipse.ui,
  org.eclipse.core.runtime,
