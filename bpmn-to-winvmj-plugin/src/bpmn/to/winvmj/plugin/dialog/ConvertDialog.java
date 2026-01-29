@@ -8,6 +8,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
+import com.example.model.BPMN;
 import com.example.parser.Parser;
 
 public class ConvertDialog extends TitleAreaDialog {
@@ -76,7 +77,8 @@ public class ConvertDialog extends TitleAreaDialog {
             File bpmnFile = new File(bpmnPath);
 
             Parser parser = new Parser();
-            parser.parse(bpmnFile);
+            BPMN bpmn = parser.parse(bpmnFile);
+            System.out.println(bpmn.buildXml());
 
             // IFML can be handled later
             // File ifmlFile = ifmlPath.isBlank() ? null : new File(ifmlPath);
