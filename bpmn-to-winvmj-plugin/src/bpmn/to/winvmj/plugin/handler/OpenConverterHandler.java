@@ -7,7 +7,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import bpmn.to.winvmj.plugin.dialog.ConvertDialog;  // Updated import
+import bpmn.to.winvmj.plugin.dialog.ConvertDialog;
 
 public class OpenConverterHandler extends AbstractHandler {
     @Override
@@ -18,8 +18,8 @@ public class OpenConverterHandler extends AbstractHandler {
         
         try {
             System.out.println("BPMN Handler: Opening dialog...");
-            ConvertDialog dialog = new ConvertDialog(window.getShell());  // Updated class name
-            int result = dialog.open();  // This should work now
+            ConvertDialog dialog = new ConvertDialog(window.getShell());
+            int result = dialog.open();
             System.out.println("BPMN Handler: Dialog returned: " + result);
             
         } catch (Exception e) {

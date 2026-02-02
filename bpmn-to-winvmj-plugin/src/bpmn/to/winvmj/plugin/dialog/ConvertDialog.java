@@ -1,12 +1,26 @@
 package bpmn.to.winvmj.plugin.dialog;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import com.example.model.BPMN;
 import com.example.parser.Parser;
@@ -76,12 +90,23 @@ public class ConvertDialog extends TitleAreaDialog {
         try {
             File bpmnFile = new File(bpmnPath);
 
-            Parser parser = new Parser();
-            BPMN bpmn = parser.parse(bpmnFile);
-            System.out.println(bpmn.buildXml());
+            BPMN bpmn = Parser.parse(bpmnFile);
+            String bpmnXml = bpmn.buildXml();
+            
+         // 1. Create temp file
+            File tempXml = File.createTempFile("bpmn-", ".xml");
+            tempXml.deleteOnExit(); // optional but nice
+
+            // 2. Write content
+            Files.write(
+                tempXml.toPath(),
+                bpmnXml.getBytes(StandardCharsets.UTF_8)
+            );
 
             // IFML can be handled later
-            // File ifmlFile = ifmlPath.isBlank() ? null : new File(ifmlPath);
+             File ifmlFile = ifmlPath.isBlank() ? null : new File(ifmlPath);
+             
+             runAcceleo(tempXml);
 
         } catch (Exception ex) {
             setErrorMessage("Failed to parse BPMN: " + ex.getMessage());
@@ -89,5 +114,20 @@ public class ConvertDialog extends TitleAreaDialog {
         }
 
         super.okPressed();
+    }
+    
+    private void runAcceleo(File tempXml) throws IOException {
+
+        ResourceSet rs = new ResourceSetImpl();
+
+        // Register default factory for XML/XMI
+        rs.getResourceFactoryRegistry()
+          .getExtensionToFactoryMap()
+          .put("xml", new XMIResourceFactoryImpl());
+
+        URI uri = URI.createFileURI(tempXml.getAbsolutePath());
+        Resource resource = rs.getResource(uri, true);
+
+        // Now pass `resource` or `resource.getContents()` to Acceleo
     }
 }

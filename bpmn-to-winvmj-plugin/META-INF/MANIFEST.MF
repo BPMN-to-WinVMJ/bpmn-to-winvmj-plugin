@@ -10,7 +10,11 @@ Require-Bundle:
  org.eclipse.core.runtime,
  org.eclipse.jface,
  org.eclipse.swt,
- org.eclipse.core.commands
+ org.eclipse.core.commands,
+ org.eclipse.emf.common,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ bpmn.to.winvmj.acceleo
 Bundle-ClassPath: .,
  lib/bpmn-parser-1.0.0.jar
 Export-Package: 
