@@ -1,9 +1,0 @@
-[comment encoding = UTF-8 /]
-[module generate('http://www.eclipse.org/bpel')]
-
-[template public generate(root : EObject)]
-[file ('output.txt', false, 'UTF-8')]
-Hello from Acceleo!
-Root class: [root.eClass().name/]
-[/file]
-[/template]

@@ -14,9 +14,9 @@ Require-Bundle:
  org.eclipse.emf.common,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
+ org.eclipse.acceleo.engine,
+ org.eclipse.core.resources,
  bpmn.to.winvmj.acceleo
-Bundle-ClassPath: .,
- lib/bpmn-parser-1.0.0.jar
 Export-Package: 
  bpmn.to.winvmj.plugin,
  bpmn.to.winvmj.plugin.dialog,

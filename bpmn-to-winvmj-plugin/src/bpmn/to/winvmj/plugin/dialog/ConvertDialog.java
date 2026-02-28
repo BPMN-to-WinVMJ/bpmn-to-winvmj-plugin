@@ -1,15 +1,7 @@
 package bpmn.to.winvmj.plugin.dialog;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -22,8 +14,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.example.model.BPMN;
-import com.example.parser.Parser;
+import bpmn.to.winvmj.plugin.BpmnToWinVmjGenerator;
+
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 
 public class ConvertDialog extends TitleAreaDialog {
 
@@ -86,27 +80,38 @@ public class ConvertDialog extends TitleAreaDialog {
             setErrorMessage("BPMN file is required");
             return;
         }
+        
+        // Validate BPMN file exists
+        File bpmnFile = new File(bpmnPath);
+        if (!bpmnFile.exists()) {
+            setErrorMessage("BPMN file does not exist: " + bpmnPath);
+            return;
+        }
 
         try {
-            File bpmnFile = new File(bpmnPath);
-
-            BPMN bpmn = Parser.parse(bpmnFile);
-            String bpmnXml = bpmn.buildXml();
+        	File bpmnDir = bpmnFile.getParentFile();
+            File outputFolder = new File(bpmnDir, "generated");
             
-         // 1. Create temp file
-            File tempXml = File.createTempFile("bpmn-", ".xml");
-            tempXml.deleteOnExit(); // optional but nice
+            if (!outputFolder.exists()) {
+                outputFolder.mkdirs();
+            }
 
-            // 2. Write content
-            Files.write(
-                tempXml.toPath(),
-                bpmnXml.getBytes(StandardCharsets.UTF_8)
-            );
-
+        	BpmnToWinVmjGenerator generator = new BpmnToWinVmjGenerator();
+			boolean success = generator.transformBpmnFile(bpmnPath, outputFolder);
+			if (success) {
+                System.out.println("Conversion completed successfully!");
+                setErrorMessage(null);
+                setMessage("Conversion completed! Files generated in: " + outputFolder.getAbsolutePath());
+            } else {
+                setErrorMessage("Conversion failed. Check console for details.");
+                return;
+            }
+        	
             // IFML can be handled later
              File ifmlFile = ifmlPath.isBlank() ? null : new File(ifmlPath);
              
-             runAcceleo(tempXml);
+             refreshFolder(outputFolder);
+             
 
         } catch (Exception ex) {
             setErrorMessage("Failed to parse BPMN: " + ex.getMessage());
@@ -116,18 +121,18 @@ public class ConvertDialog extends TitleAreaDialog {
         super.okPressed();
     }
     
-    private void runAcceleo(File tempXml) throws IOException {
-
-        ResourceSet rs = new ResourceSetImpl();
-
-        // Register default factory for XML/XMI
-        rs.getResourceFactoryRegistry()
-          .getExtensionToFactoryMap()
-          .put("xml", new XMIResourceFactoryImpl());
-
-        URI uri = URI.createFileURI(tempXml.getAbsolutePath());
-        Resource resource = rs.getResource(uri, true);
-
-        // Now pass `resource` or `resource.getContents()` to Acceleo
+    private static void refreshFolder(File folder) {
+        try {
+            IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+                .findMember(folder.getAbsolutePath());
+            
+            if (resource != null) {
+                resource.refreshLocal(IResource.DEPTH_INFINITE, null);
+                System.out.println("Refreshed folder: " + folder.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            System.err.println("Error refreshing folder: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
