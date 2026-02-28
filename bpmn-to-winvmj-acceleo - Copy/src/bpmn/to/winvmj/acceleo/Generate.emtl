@@ -1,0 +1,2925 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:mtl="http://www.eclipse.org/acceleo/mtl/3.0" xmlns:ocl.ecore="http://www.eclipse.org/ocl/1.1.0/Ecore">
+  <mtl:Module name="Generate" nsURI="bpmn::to::winvmj::acceleo::Generate" endHeaderPosition="327">
+    <input>
+      <takesTypesFrom href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#/"/>
+    </input>
+    <input/>
+    <ownedModuleElement xsi:type="mtl:Query" name="getPrior" visibility="Public" type="/3/Sequence(FlowNode)">
+      <parameter name="ut">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+      </parameter>
+      <parameter name="p">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+      </parameter>
+      <expression xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_OclAny_Class/invoke">
+        <eType xsi:type="ocl.ecore:AnyType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny"/>
+        <source xsi:type="ocl.ecore:VariableExp" name="self" referredVariable="/5">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+        </source>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="bpmn.to.winvmj.acceleo.java.GenerateUtil">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="getPrior(org.eclipse.bpmn2.UserTask, org.eclipse.bpmn2.Process)">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:CollectionLiteralExp" eType="/3/Sequence(BaseElement)" kind="Sequence">
+          <part xsi:type="ocl.ecore:CollectionItem">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            <item xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/getPrior/ut">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </item>
+          </part>
+          <part xsi:type="ocl.ecore:CollectionItem">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+            <item xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/getPrior/p">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+            </item>
+          </part>
+        </argument>
+      </expression>
+    </ownedModuleElement>
+    <ownedModuleElement xsi:type="mtl:Query" name="getServiceTaskAfter" visibility="Public" type="/3/Sequence(Task)">
+      <parameter name="ut">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+      </parameter>
+      <parameter name="p">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+      </parameter>
+      <expression xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_OclAny_Class/invoke">
+        <eType xsi:type="ocl.ecore:AnyType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny"/>
+        <source xsi:type="ocl.ecore:VariableExp" name="self" referredVariable="/8">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+        </source>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="bpmn.to.winvmj.acceleo.java.GenerateUtil">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="getServiceTaskAfter(org.eclipse.bpmn2.UserTask, org.eclipse.bpmn2.Process)">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:CollectionLiteralExp" eType="/3/Sequence(BaseElement)" kind="Sequence">
+          <part xsi:type="ocl.ecore:CollectionItem">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            <item xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/getServiceTaskAfter/ut">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </item>
+          </part>
+          <part xsi:type="ocl.ecore:CollectionItem">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+            <item xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/getServiceTaskAfter/p">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+            </item>
+          </part>
+        </argument>
+      </expression>
+    </ownedModuleElement>
+    <ownedModuleElement xsi:type="mtl:Query" name="getTasksAfterStart" visibility="Public" type="/3/Set(Task)">
+      <parameter name="p">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+      </parameter>
+      <expression xsi:type="ocl.ecore:OperationCallExp" eType="/3/Set(FlowNode)">
+        <source xsi:type="ocl.ecore:IteratorExp" name="select" eType="/3/Bag(FlowNode)">
+          <source xsi:type="ocl.ecore:IteratorExp" name="collect" eType="/3/Bag(FlowNode)">
+            <source xsi:type="ocl.ecore:IteratorExp" name="collect" eType="/3/Bag(SequenceFlow)">
+              <source xsi:type="ocl.ecore:IteratorExp" name="collect" eType="/3/Bag(StartEvent)">
+                <source xsi:type="ocl.ecore:IteratorExp" name="select" eType="/3/Set(FlowElement)">
+                  <source xsi:type="ocl.ecore:PropertyCallExp" eType="/3/Set(FlowElement)">
+                    <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/getTasksAfterStart/p">
+                      <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+                    </source>
+                    <referredProperty xsi:type="ecore:EReference" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElementsContainer/flowElements"/>
+                  </source>
+                  <body xsi:type="ocl.ecore:OperationCallExp">
+                    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+                    <source xsi:type="ocl.ecore:VariableExp" name="e" referredVariable="/0/getTasksAfterStart/%/select/collect/collect/collect/select/e">
+                      <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+                    </source>
+                    <argument xsi:type="ocl.ecore:TypeExp" eType="/11/StartEvent">
+                      <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//StartEvent"/>
+                    </argument>
+                    <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny_Class/oclIsKindOf"/>
+                  </body>
+                  <iterator xsi:type="ocl.ecore:Variable" name="e">
+                    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+                  </iterator>
+                </source>
+                <body xsi:type="ocl.ecore:OperationCallExp">
+                  <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//StartEvent"/>
+                  <source xsi:type="ocl.ecore:VariableExp" name="se" referredVariable="/0/getTasksAfterStart/%/select/collect/collect/collect/se">
+                    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+                  </source>
+                  <argument xsi:type="ocl.ecore:TypeExp" eType="/11/StartEvent">
+                    <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//StartEvent"/>
+                  </argument>
+                  <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny_Class/oclAsType"/>
+                </body>
+                <iterator xsi:type="ocl.ecore:Variable" name="se">
+                  <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+                </iterator>
+              </source>
+              <body xsi:type="ocl.ecore:PropertyCallExp" eType="/3/OrderedSet(SequenceFlow)">
+                <source xsi:type="ocl.ecore:VariableExp" name="se" referredVariable="/0/getTasksAfterStart/%/select/collect/collect/se">
+                  <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//StartEvent"/>
+                </source>
+                <referredProperty xsi:type="ecore:EReference" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowNode/outgoing"/>
+              </body>
+              <iterator xsi:type="ocl.ecore:Variable" name="se">
+                <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//StartEvent"/>
+              </iterator>
+            </source>
+            <body xsi:type="ocl.ecore:PropertyCallExp">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowNode"/>
+              <source xsi:type="ocl.ecore:VariableExp" name="sf" referredVariable="/0/getTasksAfterStart/%/select/collect/sf">
+                <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//SequenceFlow"/>
+              </source>
+              <referredProperty xsi:type="ecore:EReference" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//SequenceFlow/targetRef"/>
+            </body>
+            <iterator xsi:type="ocl.ecore:Variable" name="sf">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//SequenceFlow"/>
+            </iterator>
+          </source>
+          <body xsi:type="ocl.ecore:OperationCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="t" referredVariable="/0/getTasksAfterStart/%/select/t">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowNode"/>
+            </source>
+            <argument xsi:type="ocl.ecore:TypeExp" eType="/11/Task">
+              <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </argument>
+            <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny_Class/oclIsKindOf"/>
+          </body>
+          <iterator xsi:type="ocl.ecore:Variable" name="t">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowNode"/>
+          </iterator>
+        </source>
+        <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Bag(T)_Class/asSet"/>
+      </expression>
+    </ownedModuleElement>
+    <ownedModuleElement xsi:type="mtl:Template" name="generate" visibility="Public" main="true">
+      <body xsi:type="mtl:ForBlock">
+        <body xsi:type="mtl:FileBlock" openMode="OverWrite">
+          <body xsi:type="mtl:TemplateInvocation" definition="/0/generateProcess">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <argument xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generate/%/p">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+            </argument>
+          </body>
+          <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xD;&#xA;"/>
+          <fileUrl xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/+">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/+">
+              <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+              <source xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/+">
+                <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                <source xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/+">
+                  <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                  <source xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="bpmn/product/">
+                    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                  </source>
+                  <argument xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+                    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                    <source xsi:type="ocl.ecore:PropertyCallExp">
+                      <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                      <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generate/%/p">
+                        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+                      </source>
+                      <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+                    </source>
+                    <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+                      <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                    </argument>
+                    <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+                      <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                    </argument>
+                  </argument>
+                </source>
+                <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="/">
+                  <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                </argument>
+              </source>
+              <argument xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+                <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                <source xsi:type="ocl.ecore:PropertyCallExp">
+                  <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                  <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generate/%/p">
+                    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+                  </source>
+                  <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+                </source>
+                <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+                  <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                </argument>
+                <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+                  <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                </argument>
+              </argument>
+            </source>
+            <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="ResourceImpl.java">
+              <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            </argument>
+          </fileUrl>
+          <charset xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="UTF-8">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </charset>
+        </body>
+        <loopVariable name="p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </loopVariable>
+        <iterSet xsi:type="ocl.ecore:IteratorExp" name="select" eType="/3/Set(RootElement)">
+          <source xsi:type="ocl.ecore:PropertyCallExp" eType="/3/Set(RootElement)">
+            <source xsi:type="ocl.ecore:VariableExp" name="defs" referredVariable="/0/generate/defs">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Definitions"/>
+            </source>
+            <referredProperty xsi:type="ecore:EReference" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Definitions/rootElements"/>
+          </source>
+          <body xsi:type="ocl.ecore:OperationCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="e" referredVariable="/0/generate/%/select/e">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//RootElement"/>
+            </source>
+            <argument xsi:type="ocl.ecore:TypeExp" eType="/11/Process">
+              <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+            </argument>
+            <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny_Class/oclIsKindOf"/>
+          </body>
+          <iterator xsi:type="ocl.ecore:Variable" name="e">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//RootElement"/>
+          </iterator>
+        </iterSet>
+      </body>
+      <parameter name="defs">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Definitions"/>
+      </parameter>
+    </ownedModuleElement>
+    <ownedModuleElement xsi:type="mtl:Template" name="generateProcess" visibility="Public">
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="// @generated&#xD;&#xA;&#xD;&#xA;package bpmn.product."/>
+      <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+        </source>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=";&#xD;&#xA;&#xD;&#xA;import java.util.*;&#xD;&#xA;import vmj.routing.route.VMJExchange;&#xD;&#xA;import vmj.routing.route.Route;&#xD;&#xA;&#xD;&#xA;public class "/>
+      <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+        </source>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="ResourceImpl extends "/>
+      <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+        </source>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="Component {&#xD;&#xA;&#xD;&#xA;    static class ProcessInstance {&#xD;&#xA;        String id;&#xD;&#xA;        String state;&#xD;&#xA;        ProcessInstance(String id, String state) {&#xD;&#xA;            this.id = id;&#xD;&#xA;            this.state = state;&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    static interface ProcessService {&#xD;&#xA;        boolean upsert(ProcessInstance state); &#xD;&#xA;        List&lt;ProcessInstance> getAllById(String id);&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    static class ProcessServiceImpl implements ProcessService {&#xD;&#xA;        private static final List&lt;ProcessInstance> STORE = new ArrayList&lt;>();&#xD;&#xA;&#xD;&#xA;        public boolean upsert(ProcessInstance state) {&#xD;&#xA;            if (STORE.contains(state)) return true;&#xD;&#xA;            return STORE.add(state);&#xD;&#xA;        }&#xD;&#xA;&#xD;&#xA;        public List&lt;ProcessInstance> getAllById(String id) {&#xD;&#xA;            return STORE.stream()&#xD;&#xA;                .filter(p -> id.equals(p.id))&#xD;&#xA;                .toList();&#xD;&#xA;        }&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    static interface "/>
+      <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+        </source>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="Service {&#xD;&#xA;"/>
+      <body xsi:type="mtl:TemplateInvocation" definition="/0/generateServiceSignatures">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <argument xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    static class "/>
+      <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+        </source>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="ServiceImpl implements "/>
+      <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+        </source>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="Service {&#xD;&#xA;"/>
+      <body xsi:type="mtl:TemplateInvocation" definition="/0/generateServiceImplementations">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <argument xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;    private ProcessService processService = new ProcessServiceImpl();&#xD;&#xA;    &#xD;&#xA;&#x9;private "/>
+      <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+        </source>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="Service "/>
+      <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+        </source>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="Service = new "/>
+      <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+        </source>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+        <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="ServiceImpl();&#xD;&#xA;&#xD;&#xA;"/>
+      <body xsi:type="mtl:TemplateInvocation" definition="/0/generateUserTaskResources">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <argument xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateProcess/p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </argument>
+      </body>
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xD;&#xA;}"/>
+      <parameter name="p">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+      </parameter>
+    </ownedModuleElement>
+    <ownedModuleElement xsi:type="mtl:Template" name="generateServiceSignatures" visibility="Public">
+      <body xsi:type="mtl:ForBlock">
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="        void "/>
+        <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="t" referredVariable="/0/generateServiceSignatures/%/t">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </source>
+            <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+          </source>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="(Map&lt;String, Object> body, String processid);&#xD;&#xA;"/>
+        <loopVariable name="t">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+        </loopVariable>
+        <iterSet xsi:type="ocl.ecore:IteratorExp" name="select" eType="/3/Set(FlowElement)">
+          <source xsi:type="ocl.ecore:PropertyCallExp" eType="/3/Set(FlowElement)">
+            <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateServiceSignatures/p">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+            </source>
+            <referredProperty xsi:type="ecore:EReference" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElementsContainer/flowElements"/>
+          </source>
+          <body xsi:type="ocl.ecore:OperationCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="e" referredVariable="/0/generateServiceSignatures/%/select/e">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+            </source>
+            <argument xsi:type="ocl.ecore:TypeExp" eType="/11/Task">
+              <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </argument>
+            <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny_Class/oclIsKindOf"/>
+          </body>
+          <iterator xsi:type="ocl.ecore:Variable" name="e">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+          </iterator>
+        </iterSet>
+      </body>
+      <parameter name="p">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+      </parameter>
+    </ownedModuleElement>
+    <ownedModuleElement xsi:type="mtl:Template" name="generateServiceImplementations" visibility="Public">
+      <body xsi:type="mtl:ForBlock">
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#x9;    @Override&#xD;&#xA;&#x9;    public void "/>
+        <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="t" referredVariable="/0/generateServiceImplementations/%/t">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </source>
+            <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+          </source>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="(Map&lt;String, Object> body, String processid {&#xD;&#xA;&#x9;        // TODO: Implement logic for "/>
+        <body xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="t" referredVariable="/0/generateServiceImplementations/%/t">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xD;&#xA;&#x9;&#x9;&#x9;processService.upsert(new ProcessInstance(processid, &quot;"/>
+        <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="t" referredVariable="/0/generateServiceImplementations/%/t">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </source>
+            <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+          </source>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&quot;));&#xD;&#xA;&#x9;        System.out.println(&quot;Executing "/>
+        <body xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="t" referredVariable="/0/generateServiceImplementations/%/t">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&quot;);&#xD;&#xA;&#x9;    }&#xD;&#xA;&#xD;&#xA;"/>
+        <loopVariable name="t">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+        </loopVariable>
+        <iterSet xsi:type="ocl.ecore:IteratorExp" name="select" eType="/3/Set(FlowElement)">
+          <source xsi:type="ocl.ecore:PropertyCallExp" eType="/3/Set(FlowElement)">
+            <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateServiceImplementations/p">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+            </source>
+            <referredProperty xsi:type="ecore:EReference" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElementsContainer/flowElements"/>
+          </source>
+          <body xsi:type="ocl.ecore:OperationCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="e" referredVariable="/0/generateServiceImplementations/%/select/e">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+            </source>
+            <argument xsi:type="ocl.ecore:TypeExp" eType="/11/Task">
+              <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </argument>
+            <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny_Class/oclIsKindOf"/>
+          </body>
+          <iterator xsi:type="ocl.ecore:Variable" name="e">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+          </iterator>
+        </iterSet>
+      </body>
+      <parameter name="p">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+      </parameter>
+    </ownedModuleElement>
+    <ownedModuleElement xsi:type="mtl:Template" name="generateUserTaskResources" visibility="Public">
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xD;&#xA;"/>
+      <body xsi:type="mtl:ForBlock">
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="    @Route(url = &quot;call/"/>
+        <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/generateUserTaskResources/%.1/ut">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </source>
+            <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+          </source>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&quot;)&#xD;&#xA;    public Map&lt;String, Object> "/>
+        <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/generateUserTaskResources/%.1/ut">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </source>
+            <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+          </source>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="(VMJExchange exchange) {&#xD;&#xA;        Map&lt;String, Object> res = new HashMap&lt;>();&#xD;&#xA;&#xD;&#xA;"/>
+        <body xsi:type="mtl:IfBlock">
+          <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="        Map&lt;String, Object> res = new HashMap&lt;>();&#xD;&#xA;        String processid = UUID.randomUUID().toString();&#xD;&#xA;        processService.upsert(new ProcessInstance(processid, &quot;%s&quot;));&#xD;&#xA;"/>
+          <ifExpr xsi:type="ocl.ecore:OperationCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+            <source xsi:type="mtl:QueryInvocation" eType="/3/Set(Task)" definition="/0/getTasksAfterStart">
+              <argument xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateUserTaskResources/p">
+                <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+              </argument>
+            </source>
+            <argument xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/generateUserTaskResources/%.1/ut">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </argument>
+            <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Set(T)_Class/includes"/>
+          </ifExpr>
+          <else>
+            <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#x9;&#x9;if (vmjExchange.getHttpMethod().equals(&quot;POST&quot;)) {&#xD;&#xA;&#xD;&#xA;&#x9;        // Cek apakah step sebelumnya pernah dilakukan&#xD;&#xA;&#x9;        // This also allows user yang mundur page trus isi form ulang&#xD;&#xA;&#x9;        // karena langkah sebelum page ini pasti udh dilakukan&#xD;&#xA;&#x9;        // ini juga mencegah orang dari asal tembak api&#xD;&#xA;&#x9;        List&lt;ProcessInstance> processes = processService.getAllById(processid);&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;if (processes.stream()&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;.filter(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;x -> "/>
+            <body xsi:type="mtl:TemplateInvocation" definition="/0/traversePrior">
+              <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+              <argument xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/generateUserTaskResources/%.1/ut">
+                <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+              </argument>
+              <argument xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateUserTaskResources/p">
+                <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+              </argument>
+            </body>
+            <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;).toList().isEmpty()&#xD;&#xA;&#x9;&#x9;&#x9;) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;res.put(&quot;message&quot;, &quot;"/>
+            <body xsi:type="ocl.ecore:PropertyCallExp">
+              <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+              <source xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/generateUserTaskResources/%.1/ut">
+                <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+              </source>
+              <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+            </body>
+            <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" DENIED&quot;);&#xD;&#xA;            &#x9;return res;&#xD;&#xA;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;"/>
+          </else>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xD;&#xA;&#x9;&#x9;processService.upsert(new ProcessInstance(processid, &quot;"/>
+        <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/generateUserTaskResources/%.1/ut">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </source>
+            <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+          </source>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&quot;));&#xD;&#xA;&#x9;&#x9;"/>
+        <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateUserTaskResources/p">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+            </source>
+            <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+          </source>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="Service."/>
+        <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/generateUserTaskResources/%.1/ut">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </source>
+            <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+          </source>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="(requestBody, processid);&#xD;&#xA;&#x9;&#x9;"/>
+        <body xsi:type="mtl:TemplateInvocation" definition="/0/traverseAfter">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <argument xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/generateUserTaskResources/%.1/ut">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateUserTaskResources/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xD;&#xA;&#xD;&#xA;        res.put(&quot;status&quot;, &quot;ok&quot;);&#xD;&#xA;        res.put(&quot;message&quot;, &quot;"/>
+        <body xsi:type="ocl.ecore:PropertyCallExp">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/generateUserTaskResources/%.1/ut">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+          </source>
+          <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" SUCCESS&quot;);&#xD;&#xA;        return res;&#xD;&#xA;    }&#xD;&#xA;&#xD;&#xA;"/>
+        <loopVariable name="ut">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+        </loopVariable>
+        <iterSet xsi:type="ocl.ecore:IteratorExp" name="collect" eType="/3/Sequence(Task)">
+          <source xsi:type="ocl.ecore:OperationCallExp" eType="/3/OrderedSet(FlowElement)">
+            <source xsi:type="ocl.ecore:OperationCallExp" eType="/3/Set(FlowElement)">
+              <source xsi:type="ocl.ecore:IteratorExp" name="select" eType="/3/Set(FlowElement)">
+                <source xsi:type="ocl.ecore:PropertyCallExp" eType="/3/Set(FlowElement)">
+                  <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateUserTaskResources/p">
+                    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+                  </source>
+                  <referredProperty xsi:type="ecore:EReference" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElementsContainer/flowElements"/>
+                </source>
+                <body xsi:type="ocl.ecore:OperationCallExp">
+                  <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+                  <source xsi:type="ocl.ecore:VariableExp" name="e" referredVariable="/0/generateUserTaskResources/%.1/collect/%/%/select/e">
+                    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+                  </source>
+                  <argument xsi:type="ocl.ecore:TypeExp" eType="/11/UserTask">
+                    <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//UserTask"/>
+                  </argument>
+                  <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny_Class/oclIsKindOf"/>
+                </body>
+                <iterator xsi:type="ocl.ecore:Variable" name="e">
+                  <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+                </iterator>
+              </source>
+              <argument xsi:type="mtl:QueryInvocation" eType="/3/Set(Task)" definition="/0/getTasksAfterStart">
+                <argument xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/generateUserTaskResources/p">
+                  <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+                </argument>
+              </argument>
+              <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Set(T)_Class/union.1"/>
+            </source>
+            <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Set(T)_Class/asOrderedSet"/>
+          </source>
+          <body xsi:type="ocl.ecore:OperationCallExp">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="e" referredVariable="/0/generateUserTaskResources/%.1/collect/e">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+            </source>
+            <argument xsi:type="ocl.ecore:TypeExp" eType="/11/Task">
+              <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </argument>
+            <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny_Class/oclAsType"/>
+          </body>
+          <iterator xsi:type="ocl.ecore:Variable" name="e">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+          </iterator>
+        </iterSet>
+      </body>
+      <parameter name="p">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+      </parameter>
+    </ownedModuleElement>
+    <ownedModuleElement xsi:type="mtl:Template" name="traversePrior" visibility="Public">
+      <body xsi:type="mtl:ForBlock">
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="x.state.equalsIgnoreCase(&quot;"/>
+        <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="prior" referredVariable="/0/traversePrior/%/prior">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowNode"/>
+            </source>
+            <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+          </source>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&quot;)&#xD;&#xA;"/>
+        <loopVariable name="prior">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowNode"/>
+        </loopVariable>
+        <iterSet xsi:type="mtl:QueryInvocation" eType="/3/Sequence(FlowNode)" definition="/0/getPrior">
+          <argument xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/traversePrior/ut">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/traversePrior/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </argument>
+        </iterSet>
+      </body>
+      <parameter name="ut">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+      </parameter>
+      <parameter name="p">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+      </parameter>
+    </ownedModuleElement>
+    <ownedModuleElement xsi:type="mtl:Template" name="traverseAfter" visibility="Public">
+      <body xsi:type="mtl:ForBlock">
+        <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/traverseAfter/p">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+            </source>
+            <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//CallableElement/name"/>
+          </source>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="Service."/>
+        <body xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/replaceAll">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          <source xsi:type="ocl.ecore:PropertyCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+            <source xsi:type="ocl.ecore:VariableExp" name="afterr" referredVariable="/0/traverseAfter/%/afterr">
+              <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+            </source>
+            <referredProperty xsi:type="ecore:EAttribute" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement/name"/>
+          </source>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" ">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+          </argument>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="(requestBody, processid);&#xD;&#xA;"/>
+        <loopVariable name="afterr">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+        </loopVariable>
+        <iterSet xsi:type="mtl:QueryInvocation" eType="/3/Sequence(Task)" definition="/0/getServiceTaskAfter">
+          <argument xsi:type="ocl.ecore:VariableExp" name="ut" referredVariable="/0/traverseAfter/ut">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+          </argument>
+          <argument xsi:type="ocl.ecore:VariableExp" name="p" referredVariable="/0/traverseAfter/p">
+            <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+          </argument>
+        </iterSet>
+      </body>
+      <parameter name="ut">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+      </parameter>
+      <parameter name="p">
+        <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+      </parameter>
+    </ownedModuleElement>
+  </mtl:Module>
+  <ecore:EPackage name="additions">
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_String_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+      </eAnnotations>
+      <eOperations name="replaceAll">
+        <eAnnotations source="MTL non-standard"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="substring">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </eParameters>
+        <eParameters name="replacement">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </eParameters>
+      </eOperations>
+      <eOperations name="+">
+        <eAnnotations source="MTL non-standard"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="other">
+          <eType xsi:type="ocl.ecore:AnyType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny"/>
+        </eParameters>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Integer_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Real_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Real"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ecore_EObject_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+      </eAnnotations>
+      <eOperations name="getPrior" eType="/3/Sequence(FlowNode)">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/getPrior"/>
+        <eParameters name="ut">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+        </eParameters>
+        <eParameters name="p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </eParameters>
+      </eOperations>
+      <eOperations name="getServiceTaskAfter" eType="/3/Sequence(Task)">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/getServiceTaskAfter"/>
+        <eParameters name="ut">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+        </eParameters>
+        <eParameters name="p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </eParameters>
+      </eOperations>
+      <eOperations name="getTasksAfterStart" eType="/3/Set(Task)">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/getTasksAfterStart"/>
+        <eParameters name="p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </eParameters>
+      </eOperations>
+      <eOperations name="generate">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/generate"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="defs">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Definitions"/>
+        </eParameters>
+      </eOperations>
+      <eOperations name="generateProcess">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/generateProcess"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </eParameters>
+      </eOperations>
+      <eOperations name="generateServiceSignatures">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/generateServiceSignatures"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </eParameters>
+      </eOperations>
+      <eOperations name="generateServiceImplementations">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/generateServiceImplementations"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </eParameters>
+      </eOperations>
+      <eOperations name="generateUserTaskResources">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/generateUserTaskResources"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </eParameters>
+      </eOperations>
+      <eOperations name="traversePrior">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/traversePrior"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="ut">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+        </eParameters>
+        <eParameters name="p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </eParameters>
+      </eOperations>
+      <eOperations name="traverseAfter">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/traverseAfter"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="ut">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+        </eParameters>
+        <eParameters name="p">
+          <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+        </eParameters>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_OclAny_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny"/>
+      </eAnnotations>
+      <eOperations name="invoke">
+        <eAnnotations source="MTL non-standard"/>
+        <eType xsi:type="ocl.ecore:AnyType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny"/>
+        <eParameters name="class">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </eParameters>
+        <eParameters name="method">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </eParameters>
+        <eParameters name="arguments">
+          <eType xsi:type="ocl.ecore:SequenceType" href="http://www.eclipse.org/acceleo/mtl/3.0/mtlnonstdlib.ecore#//Sequence(OclAny)"/>
+        </eParameters>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Collection(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Collection(T)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Sequence(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Sequence(T)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_OrderedSet(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OrderedSet(T)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="bpmn2_Task_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="bpmn2_Process_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="bpmn2_Definitions_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Definitions"/>
+      </eAnnotations>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ecore:EPackage name="collections">
+    <eClassifiers xsi:type="ocl.ecore:SequenceType" name="Sequence(FlowNode)" instanceClassName="java.util.List">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowNode"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:SequenceType" name="Sequence(Task)" instanceClassName="java.util.List">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:SetType" name="Set(Task)" instanceClassName="java.util.Set">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:SequenceType" name="Sequence(BaseElement)" instanceClassName="java.util.List">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//BaseElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:SequenceType" name="Sequence(OclAny)" instanceClassName="java.util.List">
+      <elementType xsi:type="ocl.ecore:AnyType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:SetType" name="Set(FlowElement)" instanceClassName="java.util.Set">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:BagType" name="Bag(StartEvent)" instanceClassName="org.eclipse.ocl.util.Bag">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//StartEvent"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:OrderedSetType" name="OrderedSet(SequenceFlow)" instanceClassName="java.util.LinkedHashSet">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//SequenceFlow"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:BagType" name="Bag(SequenceFlow)" instanceClassName="org.eclipse.ocl.util.Bag">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//SequenceFlow"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:BagType" name="Bag(FlowNode)" instanceClassName="org.eclipse.ocl.util.Bag">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowNode"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:SetType" name="Set(FlowNode)" instanceClassName="java.util.Set">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowNode"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:SetType" name="Set(RootElement)" instanceClassName="java.util.Set">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//RootElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:BagType" name="Bag(FlowElement)" instanceClassName="org.eclipse.ocl.util.Bag">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:OrderedSetType" name="OrderedSet(FlowElement)" instanceClassName="java.util.LinkedHashSet">
+      <elementType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowElement"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ecore:EPackage name="types">
+    <eClassifiers xsi:type="ocl.ecore:TypeType" name="StartEvent">
+      <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//StartEvent"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:TypeType" name="Task">
+      <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:TypeType" name="Process">
+      <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:TypeType" name="UserTask">
+      <referredType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//UserTask"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Definitions"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Definitions"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Definitions"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Definitions"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="i">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="i">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="i">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Process"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="i">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowNode"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//FlowNode"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="i">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI#//Task"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="i">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ecore:EAnnotation source="positions">
+    <eAnnotations source="positions.0" references="/0/getPrior">
+      <details key="start" value="77"/>
+      <details key="end" value="329"/>
+      <details key="line" value="5"/>
+    </eAnnotations>
+    <eAnnotations source="positions.1" references="/0/getPrior/ut">
+      <details key="start" value="100"/>
+      <details key="end" value="116"/>
+      <details key="line" value="5"/>
+    </eAnnotations>
+    <eAnnotations source="positions.2" references="/0/getPrior/p">
+      <details key="start" value="118"/>
+      <details key="end" value="136"/>
+      <details key="line" value="5"/>
+    </eAnnotations>
+    <eAnnotations source="positions.3" references="/0/getPrior/%">
+      <details key="start" value="171"/>
+      <details key="end" value="325"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.4" references="/0/getPrior/%/self">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.5" references="/0/getPrior/%/%">
+      <details key="start" value="184"/>
+      <details key="end" value="226"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.6" references="/0/getPrior/%/%.1">
+      <details key="start" value="233"/>
+      <details key="end" value="298"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.7" references="/0/getPrior/%/%.2">
+      <details key="start" value="305"/>
+      <details key="end" value="320"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.8" references="/0/getPrior/%/%.2/%/ut">
+      <details key="start" value="314"/>
+      <details key="end" value="316"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.9" references="/0/getPrior/%/%.2/%.1/p">
+      <details key="start" value="318"/>
+      <details key="end" value="319"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.10" references="/0/getServiceTaskAfter">
+      <details key="start" value="333"/>
+      <details key="end" value="603"/>
+      <details key="line" value="13"/>
+    </eAnnotations>
+    <eAnnotations source="positions.11" references="/0/getServiceTaskAfter/ut">
+      <details key="start" value="367"/>
+      <details key="end" value="383"/>
+      <details key="line" value="13"/>
+    </eAnnotations>
+    <eAnnotations source="positions.12" references="/0/getServiceTaskAfter/p">
+      <details key="start" value="385"/>
+      <details key="end" value="403"/>
+      <details key="line" value="13"/>
+    </eAnnotations>
+    <eAnnotations source="positions.13" references="/0/getServiceTaskAfter/%">
+      <details key="start" value="434"/>
+      <details key="end" value="599"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.14" references="/0/getServiceTaskAfter/%/self">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.15" references="/0/getServiceTaskAfter/%/%">
+      <details key="start" value="447"/>
+      <details key="end" value="489"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.16" references="/0/getServiceTaskAfter/%/%.1">
+      <details key="start" value="496"/>
+      <details key="end" value="572"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.17" references="/0/getServiceTaskAfter/%/%.2">
+      <details key="start" value="579"/>
+      <details key="end" value="594"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.18" references="/0/getServiceTaskAfter/%/%.2/%/ut">
+      <details key="start" value="588"/>
+      <details key="end" value="590"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.19" references="/0/getServiceTaskAfter/%/%.2/%.1/p">
+      <details key="start" value="592"/>
+      <details key="end" value="593"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.20" references="/0/getTasksAfterStart">
+      <details key="start" value="607"/>
+      <details key="end" value="961"/>
+      <details key="line" value="21"/>
+    </eAnnotations>
+    <eAnnotations source="positions.21" references="/0/getTasksAfterStart/p">
+      <details key="start" value="640"/>
+      <details key="end" value="658"/>
+      <details key="line" value="21"/>
+    </eAnnotations>
+    <eAnnotations source="positions.22" references="/0/getTasksAfterStart/%">
+      <details key="start" value="686"/>
+      <details key="end" value="957"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.23" references="/0/getTasksAfterStart/%/select">
+      <details key="start" value="686"/>
+      <details key="end" value="938"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.24" references="/0/getTasksAfterStart/%/select/collect">
+      <details key="start" value="686"/>
+      <details key="end" value="888"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.25" references="/0/getTasksAfterStart/%/select/collect/collect">
+      <details key="start" value="686"/>
+      <details key="end" value="850"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.26" references="/0/getTasksAfterStart/%/select/collect/collect/collect">
+      <details key="start" value="686"/>
+      <details key="end" value="813"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.27" references="/0/getTasksAfterStart/%/select/collect/collect/collect/select">
+      <details key="start" value="686"/>
+      <details key="end" value="756"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.28" references="/0/getTasksAfterStart/%/select/collect/collect/collect/select/%">
+      <details key="start" value="686"/>
+      <details key="end" value="700"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.29" references="/0/getTasksAfterStart/%/select/collect/collect/collect/select/%/p">
+      <details key="start" value="686"/>
+      <details key="end" value="687"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.30" references="/0/getTasksAfterStart/%/select/collect/collect/collect/select/%.1">
+      <details key="start" value="723"/>
+      <details key="end" value="755"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.31" references="/0/getTasksAfterStart/%/select/collect/collect/collect/select/%.1/e">
+      <details key="start" value="723"/>
+      <details key="end" value="724"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.32" references="/0/getTasksAfterStart/%/select/collect/collect/collect/select/%.1/%">
+      <details key="start" value="737"/>
+      <details key="end" value="754"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.33" references="/0/getTasksAfterStart/%/select/collect/collect/collect/select/e">
+      <details key="start" value="719"/>
+      <details key="end" value="720"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.34" references="/0/getTasksAfterStart/%/select/collect/collect/collect/%">
+      <details key="start" value="781"/>
+      <details key="end" value="812"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.35" references="/0/getTasksAfterStart/%/select/collect/collect/collect/%/se">
+      <details key="start" value="781"/>
+      <details key="end" value="783"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.36" references="/0/getTasksAfterStart/%/select/collect/collect/collect/%/%">
+      <details key="start" value="794"/>
+      <details key="end" value="811"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.37" references="/0/getTasksAfterStart/%/select/collect/collect/collect/se">
+      <details key="start" value="776"/>
+      <details key="end" value="778"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.38" references="/0/getTasksAfterStart/%/select/collect/collect/%">
+      <details key="start" value="838"/>
+      <details key="end" value="849"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.39" references="/0/getTasksAfterStart/%/select/collect/collect/%/se">
+      <details key="start" value="838"/>
+      <details key="end" value="840"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.40" references="/0/getTasksAfterStart/%/select/collect/collect/se">
+      <details key="start" value="833"/>
+      <details key="end" value="835"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.41" references="/0/getTasksAfterStart/%/select/collect/%">
+      <details key="start" value="875"/>
+      <details key="end" value="887"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.42" references="/0/getTasksAfterStart/%/select/collect/%/sf">
+      <details key="start" value="875"/>
+      <details key="end" value="877"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.43" references="/0/getTasksAfterStart/%/select/collect/sf">
+      <details key="start" value="870"/>
+      <details key="end" value="872"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.44" references="/0/getTasksAfterStart/%/select/%">
+      <details key="start" value="911"/>
+      <details key="end" value="937"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.45" references="/0/getTasksAfterStart/%/select/%/t">
+      <details key="start" value="911"/>
+      <details key="end" value="912"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.46" references="/0/getTasksAfterStart/%/select/%/%">
+      <details key="start" value="925"/>
+      <details key="end" value="936"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.47" references="/0/getTasksAfterStart/%/select/t">
+      <details key="start" value="907"/>
+      <details key="end" value="908"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.48" references="/0/generate">
+      <details key="start" value="965"/>
+      <details key="end" value="1309"/>
+      <details key="line" value="31"/>
+    </eAnnotations>
+    <eAnnotations source="positions.49" references="/0/generate/%">
+      <details key="start" value="1039"/>
+      <details key="end" value="1296"/>
+      <details key="line" value="33"/>
+    </eAnnotations>
+    <eAnnotations source="positions.50" references="/0/generate/%/%">
+      <details key="start" value="1130"/>
+      <details key="end" value="1288"/>
+      <details key="line" value="34"/>
+    </eAnnotations>
+    <eAnnotations source="positions.51" references="/0/generate/%/%/%">
+      <details key="start" value="1259"/>
+      <details key="end" value="1277"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.52" references="/0/generate/%/%/%/p">
+      <details key="start" value="1275"/>
+      <details key="end" value="1276"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.53" references="/0/generate/%/%/%.1">
+      <details key="start" value="1279"/>
+      <details key="end" value="1281"/>
+      <details key="line" value="36"/>
+    </eAnnotations>
+    <eAnnotations source="positions.54" references="/0/generate/%/%/%.2">
+      <details key="start" value="1137"/>
+      <details key="end" value="1238"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.55" references="/0/generate/%/%/%.2/%">
+      <details key="start" value="1137"/>
+      <details key="end" value="1216"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.56" references="/0/generate/%/%/%.2/%/%">
+      <details key="start" value="1137"/>
+      <details key="end" value="1187"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.57" references="/0/generate/%/%/%.2/%/%/%">
+      <details key="start" value="1137"/>
+      <details key="end" value="1181"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.58" references="/0/generate/%/%/%.2/%/%/%/%">
+      <details key="start" value="1137"/>
+      <details key="end" value="1152"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.59" references="/0/generate/%/%/%.2/%/%/%/%.1">
+      <details key="start" value="1155"/>
+      <details key="end" value="1181"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.60" references="/0/generate/%/%/%.2/%/%/%/%.1/%">
+      <details key="start" value="1155"/>
+      <details key="end" value="1161"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.61" references="/0/generate/%/%/%.2/%/%/%/%.1/%/p">
+      <details key="start" value="1155"/>
+      <details key="end" value="1156"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.62" references="/0/generate/%/%/%.2/%/%/%/%.1/%.1">
+      <details key="start" value="1173"/>
+      <details key="end" value="1176"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.63" references="/0/generate/%/%/%.2/%/%/%/%.1/%.2">
+      <details key="start" value="1178"/>
+      <details key="end" value="1180"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.64" references="/0/generate/%/%/%.2/%/%/%.1">
+      <details key="start" value="1184"/>
+      <details key="end" value="1187"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.65" references="/0/generate/%/%/%.2/%/%.1">
+      <details key="start" value="1190"/>
+      <details key="end" value="1216"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.66" references="/0/generate/%/%/%.2/%/%.1/%">
+      <details key="start" value="1190"/>
+      <details key="end" value="1196"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.67" references="/0/generate/%/%/%.2/%/%.1/%/p">
+      <details key="start" value="1190"/>
+      <details key="end" value="1191"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.68" references="/0/generate/%/%/%.2/%/%.1/%.1">
+      <details key="start" value="1208"/>
+      <details key="end" value="1211"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.69" references="/0/generate/%/%/%.2/%/%.1/%.2">
+      <details key="start" value="1213"/>
+      <details key="end" value="1215"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.70" references="/0/generate/%/%/%.2/%.1">
+      <details key="start" value="1219"/>
+      <details key="end" value="1238"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.71" references="/0/generate/%/%/%.3">
+      <details key="start" value="1247"/>
+      <details key="end" value="1254"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.72" references="/0/generate/%/p">
+      <details key="start" value="1045"/>
+      <details key="end" value="1063"/>
+      <details key="line" value="33"/>
+    </eAnnotations>
+    <eAnnotations source="positions.73" references="/0/generate/%/select">
+      <details key="start" value="1066"/>
+      <details key="end" value="1126"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.74" references="/0/generate/%/select/%">
+      <details key="start" value="1066"/>
+      <details key="end" value="1083"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.75" references="/0/generate/%/select/%/defs">
+      <details key="start" value="1066"/>
+      <details key="end" value="1070"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.76" references="/0/generate/%/select/%.1">
+      <details key="start" value="1096"/>
+      <details key="end" value="1125"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.77" references="/0/generate/%/select/%.1/e">
+      <details key="start" value="1096"/>
+      <details key="end" value="1097"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.78" references="/0/generate/%/select/%.1/%">
+      <details key="start" value="1110"/>
+      <details key="end" value="1124"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.79" references="/0/generate/%/select/e">
+      <details key="start" value="1092"/>
+      <details key="end" value="1093"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.80" references="/0/generate/defs">
+      <details key="start" value="991"/>
+      <details key="end" value="1016"/>
+      <details key="line" value="31"/>
+    </eAnnotations>
+    <eAnnotations source="positions.81" references="/0/generateProcess">
+      <details key="start" value="1313"/>
+      <details key="end" value="3021"/>
+      <details key="line" value="40"/>
+    </eAnnotations>
+    <eAnnotations source="positions.82" references="/0/generateProcess/%">
+      <details key="start" value="1368"/>
+      <details key="end" value="1406"/>
+      <details key="line" value="41"/>
+    </eAnnotations>
+    <eAnnotations source="positions.83" references="/0/generateProcess/%.1">
+      <details key="start" value="1407"/>
+      <details key="end" value="1433"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.84" references="/0/generateProcess/%.1/%">
+      <details key="start" value="1407"/>
+      <details key="end" value="1413"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.85" references="/0/generateProcess/%.1/%/p">
+      <details key="start" value="1407"/>
+      <details key="end" value="1408"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.86" references="/0/generateProcess/%.1/%.1">
+      <details key="start" value="1425"/>
+      <details key="end" value="1428"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.87" references="/0/generateProcess/%.1/%.2">
+      <details key="start" value="1430"/>
+      <details key="end" value="1432"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.88" references="/0/generateProcess/%.2">
+      <details key="start" value="1435"/>
+      <details key="end" value="1548"/>
+      <details key="line" value="43"/>
+    </eAnnotations>
+    <eAnnotations source="positions.89" references="/0/generateProcess/%.3">
+      <details key="start" value="1549"/>
+      <details key="end" value="1575"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.90" references="/0/generateProcess/%.3/%">
+      <details key="start" value="1549"/>
+      <details key="end" value="1555"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.91" references="/0/generateProcess/%.3/%/p">
+      <details key="start" value="1549"/>
+      <details key="end" value="1550"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.92" references="/0/generateProcess/%.3/%.1">
+      <details key="start" value="1567"/>
+      <details key="end" value="1570"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.93" references="/0/generateProcess/%.3/%.2">
+      <details key="start" value="1572"/>
+      <details key="end" value="1574"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.94" references="/0/generateProcess/%.4">
+      <details key="start" value="1577"/>
+      <details key="end" value="1598"/>
+      <details key="line" value="49"/>
+    </eAnnotations>
+    <eAnnotations source="positions.95" references="/0/generateProcess/%.5">
+      <details key="start" value="1599"/>
+      <details key="end" value="1625"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.96" references="/0/generateProcess/%.5/%">
+      <details key="start" value="1599"/>
+      <details key="end" value="1605"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.97" references="/0/generateProcess/%.5/%/p">
+      <details key="start" value="1599"/>
+      <details key="end" value="1600"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.98" references="/0/generateProcess/%.5/%.1">
+      <details key="start" value="1617"/>
+      <details key="end" value="1620"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.99" references="/0/generateProcess/%.5/%.2">
+      <details key="start" value="1622"/>
+      <details key="end" value="1624"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.100" references="/0/generateProcess/%.6">
+      <details key="start" value="1627"/>
+      <details key="end" value="2523"/>
+      <details key="line" value="49"/>
+    </eAnnotations>
+    <eAnnotations source="positions.101" references="/0/generateProcess/%.7">
+      <details key="start" value="2524"/>
+      <details key="end" value="2550"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.102" references="/0/generateProcess/%.7/%">
+      <details key="start" value="2524"/>
+      <details key="end" value="2530"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.103" references="/0/generateProcess/%.7/%/p">
+      <details key="start" value="2524"/>
+      <details key="end" value="2525"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.104" references="/0/generateProcess/%.7/%.1">
+      <details key="start" value="2542"/>
+      <details key="end" value="2545"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.105" references="/0/generateProcess/%.7/%.2">
+      <details key="start" value="2547"/>
+      <details key="end" value="2549"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.106" references="/0/generateProcess/%.8">
+      <details key="start" value="2552"/>
+      <details key="end" value="2563"/>
+      <details key="line" value="80"/>
+    </eAnnotations>
+    <eAnnotations source="positions.107" references="/0/generateProcess/%.9">
+      <details key="start" value="2564"/>
+      <details key="end" value="2592"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.108" references="/0/generateProcess/%.9/p">
+      <details key="start" value="2590"/>
+      <details key="end" value="2591"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.109" references="/0/generateProcess/%.10">
+      <details key="start" value="2594"/>
+      <details key="end" value="2622"/>
+      <details key="line" value="82"/>
+    </eAnnotations>
+    <eAnnotations source="positions.110" references="/0/generateProcess/%.11">
+      <details key="start" value="2623"/>
+      <details key="end" value="2649"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.111" references="/0/generateProcess/%.11/%">
+      <details key="start" value="2623"/>
+      <details key="end" value="2629"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.112" references="/0/generateProcess/%.11/%/p">
+      <details key="start" value="2623"/>
+      <details key="end" value="2624"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.113" references="/0/generateProcess/%.11/%.1">
+      <details key="start" value="2641"/>
+      <details key="end" value="2644"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.114" references="/0/generateProcess/%.11/%.2">
+      <details key="start" value="2646"/>
+      <details key="end" value="2648"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.115" references="/0/generateProcess/%.12">
+      <details key="start" value="2651"/>
+      <details key="end" value="2674"/>
+      <details key="line" value="84"/>
+    </eAnnotations>
+    <eAnnotations source="positions.116" references="/0/generateProcess/%.13">
+      <details key="start" value="2675"/>
+      <details key="end" value="2701"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.117" references="/0/generateProcess/%.13/%">
+      <details key="start" value="2675"/>
+      <details key="end" value="2681"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.118" references="/0/generateProcess/%.13/%/p">
+      <details key="start" value="2675"/>
+      <details key="end" value="2676"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.119" references="/0/generateProcess/%.13/%.1">
+      <details key="start" value="2693"/>
+      <details key="end" value="2696"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.120" references="/0/generateProcess/%.13/%.2">
+      <details key="start" value="2698"/>
+      <details key="end" value="2700"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.121" references="/0/generateProcess/%.14">
+      <details key="start" value="2703"/>
+      <details key="end" value="2714"/>
+      <details key="line" value="84"/>
+    </eAnnotations>
+    <eAnnotations source="positions.122" references="/0/generateProcess/%.15">
+      <details key="start" value="2715"/>
+      <details key="end" value="2748"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.123" references="/0/generateProcess/%.15/p">
+      <details key="start" value="2746"/>
+      <details key="end" value="2747"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.124" references="/0/generateProcess/%.16">
+      <details key="start" value="2750"/>
+      <details key="end" value="2847"/>
+      <details key="line" value="86"/>
+    </eAnnotations>
+    <eAnnotations source="positions.125" references="/0/generateProcess/%.17">
+      <details key="start" value="2848"/>
+      <details key="end" value="2874"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.126" references="/0/generateProcess/%.17/%">
+      <details key="start" value="2848"/>
+      <details key="end" value="2854"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.127" references="/0/generateProcess/%.17/%/p">
+      <details key="start" value="2848"/>
+      <details key="end" value="2849"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.128" references="/0/generateProcess/%.17/%.1">
+      <details key="start" value="2866"/>
+      <details key="end" value="2869"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.129" references="/0/generateProcess/%.17/%.2">
+      <details key="start" value="2871"/>
+      <details key="end" value="2873"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.130" references="/0/generateProcess/%.18">
+      <details key="start" value="2876"/>
+      <details key="end" value="2884"/>
+      <details key="line" value="90"/>
+    </eAnnotations>
+    <eAnnotations source="positions.131" references="/0/generateProcess/%.19">
+      <details key="start" value="2885"/>
+      <details key="end" value="2911"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.132" references="/0/generateProcess/%.19/%">
+      <details key="start" value="2885"/>
+      <details key="end" value="2891"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.133" references="/0/generateProcess/%.19/%/p">
+      <details key="start" value="2885"/>
+      <details key="end" value="2886"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.134" references="/0/generateProcess/%.19/%.1">
+      <details key="start" value="2903"/>
+      <details key="end" value="2906"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.135" references="/0/generateProcess/%.19/%.2">
+      <details key="start" value="2908"/>
+      <details key="end" value="2910"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.136" references="/0/generateProcess/%.20">
+      <details key="start" value="2913"/>
+      <details key="end" value="2927"/>
+      <details key="line" value="90"/>
+    </eAnnotations>
+    <eAnnotations source="positions.137" references="/0/generateProcess/%.21">
+      <details key="start" value="2928"/>
+      <details key="end" value="2954"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.138" references="/0/generateProcess/%.21/%">
+      <details key="start" value="2928"/>
+      <details key="end" value="2934"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.139" references="/0/generateProcess/%.21/%/p">
+      <details key="start" value="2928"/>
+      <details key="end" value="2929"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.140" references="/0/generateProcess/%.21/%.1">
+      <details key="start" value="2946"/>
+      <details key="end" value="2949"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.141" references="/0/generateProcess/%.21/%.2">
+      <details key="start" value="2951"/>
+      <details key="end" value="2953"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.142" references="/0/generateProcess/%.22">
+      <details key="start" value="2956"/>
+      <details key="end" value="2974"/>
+      <details key="line" value="90"/>
+    </eAnnotations>
+    <eAnnotations source="positions.143" references="/0/generateProcess/%.23">
+      <details key="start" value="2975"/>
+      <details key="end" value="3003"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.144" references="/0/generateProcess/%.23/p">
+      <details key="start" value="3001"/>
+      <details key="end" value="3002"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.145" references="/0/generateProcess/%.24">
+      <details key="start" value="3005"/>
+      <details key="end" value="3008"/>
+      <details key="line" value="93"/>
+    </eAnnotations>
+    <eAnnotations source="positions.146" references="/0/generateProcess/p">
+      <details key="start" value="1346"/>
+      <details key="end" value="1364"/>
+      <details key="line" value="40"/>
+    </eAnnotations>
+    <eAnnotations source="positions.147" references="/0/generateServiceSignatures">
+      <details key="start" value="3025"/>
+      <details key="end" value="3280"/>
+      <details key="line" value="96"/>
+    </eAnnotations>
+    <eAnnotations source="positions.148" references="/0/generateServiceSignatures/%">
+      <details key="start" value="3090"/>
+      <details key="end" value="3267"/>
+      <details key="line" value="97"/>
+    </eAnnotations>
+    <eAnnotations source="positions.149" references="/0/generateServiceSignatures/%/%">
+      <details key="start" value="3172"/>
+      <details key="end" value="3185"/>
+      <details key="line" value="98"/>
+    </eAnnotations>
+    <eAnnotations source="positions.150" references="/0/generateServiceSignatures/%/%.1">
+      <details key="start" value="3186"/>
+      <details key="end" value="3212"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.151" references="/0/generateServiceSignatures/%/%.1/%">
+      <details key="start" value="3186"/>
+      <details key="end" value="3192"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.152" references="/0/generateServiceSignatures/%/%.1/%/t">
+      <details key="start" value="3186"/>
+      <details key="end" value="3187"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.153" references="/0/generateServiceSignatures/%/%.1/%.1">
+      <details key="start" value="3204"/>
+      <details key="end" value="3207"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.154" references="/0/generateServiceSignatures/%/%.1/%.2">
+      <details key="start" value="3209"/>
+      <details key="end" value="3211"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.155" references="/0/generateServiceSignatures/%/%.2">
+      <details key="start" value="3214"/>
+      <details key="end" value="3261"/>
+      <details key="line" value="98"/>
+    </eAnnotations>
+    <eAnnotations source="positions.156" references="/0/generateServiceSignatures/%/t">
+      <details key="start" value="3096"/>
+      <details key="end" value="3111"/>
+      <details key="line" value="97"/>
+    </eAnnotations>
+    <eAnnotations source="positions.157" references="/0/generateServiceSignatures/%/select">
+      <details key="start" value="3114"/>
+      <details key="end" value="3168"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.158" references="/0/generateServiceSignatures/%/select/%">
+      <details key="start" value="3114"/>
+      <details key="end" value="3128"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.159" references="/0/generateServiceSignatures/%/select/%/p">
+      <details key="start" value="3114"/>
+      <details key="end" value="3115"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.160" references="/0/generateServiceSignatures/%/select/%.1">
+      <details key="start" value="3141"/>
+      <details key="end" value="3167"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.161" references="/0/generateServiceSignatures/%/select/%.1/e">
+      <details key="start" value="3141"/>
+      <details key="end" value="3142"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.162" references="/0/generateServiceSignatures/%/select/%.1/%">
+      <details key="start" value="3155"/>
+      <details key="end" value="3166"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.163" references="/0/generateServiceSignatures/%/select/e">
+      <details key="start" value="3137"/>
+      <details key="end" value="3138"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.164" references="/0/generateServiceSignatures/p">
+      <details key="start" value="3068"/>
+      <details key="end" value="3086"/>
+      <details key="line" value="96"/>
+    </eAnnotations>
+    <eAnnotations source="positions.165" references="/0/generateServiceImplementations">
+      <details key="start" value="3284"/>
+      <details key="end" value="3769"/>
+      <details key="line" value="102"/>
+    </eAnnotations>
+    <eAnnotations source="positions.166" references="/0/generateServiceImplementations/%">
+      <details key="start" value="3354"/>
+      <details key="end" value="3756"/>
+      <details key="line" value="103"/>
+    </eAnnotations>
+    <eAnnotations source="positions.167" references="/0/generateServiceImplementations/%/%">
+      <details key="start" value="3436"/>
+      <details key="end" value="3469"/>
+      <details key="line" value="104"/>
+    </eAnnotations>
+    <eAnnotations source="positions.168" references="/0/generateServiceImplementations/%/%.1">
+      <details key="start" value="3470"/>
+      <details key="end" value="3496"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.169" references="/0/generateServiceImplementations/%/%.1/%">
+      <details key="start" value="3470"/>
+      <details key="end" value="3476"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.170" references="/0/generateServiceImplementations/%/%.1/%/t">
+      <details key="start" value="3470"/>
+      <details key="end" value="3471"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.171" references="/0/generateServiceImplementations/%/%.1/%.1">
+      <details key="start" value="3488"/>
+      <details key="end" value="3491"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.172" references="/0/generateServiceImplementations/%/%.1/%.2">
+      <details key="start" value="3493"/>
+      <details key="end" value="3495"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.173" references="/0/generateServiceImplementations/%/%.2">
+      <details key="start" value="3498"/>
+      <details key="end" value="3583"/>
+      <details key="line" value="105"/>
+    </eAnnotations>
+    <eAnnotations source="positions.174" references="/0/generateServiceImplementations/%/%.3">
+      <details key="start" value="3584"/>
+      <details key="end" value="3590"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.175" references="/0/generateServiceImplementations/%/%.3/t">
+      <details key="start" value="3584"/>
+      <details key="end" value="3585"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.176" references="/0/generateServiceImplementations/%/%.4">
+      <details key="start" value="3592"/>
+      <details key="end" value="3651"/>
+      <details key="line" value="107"/>
+    </eAnnotations>
+    <eAnnotations source="positions.177" references="/0/generateServiceImplementations/%/%.5">
+      <details key="start" value="3652"/>
+      <details key="end" value="3678"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.178" references="/0/generateServiceImplementations/%/%.5/%">
+      <details key="start" value="3652"/>
+      <details key="end" value="3658"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.179" references="/0/generateServiceImplementations/%/%.5/%/t">
+      <details key="start" value="3652"/>
+      <details key="end" value="3653"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.180" references="/0/generateServiceImplementations/%/%.5/%.1">
+      <details key="start" value="3670"/>
+      <details key="end" value="3673"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.181" references="/0/generateServiceImplementations/%/%.5/%.2">
+      <details key="start" value="3675"/>
+      <details key="end" value="3677"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.182" references="/0/generateServiceImplementations/%/%.6">
+      <details key="start" value="3681"/>
+      <details key="end" value="3726"/>
+      <details key="line" value="107"/>
+    </eAnnotations>
+    <eAnnotations source="positions.183" references="/0/generateServiceImplementations/%/%.7">
+      <details key="start" value="3727"/>
+      <details key="end" value="3733"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.184" references="/0/generateServiceImplementations/%/%.7/t">
+      <details key="start" value="3727"/>
+      <details key="end" value="3728"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.185" references="/0/generateServiceImplementations/%/%.8">
+      <details key="start" value="3735"/>
+      <details key="end" value="3750"/>
+      <details key="line" value="108"/>
+    </eAnnotations>
+    <eAnnotations source="positions.186" references="/0/generateServiceImplementations/%/t">
+      <details key="start" value="3360"/>
+      <details key="end" value="3375"/>
+      <details key="line" value="103"/>
+    </eAnnotations>
+    <eAnnotations source="positions.187" references="/0/generateServiceImplementations/%/select">
+      <details key="start" value="3378"/>
+      <details key="end" value="3432"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.188" references="/0/generateServiceImplementations/%/select/%">
+      <details key="start" value="3378"/>
+      <details key="end" value="3392"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.189" references="/0/generateServiceImplementations/%/select/%/p">
+      <details key="start" value="3378"/>
+      <details key="end" value="3379"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.190" references="/0/generateServiceImplementations/%/select/%.1">
+      <details key="start" value="3405"/>
+      <details key="end" value="3431"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.191" references="/0/generateServiceImplementations/%/select/%.1/e">
+      <details key="start" value="3405"/>
+      <details key="end" value="3406"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.192" references="/0/generateServiceImplementations/%/select/%.1/%">
+      <details key="start" value="3419"/>
+      <details key="end" value="3430"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.193" references="/0/generateServiceImplementations/%/select/e">
+      <details key="start" value="3401"/>
+      <details key="end" value="3402"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.194" references="/0/generateServiceImplementations/p">
+      <details key="start" value="3332"/>
+      <details key="end" value="3350"/>
+      <details key="line" value="102"/>
+    </eAnnotations>
+    <eAnnotations source="positions.195" references="/0/generateUserTaskResources">
+      <details key="start" value="3773"/>
+      <details key="end" value="5446"/>
+      <details key="line" value="114"/>
+    </eAnnotations>
+    <eAnnotations source="positions.196" references="/0/generateUserTaskResources/%">
+      <details key="start" value="3838"/>
+      <details key="end" value="3840"/>
+      <details key="line" value="115"/>
+    </eAnnotations>
+    <eAnnotations source="positions.197" references="/0/generateUserTaskResources/%.1">
+      <details key="start" value="3840"/>
+      <details key="end" value="5433"/>
+      <details key="line" value="116"/>
+    </eAnnotations>
+    <eAnnotations source="positions.198" references="/0/generateUserTaskResources/%.1/%">
+      <details key="start" value="4060"/>
+      <details key="end" value="4083"/>
+      <details key="line" value="123"/>
+    </eAnnotations>
+    <eAnnotations source="positions.199" references="/0/generateUserTaskResources/%.1/%.1">
+      <details key="start" value="4084"/>
+      <details key="end" value="4111"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.200" references="/0/generateUserTaskResources/%.1/%.1/%">
+      <details key="start" value="4084"/>
+      <details key="end" value="4091"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.201" references="/0/generateUserTaskResources/%.1/%.1/%/ut">
+      <details key="start" value="4084"/>
+      <details key="end" value="4086"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.202" references="/0/generateUserTaskResources/%.1/%.1/%.1">
+      <details key="start" value="4103"/>
+      <details key="end" value="4106"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.203" references="/0/generateUserTaskResources/%.1/%.1/%.2">
+      <details key="start" value="4108"/>
+      <details key="end" value="4110"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.204" references="/0/generateUserTaskResources/%.1/%.2">
+      <details key="start" value="4113"/>
+      <details key="end" value="4148"/>
+      <details key="line" value="123"/>
+    </eAnnotations>
+    <eAnnotations source="positions.205" references="/0/generateUserTaskResources/%.1/%.3">
+      <details key="start" value="4149"/>
+      <details key="end" value="4176"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.206" references="/0/generateUserTaskResources/%.1/%.3/%">
+      <details key="start" value="4149"/>
+      <details key="end" value="4156"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.207" references="/0/generateUserTaskResources/%.1/%.3/%/ut">
+      <details key="start" value="4149"/>
+      <details key="end" value="4151"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.208" references="/0/generateUserTaskResources/%.1/%.3/%.1">
+      <details key="start" value="4168"/>
+      <details key="end" value="4171"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.209" references="/0/generateUserTaskResources/%.1/%.3/%.2">
+      <details key="start" value="4173"/>
+      <details key="end" value="4175"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.210" references="/0/generateUserTaskResources/%.1/%.4">
+      <details key="start" value="4178"/>
+      <details key="end" value="4258"/>
+      <details key="line" value="124"/>
+    </eAnnotations>
+    <eAnnotations source="positions.211" references="/0/generateUserTaskResources/%.1/%.5">
+      <details key="start" value="4260"/>
+      <details key="end" value="5089"/>
+      <details key="line" value="127"/>
+    </eAnnotations>
+    <eAnnotations source="positions.212" references="/0/generateUserTaskResources/%.1/%.5/%">
+      <details key="start" value="4304"/>
+      <details key="end" value="4484"/>
+      <details key="line" value="128"/>
+    </eAnnotations>
+    <eAnnotations source="positions.213" references="/0/generateUserTaskResources/%.1/%.5/%.1">
+      <details key="start" value="4264"/>
+      <details key="end" value="4301"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.214" references="/0/generateUserTaskResources/%.1/%.5/%.1/%">
+      <details key="start" value="4265"/>
+      <details key="end" value="4286"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.215" references="/0/generateUserTaskResources/%.1/%.5/%.1/%/p">
+      <details key="start" value="4284"/>
+      <details key="end" value="4285"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.216" references="/0/generateUserTaskResources/%.1/%.5/%.1/ut">
+      <details key="start" value="4297"/>
+      <details key="end" value="4299"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.217" references="/0/generateUserTaskResources/%.1/%.5/%.2">
+      <details key="start" value="4486"/>
+      <details key="end" value="5084"/>
+      <details key="line" value="131"/>
+    </eAnnotations>
+    <eAnnotations source="positions.218" references="/0/generateUserTaskResources/%.1/%.5/%.2/%">
+      <details key="start" value="4494"/>
+      <details key="end" value="4939"/>
+      <details key="line" value="132"/>
+    </eAnnotations>
+    <eAnnotations source="positions.219" references="/0/generateUserTaskResources/%.1/%.5/%.2/%.1">
+      <details key="start" value="4940"/>
+      <details key="end" value="4960"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.220" references="/0/generateUserTaskResources/%.1/%.5/%.2/%.1/ut">
+      <details key="start" value="4954"/>
+      <details key="end" value="4956"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.221" references="/0/generateUserTaskResources/%.1/%.5/%.2/%.1/p">
+      <details key="start" value="4958"/>
+      <details key="end" value="4959"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.222" references="/0/generateUserTaskResources/%.1/%.5/%.2/%.2">
+      <details key="start" value="4962"/>
+      <details key="end" value="5022"/>
+      <details key="line" value="143"/>
+    </eAnnotations>
+    <eAnnotations source="positions.223" references="/0/generateUserTaskResources/%.1/%.5/%.2/%.3">
+      <details key="start" value="5023"/>
+      <details key="end" value="5030"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.224" references="/0/generateUserTaskResources/%.1/%.5/%.2/%.3/ut">
+      <details key="start" value="5023"/>
+      <details key="end" value="5025"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.225" references="/0/generateUserTaskResources/%.1/%.5/%.2/%.4">
+      <details key="start" value="5033"/>
+      <details key="end" value="5082"/>
+      <details key="line" value="145"/>
+    </eAnnotations>
+    <eAnnotations source="positions.226" references="/0/generateUserTaskResources/%.1/%.6">
+      <details key="start" value="5091"/>
+      <details key="end" value="5149"/>
+      <details key="line" value="150"/>
+    </eAnnotations>
+    <eAnnotations source="positions.227" references="/0/generateUserTaskResources/%.1/%.7">
+      <details key="start" value="5150"/>
+      <details key="end" value="5177"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.228" references="/0/generateUserTaskResources/%.1/%.7/%">
+      <details key="start" value="5150"/>
+      <details key="end" value="5157"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.229" references="/0/generateUserTaskResources/%.1/%.7/%/ut">
+      <details key="start" value="5150"/>
+      <details key="end" value="5152"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.230" references="/0/generateUserTaskResources/%.1/%.7/%.1">
+      <details key="start" value="5169"/>
+      <details key="end" value="5172"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.231" references="/0/generateUserTaskResources/%.1/%.7/%.2">
+      <details key="start" value="5174"/>
+      <details key="end" value="5176"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.232" references="/0/generateUserTaskResources/%.1/%.8">
+      <details key="start" value="5180"/>
+      <details key="end" value="5188"/>
+      <details key="line" value="151"/>
+    </eAnnotations>
+    <eAnnotations source="positions.233" references="/0/generateUserTaskResources/%.1/%.9">
+      <details key="start" value="5189"/>
+      <details key="end" value="5215"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.234" references="/0/generateUserTaskResources/%.1/%.9/%">
+      <details key="start" value="5189"/>
+      <details key="end" value="5195"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.235" references="/0/generateUserTaskResources/%.1/%.9/%/p">
+      <details key="start" value="5189"/>
+      <details key="end" value="5190"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.236" references="/0/generateUserTaskResources/%.1/%.9/%.1">
+      <details key="start" value="5207"/>
+      <details key="end" value="5210"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.237" references="/0/generateUserTaskResources/%.1/%.9/%.2">
+      <details key="start" value="5212"/>
+      <details key="end" value="5214"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.238" references="/0/generateUserTaskResources/%.1/%.10">
+      <details key="start" value="5217"/>
+      <details key="end" value="5225"/>
+      <details key="line" value="152"/>
+    </eAnnotations>
+    <eAnnotations source="positions.239" references="/0/generateUserTaskResources/%.1/%.11">
+      <details key="start" value="5226"/>
+      <details key="end" value="5253"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.240" references="/0/generateUserTaskResources/%.1/%.11/%">
+      <details key="start" value="5226"/>
+      <details key="end" value="5233"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.241" references="/0/generateUserTaskResources/%.1/%.11/%/ut">
+      <details key="start" value="5226"/>
+      <details key="end" value="5228"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.242" references="/0/generateUserTaskResources/%.1/%.11/%.1">
+      <details key="start" value="5245"/>
+      <details key="end" value="5248"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.243" references="/0/generateUserTaskResources/%.1/%.11/%.2">
+      <details key="start" value="5250"/>
+      <details key="end" value="5252"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.244" references="/0/generateUserTaskResources/%.1/%.12">
+      <details key="start" value="5256"/>
+      <details key="end" value="5285"/>
+      <details key="line" value="152"/>
+    </eAnnotations>
+    <eAnnotations source="positions.245" references="/0/generateUserTaskResources/%.1/%.13">
+      <details key="start" value="5286"/>
+      <details key="end" value="5306"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.246" references="/0/generateUserTaskResources/%.1/%.13/ut">
+      <details key="start" value="5300"/>
+      <details key="end" value="5302"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.247" references="/0/generateUserTaskResources/%.1/%.13/p">
+      <details key="start" value="5304"/>
+      <details key="end" value="5305"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.248" references="/0/generateUserTaskResources/%.1/%.14">
+      <details key="start" value="5308"/>
+      <details key="end" value="5374"/>
+      <details key="line" value="154"/>
+    </eAnnotations>
+    <eAnnotations source="positions.249" references="/0/generateUserTaskResources/%.1/%.15">
+      <details key="start" value="5375"/>
+      <details key="end" value="5382"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.250" references="/0/generateUserTaskResources/%.1/%.15/ut">
+      <details key="start" value="5375"/>
+      <details key="end" value="5377"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.251" references="/0/generateUserTaskResources/%.1/%.16">
+      <details key="start" value="5384"/>
+      <details key="end" value="5427"/>
+      <details key="line" value="156"/>
+    </eAnnotations>
+    <eAnnotations source="positions.252" references="/0/generateUserTaskResources/%.1/ut">
+      <details key="start" value="3846"/>
+      <details key="end" value="3862"/>
+      <details key="line" value="116"/>
+    </eAnnotations>
+    <eAnnotations source="positions.253" references="/0/generateUserTaskResources/%.1/collect">
+      <details key="start" value="3871"/>
+      <details key="end" value="4054"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.254" references="/0/generateUserTaskResources/%.1/collect/%">
+      <details key="start" value="3871"/>
+      <details key="end" value="4005"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.255" references="/0/generateUserTaskResources/%.1/collect/%/%">
+      <details key="start" value="3871"/>
+      <details key="end" value="3979"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.256" references="/0/generateUserTaskResources/%.1/collect/%/%/select">
+      <details key="start" value="3871"/>
+      <details key="end" value="3939"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.257" references="/0/generateUserTaskResources/%.1/collect/%/%/select/%">
+      <details key="start" value="3871"/>
+      <details key="end" value="3885"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.258" references="/0/generateUserTaskResources/%.1/collect/%/%/select/%/p">
+      <details key="start" value="3871"/>
+      <details key="end" value="3872"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.259" references="/0/generateUserTaskResources/%.1/collect/%/%/select/%.1">
+      <details key="start" value="3908"/>
+      <details key="end" value="3938"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.260" references="/0/generateUserTaskResources/%.1/collect/%/%/select/%.1/e">
+      <details key="start" value="3908"/>
+      <details key="end" value="3909"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.261" references="/0/generateUserTaskResources/%.1/collect/%/%/select/%.1/%">
+      <details key="start" value="3922"/>
+      <details key="end" value="3937"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.262" references="/0/generateUserTaskResources/%.1/collect/%/%/select/e">
+      <details key="start" value="3904"/>
+      <details key="end" value="3905"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.263" references="/0/generateUserTaskResources/%.1/collect/%/%/%">
+      <details key="start" value="3957"/>
+      <details key="end" value="3978"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.264" references="/0/generateUserTaskResources/%.1/collect/%/%/%/p">
+      <details key="start" value="3976"/>
+      <details key="end" value="3977"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.265" references="/0/generateUserTaskResources/%.1/collect/%.1">
+      <details key="start" value="4029"/>
+      <details key="end" value="4053"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.266" references="/0/generateUserTaskResources/%.1/collect/%.1/e">
+      <details key="start" value="4029"/>
+      <details key="end" value="4030"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.267" references="/0/generateUserTaskResources/%.1/collect/%.1/%">
+      <details key="start" value="4041"/>
+      <details key="end" value="4052"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.268" references="/0/generateUserTaskResources/%.1/collect/e">
+      <details key="start" value="4025"/>
+      <details key="end" value="4026"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.269" references="/0/generateUserTaskResources/p">
+      <details key="start" value="3816"/>
+      <details key="end" value="3834"/>
+      <details key="line" value="114"/>
+    </eAnnotations>
+    <eAnnotations source="positions.270" references="/0/traversePrior">
+      <details key="start" value="5450"/>
+      <details key="end" value="5655"/>
+      <details key="line" value="163"/>
+    </eAnnotations>
+    <eAnnotations source="positions.271" references="/0/traversePrior/%">
+      <details key="start" value="5521"/>
+      <details key="end" value="5642"/>
+      <details key="line" value="164"/>
+    </eAnnotations>
+    <eAnnotations source="positions.272" references="/0/traversePrior/%/%">
+      <details key="start" value="5572"/>
+      <details key="end" value="5598"/>
+      <details key="line" value="165"/>
+    </eAnnotations>
+    <eAnnotations source="positions.273" references="/0/traversePrior/%/%.1">
+      <details key="start" value="5599"/>
+      <details key="end" value="5629"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.274" references="/0/traversePrior/%/%.1/%">
+      <details key="start" value="5599"/>
+      <details key="end" value="5609"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.275" references="/0/traversePrior/%/%.1/%/prior">
+      <details key="start" value="5599"/>
+      <details key="end" value="5604"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.276" references="/0/traversePrior/%/%.1/%.1">
+      <details key="start" value="5621"/>
+      <details key="end" value="5624"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.277" references="/0/traversePrior/%/%.1/%.2">
+      <details key="start" value="5626"/>
+      <details key="end" value="5628"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.278" references="/0/traversePrior/%/%.2">
+      <details key="start" value="5632"/>
+      <details key="end" value="5636"/>
+      <details key="line" value="165"/>
+    </eAnnotations>
+    <eAnnotations source="positions.279" references="/0/traversePrior/%/prior">
+      <details key="start" value="5527"/>
+      <details key="end" value="5550"/>
+      <details key="line" value="164"/>
+    </eAnnotations>
+    <eAnnotations source="positions.280" references="/0/traversePrior/%/%.3">
+      <details key="start" value="5553"/>
+      <details key="end" value="5568"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.281" references="/0/traversePrior/%/%.3/ut">
+      <details key="start" value="5562"/>
+      <details key="end" value="5564"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.282" references="/0/traversePrior/%/%.3/p">
+      <details key="start" value="5566"/>
+      <details key="end" value="5567"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.283" references="/0/traversePrior/ut">
+      <details key="start" value="5481"/>
+      <details key="end" value="5497"/>
+      <details key="line" value="163"/>
+    </eAnnotations>
+    <eAnnotations source="positions.284" references="/0/traversePrior/p">
+      <details key="start" value="5499"/>
+      <details key="end" value="5517"/>
+      <details key="line" value="163"/>
+    </eAnnotations>
+    <eAnnotations source="positions.285" references="/0/traverseAfter">
+      <details key="start" value="5659"/>
+      <details key="end" value="5907"/>
+      <details key="line" value="169"/>
+    </eAnnotations>
+    <eAnnotations source="positions.286" references="/0/traverseAfter/%">
+      <details key="start" value="5730"/>
+      <details key="end" value="5894"/>
+      <details key="line" value="170"/>
+    </eAnnotations>
+    <eAnnotations source="positions.287" references="/0/traverseAfter/%/%">
+      <details key="start" value="5790"/>
+      <details key="end" value="5816"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.288" references="/0/traverseAfter/%/%/%">
+      <details key="start" value="5790"/>
+      <details key="end" value="5796"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.289" references="/0/traverseAfter/%/%/%/p">
+      <details key="start" value="5790"/>
+      <details key="end" value="5791"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.290" references="/0/traverseAfter/%/%/%.1">
+      <details key="start" value="5808"/>
+      <details key="end" value="5811"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.291" references="/0/traverseAfter/%/%/%.2">
+      <details key="start" value="5813"/>
+      <details key="end" value="5815"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.292" references="/0/traverseAfter/%/%.1">
+      <details key="start" value="5818"/>
+      <details key="end" value="5826"/>
+      <details key="line" value="171"/>
+    </eAnnotations>
+    <eAnnotations source="positions.293" references="/0/traverseAfter/%/%.2">
+      <details key="start" value="5827"/>
+      <details key="end" value="5858"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.294" references="/0/traverseAfter/%/%.2/%">
+      <details key="start" value="5827"/>
+      <details key="end" value="5838"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.295" references="/0/traverseAfter/%/%.2/%/afterr">
+      <details key="start" value="5827"/>
+      <details key="end" value="5833"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.296" references="/0/traverseAfter/%/%.2/%.1">
+      <details key="start" value="5850"/>
+      <details key="end" value="5853"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.297" references="/0/traverseAfter/%/%.2/%.2">
+      <details key="start" value="5855"/>
+      <details key="end" value="5857"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.298" references="/0/traverseAfter/%/%.3">
+      <details key="start" value="5861"/>
+      <details key="end" value="5888"/>
+      <details key="line" value="171"/>
+    </eAnnotations>
+    <eAnnotations source="positions.299" references="/0/traverseAfter/%/afterr">
+      <details key="start" value="5736"/>
+      <details key="end" value="5756"/>
+      <details key="line" value="170"/>
+    </eAnnotations>
+    <eAnnotations source="positions.300" references="/0/traverseAfter/%/%.4">
+      <details key="start" value="5759"/>
+      <details key="end" value="5785"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.301" references="/0/traverseAfter/%/%.4/ut">
+      <details key="start" value="5779"/>
+      <details key="end" value="5781"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.302" references="/0/traverseAfter/%/%.4/p">
+      <details key="start" value="5783"/>
+      <details key="end" value="5784"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.303" references="/0/traverseAfter/ut">
+      <details key="start" value="5690"/>
+      <details key="end" value="5706"/>
+      <details key="line" value="169"/>
+    </eAnnotations>
+    <eAnnotations source="positions.304" references="/0/traverseAfter/p">
+      <details key="start" value="5708"/>
+      <details key="end" value="5726"/>
+      <details key="line" value="169"/>
+    </eAnnotations>
+  </ecore:EAnnotation>
+</xmi:XMI>
