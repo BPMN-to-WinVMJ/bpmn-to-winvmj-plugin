@@ -7,18 +7,22 @@
    <description>
       Plugin for PRICES IDE to generate BPMN Diagrams and parse them into WinVMJ applications.
    </description>
-   
+
    <copyright>
       Copyright © 2024 PricesIDE. All rights reserved.
    </copyright>
-   
+
    <license url="https://opensource.org/licenses/MIT">
       MIT License - See LICENSE file for details.
    </license>
-   
+
    <plugin
-         id="bpmn.to.winvmj.plugin"
-         version="0.0.0"
-         unpack="false"/>
+     id="bpmn.to.winvmj.plugin"
+     version="1.0.0.qualifier"
+     unpack="false"/>
+   <plugin
+     id="bpmn.to.winvmj.acceleo"
+     version="1.0.0.qualifier"
+     unpack="false"/>
 
 </feature>
