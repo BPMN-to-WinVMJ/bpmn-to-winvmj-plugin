@@ -27,4 +27,5 @@ Eclipse-LazyStart: true
 Export-Package: bpmn.to.winvmj.acceleo,
  bpmn.to.winvmj.acceleo.java,
  bpmn.to.winvmj.acceleo.java.model
-Bundle-ClassPath: .
+Bundle-ClassPath: .,\
+ bin/
