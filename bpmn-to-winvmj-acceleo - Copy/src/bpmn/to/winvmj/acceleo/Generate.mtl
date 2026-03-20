@@ -2,7 +2,7 @@
     'http://www.omg.org/spec/BPMN/20100524/MODEL',
 )]
 
-[query public getPrior(ut : bpmn2::Task, p : bpmn2::Process) : Sequence(bpmn2::FlowNode) =
+[query public getPrior(ut : bpmn2::Task, p : bpmn2::Process) : String =
   invoke(
     'bpmn.to.winvmj.acceleo.java.GenerateUtil',
     'getPrior(org.eclipse.bpmn2.UserTask, org.eclipse.bpmn2.Process)',
@@ -10,43 +10,41 @@
   )
 /]
 
-[query public getServiceTaskAfter(ut : bpmn2::Task, p : bpmn2::Process) : Sequence(bpmn2::Task) =
+[query public getServiceTaskAfter(ut : bpmn2::Task, p : bpmn2::Process, bpmnName : String) : String =
   invoke(
     'bpmn.to.winvmj.acceleo.java.GenerateUtil',
-    'getServiceTaskAfter(org.eclipse.bpmn2.UserTask, org.eclipse.bpmn2.Process)',
-    Sequence{ut, p}
+    'getServiceTaskAfter(org.eclipse.bpmn2.Task, org.eclipse.bpmn2.Process, java.lang.String)',
+    Sequence{ut, p, bpmnName}
   )
 /]
 
-[query public getTasksAfterStart(p : bpmn2::Process) : Set(bpmn2::Task) =
-    p.flowElements
-        ->select(e | e.oclIsKindOf(bpmn2::StartEvent))
-        ->collect(se | se.oclAsType(bpmn2::StartEvent))
-        ->collect(se | se.outgoing)
-        ->collect(sf | sf.targetRef)
-        ->select(t | t.oclIsKindOf(bpmn2::Task))
-        ->asSet()
+[query public getTasksAfterStart(e: bpmn2::StartEvent, p : bpmn2::Process, unwrap : Boolean) : Set(bpmn2::Task) =
+    invoke(
+    'bpmn.to.winvmj.acceleo.java.GenerateUtil',
+    'traverseForward(org.eclipse.bpmn2.FlowNode, org.eclipse.bpmn2.Process, java.lang.Boolean)',
+    Sequence{e, p, unwrap}
+  )
 /]
 
-[template public generate(defs : bpmn2::Definitions)]
+[template public generate(defs : bpmn2::Definitions, fileName : String)]
 [comment @main /]
 [for (p : bpmn2::Process | defs.rootElements->select(e | e.oclIsKindOf(bpmn2::Process)))]
-[file ('bpmn/product/' + p.name.replaceAll(' ', '') + '/' + p.name.replaceAll(' ', '') + 'ResourceImpl.java', false, 'UTF-8')]
-[generateProcess(p)/]
+[file ('bpmn/product/' + fileName.toUpperFirst().replaceAll(' ', '') + '/' +fileName.toUpperFirst().replaceAll(' ', '') + 'ResourceImpl.java', false, 'UTF-8')]
+[generateProcess(p, fileName.toUpperFirst())/]
 [/file]
 [/for]
 [/template]
 
-[template public generateProcess(p : bpmn2::Process)]
-// @generated
+[template public generateProcess(p : bpmn2::Process, fileName : String)]
+// @generated from [fileName /].bpmn2
 
-package bpmn.product.[p.name.replaceAll(' ', '')/];
+package bpmn.product.[fileName.replaceAll(' ', '')/];
 
 import java.util.*;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.Route;
 
-public class [p.name.replaceAll(' ', '')/]ResourceImpl extends [p.name.replaceAll(' ', '')/]Component {
+public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.replaceAll(' ', '')/]Component {
 
     static class ProcessInstance {
         String id;
@@ -77,19 +75,18 @@ public class [p.name.replaceAll(' ', '')/]ResourceImpl extends [p.name.replaceAl
         }
     }
 
-    static interface [p.name.replaceAll(' ', '')/]Service {
+    static interface [fileName.replaceAll(' ', '')/]Service {
 [generateServiceSignatures(p)/]
     }
 
-    static class [p.name.replaceAll(' ', '')/]ServiceImpl implements [p.name.replaceAll(' ', '')/]Service {
+    static class [fileName.replaceAll(' ', '')/]ServiceImpl implements [fileName.replaceAll(' ', '')/]Service {
 [generateServiceImplementations(p)/]
     }
 
     private ProcessService processService = new ProcessServiceImpl();
-    
-	private [p.name.replaceAll(' ', '')/]Service [p.name.replaceAll(' ', '')/]Service = new [p.name.replaceAll(' ', '')/]ServiceImpl();
+	private [fileName.replaceAll(' ', '')/]Service [fileName.replaceAll(' ', '').toLower()/]Service = new [fileName.replaceAll(' ', '')/]ServiceImpl();
 
-[generateUserTaskResources(p)/]
+[generateUserTaskResources(p, fileName)/]
 }
 [/template]
 
@@ -111,12 +108,12 @@ public class [p.name.replaceAll(' ', '')/]ResourceImpl extends [p.name.replaceAl
 [/for]
 [/template]
 
-[template public generateUserTaskResources(p : bpmn2::Process)]
-
+[template public generateUserTaskResources(p : bpmn2::Process, fileName : String)]
+[let startevent : bpmn2::StartEvent = p.flowElements->asSequence()->select(e | e.oclIsKindOf(bpmn2::StartEvent))->first() ]
 [for (ut : bpmn2::Task | 
     p.flowElements
         ->select(e | e.oclIsKindOf(bpmn2::UserTask))
-        ->union(getTasksAfterStart(p))
+        ->union(getTasksAfterStart(startevent, p, true))
         ->asOrderedSet()
         ->collect(e | e.oclAsType(bpmn2::Task))
 )]
@@ -124,7 +121,7 @@ public class [p.name.replaceAll(' ', '')/]ResourceImpl extends [p.name.replaceAl
     public Map<String, Object> [ut.name.replaceAll(' ', '')/](VMJExchange exchange) {
         Map<String, Object> res = new HashMap<>();
 
-		[if (getTasksAfterStart(p)->includes(ut))]
+		[if (getTasksAfterStart(startevent, p, true)->includes(ut))]
         Map<String, Object> res = new HashMap<>();
         String processid = UUID.randomUUID().toString();
         processService.upsert(new ProcessInstance(processid, "%s"));
@@ -137,10 +134,7 @@ public class [p.name.replaceAll(' ', '')/]ResourceImpl extends [p.name.replaceAl
 	        // ini juga mencegah orang dari asal tembak api
 	        List<ProcessInstance> processes = processService.getAllById(processid);
 			
-			if (processes.stream()
-				.filter(
-					x -> [traversePrior(ut, p)/]
-				).toList().isEmpty()
+			if ([traversePrior(ut, p)/])
 			) {
 				res.put("message", "[ut.name /] DENIED");
             	return res;
@@ -148,9 +142,8 @@ public class [p.name.replaceAll(' ', '')/]ResourceImpl extends [p.name.replaceAl
 		}
 		[/if]
 
-		processService.upsert(new ProcessInstance(processid, "[ut.name.replaceAll(' ', '') /]"));
-		[p.name.replaceAll(' ', '')/]Service.[ut.name.replaceAll(' ', '') /](requestBody, processid);
-		[traverseAfter(ut, p)/]
+		[fileName.replaceAll(' ', '').toLower()/]Service.[ut.name.replaceAll(' ', '') /](requestBody, processid);
+		[traverseAfter(ut, p, fileName)/]
 
         res.put("status", "ok");
         res.put("message", "[ut.name/] SUCCESS");
@@ -158,16 +151,18 @@ public class [p.name.replaceAll(' ', '')/]ResourceImpl extends [p.name.replaceAl
     }
 
 [/for]
+[/let]
+	private static boolean hasTaskState(List<Process> processes, String... states) {
+	    return processes.stream()
+	        .anyMatch(x -> Arrays.stream(states)
+	            .anyMatch(state -> x.state.equalsIgnoreCase(state)));
+	}
 [/template]
 
 [template public traversePrior(ut : bpmn2::Task, p : bpmn2::Process)]
-[for (prior : bpmn2::FlowNode | getPrior(ut, p))]
-x.state.equalsIgnoreCase("[prior.name.replaceAll(' ', '') /]")
-[/for]
+[getPrior(ut, p)/]
 [/template]
 
-[template public traverseAfter(ut : bpmn2::Task, p : bpmn2::Process)]
-[for (afterr : bpmn2::Task | getServiceTaskAfter(ut, p))]
-[p.name.replaceAll(' ', '')/]Service.[afterr.name.replaceAll(' ', '') /](requestBody, processid);
-[/for]
+[template public traverseAfter(ut : bpmn2::Task, p : bpmn2::Process, fileName : String)]
+[getServiceTaskAfter(ut, p, fileName)/]
 [/template]

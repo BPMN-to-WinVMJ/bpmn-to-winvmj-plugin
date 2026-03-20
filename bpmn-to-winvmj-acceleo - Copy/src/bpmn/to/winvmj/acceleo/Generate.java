@@ -68,11 +68,6 @@ public class Generate extends AbstractAcceleoGenerator {
         Resource.Factory.Registry.INSTANCE
             .getProtocolToFactoryMap()
             .putIfAbsent("platform", new XMIResourceFactoryImpl());
-
-        // Debug: print all registered packages
-        System.out.println("=== ALL REGISTERED PACKAGES ===");
-        EPackage.Registry.INSTANCE.forEach((uri, pkg) ->
-            System.out.println("  " + uri));
         
         // Map platform:/plugin/org.eclipse.bpmn2/model/BPMN20.ecore
         // → the already-registered Bpmn2Package nsURI
@@ -150,8 +145,16 @@ public class Generate extends AbstractAcceleoGenerator {
 
             System.out.println("Loading BPMN2 model: " + args[0]);
             System.out.println("Output folder:       " + folder.getAbsolutePath());
+            
+            String fullPath = args[0];
+            File file = new File(fullPath);
+            String fileName = file.getName();
+            String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
+            
+            List<String> argument = new ArrayList<>();
+            argument.add(nameWithoutExtension);
 
-            Generate generator = new Generate(modelURI, folder, new ArrayList<>());
+            Generate generator = new Generate(modelURI, folder, argument);
 
             for (int i = 2; i < args.length; i++) {
                 generator.addPropertiesFile(args[i]);
@@ -224,12 +227,7 @@ public class Generate extends AbstractAcceleoGenerator {
      * @generated NOT
      */
     @Override
-    public void initialize(EObject model, File targetFolder,
-            List<? extends Object> arguments) throws IOException {
-
-        System.out.println("=== initialize(EObject) ===");
-        System.out.println("BPMN2 in registry: " +
-            (EPackage.Registry.INSTANCE.getEPackage(Bpmn2Package.eINSTANCE.getNsURI()) != null));
+    public void initialize(EObject model, File targetFolder, List<? extends Object> arguments) throws IOException {
 
         // Re-register defensively — super.initialize() will call registerPackages()
         // but that happens AFTER module loading; we need them registered NOW.

@@ -1,12 +1,12 @@
-// @generated
+// @generated from Paymentstudyplan.bpmn2
 
-package bpmn.product.Process1;
+package bpmn.product.Paymentstudyplan;
 
 import java.util.*;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.Route;
 
-public class Process1ResourceImpl extends Process1Component {
+public class PaymentstudyplanResourceImpl extends PaymentstudyplanComponent {
 
     static class ProcessInstance {
         String id;
@@ -37,21 +37,35 @@ public class Process1ResourceImpl extends Process1Component {
         }
     }
 
-    static interface Process1Service {
+    static interface PaymentstudyplanService {
+        void confirmstudyplan(Map<String, Object> body, String processid);
         void createstudyplan(Map<String, Object> body, String processid);
+        void viewstudyplanandpaymentstatus(Map<String, Object> body, String processid);
         void viewcourseschedule(Map<String, Object> body, String processid);
         void makepayment(Map<String, Object> body, String processid);
-        void viewstudyplanandpaymentstatus(Map<String, Object> body, String processid);
-        void confirmpayment(Map<String, Object> body, String processid);
 
     }
 
-    static class Process1ServiceImpl implements Process1Service {
+    static class PaymentstudyplanServiceImpl implements PaymentstudyplanService {
+	    @Override
+	    public void confirmstudyplan(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for confirm study plan
+			processService.upsert(new ProcessInstance(processid, "confirmstudyplan"));
+	        System.out.println("Executing confirm study plan");
+	    }
+
 	    @Override
 	    public void createstudyplan(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for create study plan
 			processService.upsert(new ProcessInstance(processid, "createstudyplan"));
 	        System.out.println("Executing create study plan");
+	    }
+
+	    @Override
+	    public void viewstudyplanandpaymentstatus(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for view study plan and payment status
+			processService.upsert(new ProcessInstance(processid, "viewstudyplanandpaymentstatus"));
+	        System.out.println("Executing view study plan and payment status");
 	    }
 
 	    @Override
@@ -68,47 +82,14 @@ public class Process1ResourceImpl extends Process1Component {
 	        System.out.println("Executing make payment");
 	    }
 
-	    @Override
-	    public void viewstudyplanandpaymentstatus(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for view study plan and payment status
-			processService.upsert(new ProcessInstance(processid, "viewstudyplanandpaymentstatus"));
-	        System.out.println("Executing view study plan and payment status");
-	    }
-
-	    @Override
-	    public void confirmpayment(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for confirm payment
-			processService.upsert(new ProcessInstance(processid, "confirmpayment"));
-	        System.out.println("Executing confirm payment");
-	    }
-
 
     }
 
     private ProcessService processService = new ProcessServiceImpl();
-    
-	private Process1Service Process1Service = new Process1ServiceImpl();
+	private PaymentstudyplanService paymentstudyplanService = new PaymentstudyplanServiceImpl();
 
-
-    @Route(url = "call/createstudyplan")
-    public Map<String, Object> createstudyplan(VMJExchange exchange) {
-        Map<String, Object> res = new HashMap<>();
-
-        Map<String, Object> res = new HashMap<>();
-        String processid = UUID.randomUUID().toString();
-        processService.upsert(new ProcessInstance(processid, "%s"));
-
-		processService.upsert(new ProcessInstance(processid, "createstudyplan"));
-		Process1Service.createstudyplan(requestBody, processid);
-		
-
-        res.put("status", "ok");
-        res.put("message", "create study plan SUCCESS");
-        return res;
-    }
-
-    @Route(url = "call/viewcourseschedule")
-    public Map<String, Object> viewcourseschedule(VMJExchange exchange) {
+    @Route(url = "call/confirmstudyplan")
+    public Map<String, Object> confirmstudyplan(VMJExchange exchange) {
         Map<String, Object> res = new HashMap<>();
 
 		if (vmjExchange.getHttpMethod().equals("POST")) {
@@ -119,23 +100,45 @@ public class Process1ResourceImpl extends Process1Component {
 	        // ini juga mencegah orang dari asal tembak api
 	        List<ProcessInstance> processes = processService.getAllById(processid);
 			
-			if (processes.stream()
-				.filter(
-					x -> x.state.equalsIgnoreCase("viewstudyplanandpaymentstatus")
-					
-				).toList().isEmpty()
+			if (hasTaskState("makepayment"))
 			) {
-				res.put("message", "view course schedule DENIED");
+				res.put("message", "confirm study plan DENIED");
             	return res;
 			}
 		}
 
-		processService.upsert(new ProcessInstance(processid, "viewcourseschedule"));
-		Process1Service.viewcourseschedule(requestBody, processid);
+		paymentstudyplanService.confirmstudyplan(requestBody, processid);
 		
 
         res.put("status", "ok");
-        res.put("message", "view course schedule SUCCESS");
+        res.put("message", "confirm study plan SUCCESS");
+        return res;
+    }
+
+    @Route(url = "call/createstudyplan")
+    public Map<String, Object> createstudyplan(VMJExchange exchange) {
+        Map<String, Object> res = new HashMap<>();
+
+		if (vmjExchange.getHttpMethod().equals("POST")) {
+
+	        // Cek apakah step sebelumnya pernah dilakukan
+	        // This also allows user yang mundur page trus isi form ulang
+	        // karena langkah sebelum page ini pasti udh dilakukan
+	        // ini juga mencegah orang dari asal tembak api
+	        List<ProcessInstance> processes = processService.getAllById(processid);
+			
+			if (hasTaskState("confirmstudyplan"))
+			) {
+				res.put("message", "create study plan DENIED");
+            	return res;
+			}
+		}
+
+		paymentstudyplanService.createstudyplan(requestBody, processid);
+		
+
+        res.put("status", "ok");
+        res.put("message", "create study plan SUCCESS");
         return res;
     }
 
@@ -151,19 +154,14 @@ public class Process1ResourceImpl extends Process1Component {
 	        // ini juga mencegah orang dari asal tembak api
 	        List<ProcessInstance> processes = processService.getAllById(processid);
 			
-			if (processes.stream()
-				.filter(
-					x -> x.state.equalsIgnoreCase("confirmpayment")
-					
-				).toList().isEmpty()
+			if (hasTaskState("createstudyplan"))
 			) {
 				res.put("message", "view study plan and payment status DENIED");
             	return res;
 			}
 		}
 
-		processService.upsert(new ProcessInstance(processid, "viewstudyplanandpaymentstatus"));
-		Process1Service.viewstudyplanandpaymentstatus(requestBody, processid);
+		paymentstudyplanService.viewstudyplanandpaymentstatus(requestBody, processid);
 		
 
         res.put("status", "ok");
@@ -171,8 +169,8 @@ public class Process1ResourceImpl extends Process1Component {
         return res;
     }
 
-    @Route(url = "call/confirmpayment")
-    public Map<String, Object> confirmpayment(VMJExchange exchange) {
+    @Route(url = "call/viewcourseschedule")
+    public Map<String, Object> viewcourseschedule(VMJExchange exchange) {
         Map<String, Object> res = new HashMap<>();
 
 		if (vmjExchange.getHttpMethod().equals("POST")) {
@@ -183,25 +181,40 @@ public class Process1ResourceImpl extends Process1Component {
 	        // ini juga mencegah orang dari asal tembak api
 	        List<ProcessInstance> processes = processService.getAllById(processid);
 			
-			if (processes.stream()
-				.filter(
-					x -> x.state.equalsIgnoreCase("makepayment")
-					
-				).toList().isEmpty()
+			if (hasTaskState("viewstudyplanandpaymentstatus"))
 			) {
-				res.put("message", "confirm payment DENIED");
+				res.put("message", "view course schedule DENIED");
             	return res;
 			}
 		}
 
-		processService.upsert(new ProcessInstance(processid, "confirmpayment"));
-		Process1Service.confirmpayment(requestBody, processid);
+		paymentstudyplanService.viewcourseschedule(requestBody, processid);
 		
 
         res.put("status", "ok");
-        res.put("message", "confirm payment SUCCESS");
+        res.put("message", "view course schedule SUCCESS");
         return res;
     }
 
+    @Route(url = "call/makepayment")
+    public Map<String, Object> makepayment(VMJExchange exchange) {
+        Map<String, Object> res = new HashMap<>();
 
+        Map<String, Object> res = new HashMap<>();
+        String processid = UUID.randomUUID().toString();
+        processService.upsert(new ProcessInstance(processid, "%s"));
+
+		paymentstudyplanService.makepayment(requestBody, processid);
+		
+
+        res.put("status", "ok");
+        res.put("message", "make payment SUCCESS");
+        return res;
+    }
+
+	private static boolean hasTaskState(List<Process> processes, String... states) {
+	    return processes.stream()
+	        .anyMatch(x -> Arrays.stream(states)
+	            .anyMatch(state -> x.state.equalsIgnoreCase(state)));
+	}
 }
