@@ -21,7 +21,7 @@
          version="0.0.0"/>
 
    <plugin
-         id="id.ac.ui.cs.prices.bpmn.winvmj.acceleo"
+         id="bpmn.to.winvmj.acceleo"
          version="0.0.0"/>
 
 </feature>
