@@ -2,12 +2,11 @@ package bpmn.to.winvmj.acceleo.java.model;
 
 import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.SequenceFlow;
-import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.impl.TaskImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public abstract class Component extends TaskImpl implements Comparable<Component>, Continuable, OwnedComponent {
     protected List<FlowNode> elements = new ArrayList<>();
@@ -15,7 +14,7 @@ public abstract class Component extends TaskImpl implements Comparable<Component
     protected FlowNode end;
     protected Component ownerComponent;
     
-    public abstract String getFromStartToUser(String bpmnName, Set<String> usedVariable, int indent);
+    public abstract String getFromStartToUser(String bpmnName, Map<String, String> usedVariable, int indent);
     
 	public List<TaskWrapper> getFirstTask() {
 		List<SequenceFlow> outs = getStart().getOutgoing();

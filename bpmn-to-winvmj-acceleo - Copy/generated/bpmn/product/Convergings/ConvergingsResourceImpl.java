@@ -38,120 +38,120 @@ public class ConvergingsResourceImpl extends ConvergingsComponent {
     }
 
     static interface ConvergingsService {
-        void ScriptTask2(Map<String, Object> body, String processid);
-        void ServiceTask5(Map<String, Object> body, String processid);
-        void ServiceTask8(Map<String, Object> body, String processid);
-        void ServiceTask9(Map<String, Object> body, String processid);
-        void ServiceTask7(Map<String, Object> body, String processid);
-        void UserTask1(Map<String, Object> body, String processid);
-        void ServiceTask1(Map<String, Object> body, String processid);
-        void ServiceTask3(Map<String, Object> body, String processid);
-        void ServiceTask6(Map<String, Object> body, String processid);
-        void ServiceTask2(Map<String, Object> body, String processid);
-        void ScriptTask4(Map<String, Object> body, String processid);
-        void ServiceTask4(Map<String, Object> body, String processid);
-        void UserTask2(Map<String, Object> body, String processid);
-        void ScriptTask3(Map<String, Object> body, String processid);
+        void userTask1(Map<String, Object> body, String processid);
+        void serviceTask2(Map<String, Object> body, String processid);
+        void serviceTask6(Map<String, Object> body, String processid);
+        void serviceTask8(Map<String, Object> body, String processid);
+        void usertask2(Map<String, Object> body, String processid);
+        void scriptTask4(Map<String, Object> body, String processid);
+        void scriptTask3(Map<String, Object> body, String processid);
+        void serviceTask7(Map<String, Object> body, String processid);
+        void serviceTask9(Map<String, Object> body, String processid);
+        void serviceTask1(Map<String, Object> body, String processid);
+        void serviceTask4(Map<String, Object> body, String processid);
+        void serviceTask3(Map<String, Object> body, String processid);
+        void scriptTask2(Map<String, Object> body, String processid);
+        void serviceTask5(Map<String, Object> body, String processid);
 
     }
 
     static class ConvergingsServiceImpl implements ConvergingsService {
 	    @Override
-	    public void ScriptTask2(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for Script Task 2
-			processService.upsert(new ProcessInstance(processid, "ScriptTask2"));
-	        System.out.println("Executing Script Task 2");
-	    }
-
-	    @Override
-	    public void ServiceTask5(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for Service Task 5
-			processService.upsert(new ProcessInstance(processid, "ServiceTask5"));
-	        System.out.println("Executing Service Task 5");
-	    }
-
-	    @Override
-	    public void ServiceTask8(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for Service Task 8
-			processService.upsert(new ProcessInstance(processid, "ServiceTask8"));
-	        System.out.println("Executing Service Task 8");
-	    }
-
-	    @Override
-	    public void ServiceTask9(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for Service Task 9
-			processService.upsert(new ProcessInstance(processid, "ServiceTask9"));
-	        System.out.println("Executing Service Task 9");
-	    }
-
-	    @Override
-	    public void ServiceTask7(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for Service Task 7
-			processService.upsert(new ProcessInstance(processid, "ServiceTask7"));
-	        System.out.println("Executing Service Task 7");
-	    }
-
-	    @Override
-	    public void UserTask1(Map<String, Object> body, String processid {
+	    public void userTask1(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for User Task 1
-			processService.upsert(new ProcessInstance(processid, "UserTask1"));
+			processService.upsert(new ProcessInstance(processid, "userTask1"));
 	        System.out.println("Executing User Task 1");
 	    }
 
 	    @Override
-	    public void ServiceTask1(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for Service Task 1
-			processService.upsert(new ProcessInstance(processid, "ServiceTask1"));
-	        System.out.println("Executing Service Task 1");
-	    }
-
-	    @Override
-	    public void ServiceTask3(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for Service Task 3
-			processService.upsert(new ProcessInstance(processid, "ServiceTask3"));
-	        System.out.println("Executing Service Task 3");
-	    }
-
-	    @Override
-	    public void ServiceTask6(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for Service Task 6
-			processService.upsert(new ProcessInstance(processid, "ServiceTask6"));
-	        System.out.println("Executing Service Task 6");
-	    }
-
-	    @Override
-	    public void ServiceTask2(Map<String, Object> body, String processid {
+	    public void serviceTask2(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Service Task 2
-			processService.upsert(new ProcessInstance(processid, "ServiceTask2"));
+			processService.upsert(new ProcessInstance(processid, "serviceTask2"));
 	        System.out.println("Executing Service Task 2");
 	    }
 
 	    @Override
-	    public void ScriptTask4(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for Script Task 4
-			processService.upsert(new ProcessInstance(processid, "ScriptTask4"));
-	        System.out.println("Executing Script Task 4");
+	    public void serviceTask6(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for Service Task 6
+			processService.upsert(new ProcessInstance(processid, "serviceTask6"));
+	        System.out.println("Executing Service Task 6");
 	    }
 
 	    @Override
-	    public void ServiceTask4(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for Service Task 4
-			processService.upsert(new ProcessInstance(processid, "ServiceTask4"));
-	        System.out.println("Executing Service Task 4");
+	    public void serviceTask8(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for Service Task 8
+			processService.upsert(new ProcessInstance(processid, "serviceTask8"));
+	        System.out.println("Executing Service Task 8");
 	    }
 
 	    @Override
-	    public void UserTask2(Map<String, Object> body, String processid {
+	    public void usertask2(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for UserTask 2
-			processService.upsert(new ProcessInstance(processid, "UserTask2"));
+			processService.upsert(new ProcessInstance(processid, "usertask2"));
 	        System.out.println("Executing UserTask 2");
 	    }
 
 	    @Override
-	    public void ScriptTask3(Map<String, Object> body, String processid {
+	    public void scriptTask4(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for Script Task 4
+			processService.upsert(new ProcessInstance(processid, "scriptTask4"));
+	        System.out.println("Executing Script Task 4");
+	    }
+
+	    @Override
+	    public void scriptTask3(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Script Task 3
-			processService.upsert(new ProcessInstance(processid, "ScriptTask3"));
+			processService.upsert(new ProcessInstance(processid, "scriptTask3"));
 	        System.out.println("Executing Script Task 3");
+	    }
+
+	    @Override
+	    public void serviceTask7(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for Service Task 7
+			processService.upsert(new ProcessInstance(processid, "serviceTask7"));
+	        System.out.println("Executing Service Task 7");
+	    }
+
+	    @Override
+	    public void serviceTask9(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for Service Task 9
+			processService.upsert(new ProcessInstance(processid, "serviceTask9"));
+	        System.out.println("Executing Service Task 9");
+	    }
+
+	    @Override
+	    public void serviceTask1(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for Service Task 1
+			processService.upsert(new ProcessInstance(processid, "serviceTask1"));
+	        System.out.println("Executing Service Task 1");
+	    }
+
+	    @Override
+	    public void serviceTask4(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for Service Task 4
+			processService.upsert(new ProcessInstance(processid, "serviceTask4"));
+	        System.out.println("Executing Service Task 4");
+	    }
+
+	    @Override
+	    public void serviceTask3(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for Service Task 3
+			processService.upsert(new ProcessInstance(processid, "serviceTask3"));
+	        System.out.println("Executing Service Task 3");
+	    }
+
+	    @Override
+	    public void scriptTask2(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for Script Task 2
+			processService.upsert(new ProcessInstance(processid, "scriptTask2"));
+	        System.out.println("Executing Script Task 2");
+	    }
+
+	    @Override
+	    public void serviceTask5(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for Service Task 5
+			processService.upsert(new ProcessInstance(processid, "serviceTask5"));
+	        System.out.println("Executing Service Task 5");
 	    }
 
 
@@ -160,8 +160,8 @@ public class ConvergingsResourceImpl extends ConvergingsComponent {
     private ProcessService processService = new ProcessServiceImpl();
 	private ConvergingsService convergingsService = new ConvergingsServiceImpl();
 
-    @Route(url = "call/UserTask1")
-    public Map<String, Object> UserTask1(VMJExchange exchange) {
+    @Route(url = "call/userTask1")
+    public Map<String, Object> userTask1(VMJExchange exchange) {
         Map<String, Object> res = new HashMap<>();
 
 		if (vmjExchange.getHttpMethod().equals("POST")) {
@@ -172,26 +172,27 @@ public class ConvergingsResourceImpl extends ConvergingsComponent {
 	        // ini juga mencegah orang dari asal tembak api
 	        List<ProcessInstance> processes = processService.getAllById(processid);
 			
-			if (((hasTaskState("UserTask2") || hasTaskState("ServiceTask1")) || (hasTaskState("ServiceTask2") || hasTaskState("ScriptTask2")))||
-			((hasTaskState("ServiceTask6") || hasTaskState("ServiceTask5")) || hasTaskState("ScriptTask3")))
+			if (!(((hasTaskState("usertask2") || hasTaskState("serviceTask1")) || (hasTaskState("serviceTask2") || hasTaskState("scriptTask2")))||
+			((hasTaskState("serviceTask6") || hasTaskState("serviceTask5")) || hasTaskState("scriptTask3"))))
 			) {
-				res.put("message", "User Task 1 DENIED");
+				res.put("status", "fail");
+				res.put("message", "userTask1 DENIED");
             	return res;
 			}
 		}
 
-		convergingsService.UserTask1(requestBody, processid);
-		convergingsService.ServiceTask7(requestBody, processid);
-		convergingsService.ServiceTask8(requestBody, processid);
-		
-
         res.put("status", "ok");
-        res.put("message", "User Task 1 SUCCESS");
+        res.put("message", "userTask1 SUCCESS");
+
+		convergingsService.userTask1(requestBody, processid);
+		convergingsService.serviceTask7(requestBody, processid);
+		convergingsService.serviceTask8(requestBody, processid);
+
         return res;
     }
 
-    @Route(url = "call/UserTask2")
-    public Map<String, Object> UserTask2(VMJExchange exchange) {
+    @Route(url = "call/usertask2")
+    public Map<String, Object> usertask2(VMJExchange exchange) {
         Map<String, Object> res = new HashMap<>();
 
 		if (vmjExchange.getHttpMethod().equals("POST")) {
@@ -202,37 +203,42 @@ public class ConvergingsResourceImpl extends ConvergingsComponent {
 	        // ini juga mencegah orang dari asal tembak api
 	        List<ProcessInstance> processes = processService.getAllById(processid);
 			
-			if (hasTaskState("ServiceTask4"))
+			if (!(hasTaskState("serviceTask4")))
 			) {
-				res.put("message", "UserTask 2 DENIED");
+				res.put("status", "fail");
+				res.put("message", "usertask2 DENIED");
             	return res;
 			}
 		}
 
-		convergingsService.UserTask2(requestBody, processid);
+        res.put("status", "ok");
+        res.put("message", "usertask2 SUCCESS");
+
+		convergingsService.usertask2(requestBody, processid);
 		
 
-        res.put("status", "ok");
-        res.put("message", "UserTask 2 SUCCESS");
         return res;
     }
 
-    @Route(url = "call/ServiceTask4")
-    public Map<String, Object> ServiceTask4(VMJExchange exchange) {
+    @Route(url = "call/serviceTask4")
+    public Map<String, Object> serviceTask4(VMJExchange exchange) {
         Map<String, Object> res = new HashMap<>();
 
         Map<String, Object> res = new HashMap<>();
         String processid = UUID.randomUUID().toString();
         processService.upsert(new ProcessInstance(processid, "%s"));
 
-		convergingsService.ServiceTask4(requestBody, processid);
-		boolean null = true;
+        res.put("status", "ok");
+        res.put("message", "serviceTask4 SUCCESS");
+
+		convergingsService.serviceTask4(requestBody, processid);
 		boolean a = true;
 		boolean b = true;
 		boolean c = true;
 		boolean d = true;
 		boolean e = true;
 		boolean f = true;
+		boolean var = true;
 		boolean g = true;
 		boolean h = true;
 		boolean i = true;
@@ -243,46 +249,44 @@ public class ConvergingsResourceImpl extends ConvergingsComponent {
 		boolean s = true;
 		boolean y = true;
 		if (b) {
-		  if (e) {
-		    if (g) {
-		      convergingsService.ServiceTask3(requestBody, processId);
-		      convergingsService.ScriptTask3(requestBody, processId);
-		    }
-		  } else if (f) {
-		    if (h) {
-		      if (o) {
-		        convergingsService.ServiceTask5(requestBody, processid);
-		      }
-		    } else if (k) {
-		      if (null) {
-		        if (null) {
-		          convergingsService.ServiceTask9(requestBody, processid);
-		        } else if (p) {
-		          convergingsService.ScriptTask4(requestBody, processid);
+		    if (e) {
+		        if (g) {
+		            convergingsService.serviceTask3(requestBody, processid);
+		            convergingsService.scriptTask3(requestBody, processid);
 		        }
-		        convergingsService.ServiceTask6(requestBody, processId);
-		      }
+		    } else if (f) {
+		        if (h) {
+		            if (o) {
+		                convergingsService.serviceTask5(requestBody, processid);
+		            }
+		        } else if (k) {
+		            if (var) {
+		                if (var) {
+		                    convergingsService.serviceTask9(requestBody, processid);
+		                } else if (p) {
+		                    convergingsService.scriptTask4(requestBody, processid);
+		                }
+		                convergingsService.serviceTask6(requestBody, processid);
+		            }
+		        }
 		    }
-		  }
 		} else if (a) {
-		  if (c) {
-		    if (i) {
-		      convergingsService.ServiceTask1(requestBody, processid);
-		    } else if (s) {
-		      	return res;
+		    if (c) {
+		        if (i) {
+		            convergingsService.serviceTask1(requestBody, processid);
+		        } else if (s) {
+		            return res;
+		        }
+		    } else if (d) {
+		        if (j) {
+		            convergingsService.serviceTask2(requestBody, processid);
+		        } else if (y) {
+		            convergingsService.scriptTask2(requestBody, processid);
+		        }
 		    }
-		  } else if (d) {
-		    if (j) {
-		      convergingsService.ServiceTask2(requestBody, processid);
-		    } else if (y) {
-		      convergingsService.ScriptTask2(requestBody, processid);
-		    }
-		  }
 		}
 		
 
-        res.put("status", "ok");
-        res.put("message", "Service Task 4 SUCCESS");
         return res;
     }
 

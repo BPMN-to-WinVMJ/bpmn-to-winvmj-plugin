@@ -6,7 +6,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
     // The plug-in ID (must match MANIFEST.MF Bundle-SymbolicName)
-    public static final String PLUGIN_ID = "bpmn.to.winvmj.plugin";
+    public static final String PLUGIN_ID = "id.ac.ui.cs.prices.bpmn.winvmj.plugin";
 
     // The shared instance
     private static Activator plugin;

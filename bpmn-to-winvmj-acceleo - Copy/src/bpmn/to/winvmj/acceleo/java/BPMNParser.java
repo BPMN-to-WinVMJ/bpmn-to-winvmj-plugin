@@ -1,11 +1,11 @@
 package bpmn.to.winvmj.acceleo.java;
 
 import java.util.*;
-import java.util.concurrent.Flow;
 import java.util.stream.Collectors;
 
 import org.eclipse.bpmn2.*;
 
+import bpmn.to.winvmj.acceleo.GenerateQuery;
 import bpmn.to.winvmj.acceleo.java.model.*;
 import bpmn.to.winvmj.acceleo.java.model.precond.EndPreCond;
 import bpmn.to.winvmj.acceleo.java.model.precond.FlowPreCond;
@@ -39,6 +39,8 @@ public class BPMNParser {
 
         // Classify all flow elements
         for (FlowElement fe : process.getFlowElements()) {
+        	
+        	fe.setName(GenerateQuery.toValidVariableName(fe.getName()));
 
             // Tasks
             if (fe instanceof Task task) {
@@ -114,13 +116,13 @@ public class BPMNParser {
                 pg.setGatewayDirection(GatewayDirection.CONVERGING);
                 bpmn.getGj().put(g.getId(), pg);
             }
-            if (g instanceof ExclusiveGateway eg && inSize == 1 && outSize >= 1) {
-                eg.setGatewayDirection(GatewayDirection.DIVERGING);
-                bpmn.getGd().put(g.getId(), eg);
+            if ((g instanceof ExclusiveGateway eg || g instanceof InclusiveGateway ig) && inSize == 1 && outSize >= 1) {
+                g.setGatewayDirection(GatewayDirection.DIVERGING);
+                bpmn.getGd().put(g.getId(), g);
             }
-            if (g instanceof ExclusiveGateway eg && inSize >= 1 && outSize == 1) {
-                eg.setGatewayDirection(GatewayDirection.CONVERGING);
-                bpmn.getGm().put(g.getId(), eg);
+            if ((g instanceof ExclusiveGateway eg || g instanceof InclusiveGateway ig) && inSize >= 1 && outSize == 1) {
+                g.setGatewayDirection(GatewayDirection.CONVERGING);
+                bpmn.getGm().put(g.getId(), g);
             }
             if (g instanceof EventBasedGateway evg && inSize == 1 && outSize > 1) {
                 evg.setGatewayDirection(GatewayDirection.DIVERGING);
@@ -308,7 +310,7 @@ public class BPMNParser {
      */
     private static boolean hasOneInOut(FlowNode node) {
         if (node == null) return false;
-        return node instanceof Task && node.getIncoming().size() == 1 && node.getOutgoing().size() == 1;
+        return (node instanceof Task || node instanceof Event) && node.getIncoming().size() == 1 && node.getOutgoing().size() == 1;
     }
 
     /**
@@ -439,7 +441,7 @@ public class BPMNParser {
     private static Component findWhile(BPMN bpmn) {
     	System.out.println("Finding while..");
 
-        for (ExclusiveGateway ic : bpmn.getGm().values()) {
+        for (Gateway ic : bpmn.getGm().values()) { // Exclusive and inclusive gateway are handled the same
             FlowNode gd = ic.getOutgoing().get(0).getTargetRef();
 
             if (bpmn.getGd().containsValue(gd)) {
@@ -501,7 +503,7 @@ public class BPMNParser {
     private static Component findRepeat(BPMN bpmn) {
     	System.out.println("Finding repeat..");
 
-        for (ExclusiveGateway ic : bpmn.getGd().values()) {
+        for (Gateway ic : bpmn.getGd().values()) {
 
             Set<FlowNode> candidates = new HashSet<>();
             List<SequenceFlow> loopFlows = new ArrayList<>();
@@ -629,21 +631,36 @@ public class BPMNParser {
     private static Component findSwitch(BPMN bpmn) {
         System.out.println("Finding switch..");
         for (Gateway ic : bpmn.getGd().values()) {
+        	
+        	System.out.println("[DEBUG] " + ic.getName());
 
             List<FlowNode> candidates = new ArrayList<>();
             candidates.add(ic);
 
             List<SequenceFlow> outFlows = ic.getOutgoing();
-
+            
             if (outFlows.size() < 1) continue; // not a FLOW
+            if ("inclusiveGateway1".equals(ic.getName())) {
+            	int a = 1 + 1;
+            }
 
             Gateway oc = null;
 
             for (SequenceFlow f : outFlows) {
                 FlowNode mid = f.getTargetRef();
+                
+                // Branch doesn't have any task in the middle
+                if (oc != null && mid.equals(oc)) {
+                	continue;
+                }
 
                 // Must be Task or Intermediate Event
                 if (!(hasOneInOut(mid)) || (mid instanceof StartEvent) || (mid instanceof EndEvent)) {
+                    // Found an empty branch on first flow checked
+                	if (oc == null && mid instanceof Gateway) {
+                    	oc = (Gateway) mid;
+                    	continue;
+                    }
                     oc = null;
                     break;
                 }
@@ -652,7 +669,7 @@ public class BPMNParser {
 
                 // All branches must converge to same join
                 if (oc == null) {
-                    if (!(target instanceof ExclusiveGateway) || (target instanceof ExclusiveGateway && ((Gateway)target).getOutgoing().size() > 1) ) break;
+                    if (!(target instanceof ExclusiveGateway || target instanceof InclusiveGateway) || ((target instanceof ExclusiveGateway || target instanceof InclusiveGateway) && ((Gateway)target).getOutgoing().size() > 1)) break;
                     oc = (Gateway) target;
                 } else if (!oc.equals(target)) {
                     oc = null;
@@ -670,6 +687,7 @@ public class BPMNParser {
             // Verify oc incoming flows
             if (!oc.getIncoming().stream()
                 .map(SequenceFlow::getSourceRef)
+                .filter(x -> x != ic && x != oc2)
                 .collect(Collectors.toSet())
                 .equals(
                     candidates.stream()
@@ -934,8 +952,8 @@ public class BPMNParser {
         Set<FlowNode> toOc   = new HashSet<>();
         toOc.add(ic);
 
-        GenerateUtil.forwardDFS(ic, fromIc);
-        GenerateUtil.backwardDFS(oc, toOc);
+        Util.forwardDFS(ic, fromIc);
+        Util.backwardDFS(oc, toOc);
 
 
         if (fromIc.stream().anyMatch(x -> toOc.contains(x)) && 

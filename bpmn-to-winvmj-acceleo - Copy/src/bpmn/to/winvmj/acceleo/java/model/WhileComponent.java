@@ -3,6 +3,7 @@ package bpmn.to.winvmj.acceleo.java.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -10,7 +11,8 @@ import org.eclipse.bpmn2.FlowNode;
 import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.SequenceFlow;
 
-import bpmn.to.winvmj.acceleo.java.GenerateUtil;
+import bpmn.to.winvmj.acceleo.GenerateQuery;
+import bpmn.to.winvmj.acceleo.java.Util;
 
 public class WhileComponent extends Component implements Looping {
 
@@ -20,15 +22,17 @@ public class WhileComponent extends Component implements Looping {
     }
     
 	@Override
-	public String getFromStartToUser(String bpmnName, Set<String> usedVariables, int indent) {
+	public String getFromStartToUser(String bpmnName, Map<String, String> usedVariables, int indent) {
         StringBuilder builder = new StringBuilder();
         Set<FlowNode> visited = new HashSet<>();
         visited.add(start);
 
         List<SequenceFlow> outs = this.getEnd().getOutgoing();
         
+        List<String> branches = new ArrayList<>();
+        
         String loopCondition = outs.stream().map(SequenceFlow::getName).collect(Collectors.joining(" || "));
-        usedVariables.addAll(outs.stream().map(SequenceFlow::getName).toList());
+        branches.addAll(outs.stream().map(SequenceFlow::getName).toList());
         
         Component parent = this;
         // parent == null should never happen. If it does happen, there are bigger problems at hands
@@ -36,30 +40,35 @@ public class WhileComponent extends Component implements Looping {
         	parent = parent.getOwnerComponent();
         }
         List<String> exitBranch = parent.getOutgoing().stream().map(x -> x.getName()).toList();
-        usedVariables.addAll(exitBranch);
+        branches.addAll(exitBranch);
         
-        builder.append(GenerateUtil.SPACE.repeat(indent) + String.format("while (%s) {\n", loopCondition));
+        for (String expression : branches) {
+        	Set<String> variables = Util.extractVariablesFromExpression(expression);
+        	for (String var : variables) {
+        		String varType = Util.inferTypeFromVariable(var, expression);
+        		usedVariables.put(var, varType); 
+        	}
+        }
+        
+        builder.append(Util.SPACE.repeat(indent) + String.format("while (%s) {\n", loopCondition));
         
         boolean first = true;
         for (SequenceFlow f : outs) {
             if (first) {
-                builder.append(GenerateUtil.SPACE.repeat(indent + 1) + String.format("if (%s) {\n", f.getName()));
+                builder.append(Util.SPACE.repeat(indent + 1) + String.format("if (%s) {\n", f.getName()));
                 first = false;
             } else {
-                builder.append(GenerateUtil.SPACE.repeat(indent + 1) + String.format("else if (%s) {\n", f.getName()));
+                builder.append(Util.SPACE.repeat(indent + 1) + String.format("else if (%s) {\n", f.getName()));
             }
             
-        	GenerateUtil.buildResource(builder, bpmnName, f.getTargetRef(), new HashSet<>(visited), usedVariables, indent + 2);
+        	GenerateQuery.buildResource(builder, bpmnName, f.getTargetRef(), new HashSet<>(visited), usedVariables, indent + 2);
         	
-            // this branch stops mid way due to userTask
-            if (!GenerateUtil.canContinueFrom(f.getTargetRef(), new HashSet<>(), this.getStart())) {
-            	builder.append(GenerateUtil.SPACE.repeat(indent + 2) + "return res;\r\n");
-            }
-            builder.append(GenerateUtil.SPACE.repeat(indent +1) + "}\n");
+            builder.append(Util.SPACE.repeat(indent +1) + "}\n");
         }
-        builder.append(GenerateUtil.SPACE.repeat(indent + 1) + String.format("if (%s) break;\r\n", exitBranch.stream().collect(Collectors.joining(" || "))));
+        String joined = exitBranch.stream().collect(Collectors.joining(" || "));
+        builder.append(Util.SPACE.repeat(indent + 1) + String.format("if (%s) { processService.upsert(new ProcessInstance(processid, \"%s\")); break; }\r\n", joined, joined));
 
-        builder.append(GenerateUtil.SPACE.repeat(indent) + "}\n");
+        builder.append(Util.SPACE.repeat(indent) + "}\n");
         return builder.toString();
 	}
 	

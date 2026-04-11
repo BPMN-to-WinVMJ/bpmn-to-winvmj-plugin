@@ -54,17 +54,17 @@ public class BPMN {
     // Events
     private Map<String, Event> E = new HashMap<>();
     private Map<String, StartEvent> Es = new HashMap<>();
-    private Map<String, IntermediateCatchEvent> Ei = new HashMap<>();  // IntermediateEvent -> IntermediateCatchEvent
+    private Map<String, IntermediateCatchEvent> Ei = new HashMap<>();  	// IntermediateEvent -> IntermediateCatchEvent
     private Map<String, EndEvent> Ee = new HashMap<>();
-    private Map<String, IntermediateCatchEvent> Eet = new HashMap<>(); // timer intermediate events
+    private Map<String, IntermediateCatchEvent> Eet = new HashMap<>(); 	// timer intermediate events
 
     // Gateways
     private Map<String, Gateway> G = new HashMap<>();
-    private Map<String, ParallelGateway> Gf = new HashMap<>();         // parallel fork
-    private Map<String, ParallelGateway> Gj = new HashMap<>();         // parallel join
-    private Map<String, ExclusiveGateway> Gd = new HashMap<>();        // data xor
-    private Map<String, EventBasedGateway> Gv = new HashMap<>();       // event xor
-    private Map<String, ExclusiveGateway> Gm = new HashMap<>();        // merge xor
+    private Map<String, ParallelGateway> Gf = new HashMap<>();         	// parallel fork
+    private Map<String, ParallelGateway> Gj = new HashMap<>();         	// parallel join
+    private Map<String, Gateway> Gd = new HashMap<>();        			// data xor
+    private Map<String, EventBasedGateway> Gv = new HashMap<>();       	// event xor
+    private Map<String, Gateway> Gm = new HashMap<>();        			// merge xor
 
     // Flows
     private Map<String, SequenceFlow> F = new HashMap<>();
@@ -141,19 +141,19 @@ public class BPMN {
 		Gj = gj;
 	}
 
-	public Map<String, ExclusiveGateway> getGd() {
+	public Map<String, Gateway> getGd() {
 		return Gd;
 	}
 
-	public void setGd(Map<String, ExclusiveGateway> gd) {
+	public void setGd(Map<String, Gateway> gd) {
 		Gd = gd;
 	}
 
-	public Map<String, ExclusiveGateway> getGm() {
+	public Map<String, Gateway> getGm() {
 		return Gm;
 	}
 
-	public void setGm(Map<String, ExclusiveGateway> gm) {
+	public void setGm(Map<String, Gateway> gm) {
 		Gm = gm;
 	}
 

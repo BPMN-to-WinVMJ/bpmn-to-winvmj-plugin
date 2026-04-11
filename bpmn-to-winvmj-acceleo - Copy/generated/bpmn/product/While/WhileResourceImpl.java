@@ -38,47 +38,47 @@ public class WhileResourceImpl extends WhileComponent {
     }
 
     static interface WhileService {
-        void ServiceTask2(Map<String, Object> body, String processid);
-        void ScriptTask1(Map<String, Object> body, String processid);
-        void ScriptTask2(Map<String, Object> body, String processid);
-        void UserTask3(Map<String, Object> body, String processid);
-        void UserTask1(Map<String, Object> body, String processid);
+        void serviceTask2(Map<String, Object> body, String processid);
+        void scriptTask1(Map<String, Object> body, String processid);
+        void scriptTask2(Map<String, Object> body, String processid);
+        void userTask3(Map<String, Object> body, String processid);
+        void userTask1(Map<String, Object> body, String processid);
 
     }
 
     static class WhileServiceImpl implements WhileService {
 	    @Override
-	    public void ServiceTask2(Map<String, Object> body, String processid {
+	    public void serviceTask2(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Service Task 2
-			processService.upsert(new ProcessInstance(processid, "ServiceTask2"));
+			processService.upsert(new ProcessInstance(processid, "serviceTask2"));
 	        System.out.println("Executing Service Task 2");
 	    }
 
 	    @Override
-	    public void ScriptTask1(Map<String, Object> body, String processid {
+	    public void scriptTask1(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Script Task 1
-			processService.upsert(new ProcessInstance(processid, "ScriptTask1"));
+			processService.upsert(new ProcessInstance(processid, "scriptTask1"));
 	        System.out.println("Executing Script Task 1");
 	    }
 
 	    @Override
-	    public void ScriptTask2(Map<String, Object> body, String processid {
+	    public void scriptTask2(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Script Task 2
-			processService.upsert(new ProcessInstance(processid, "ScriptTask2"));
+			processService.upsert(new ProcessInstance(processid, "scriptTask2"));
 	        System.out.println("Executing Script Task 2");
 	    }
 
 	    @Override
-	    public void UserTask3(Map<String, Object> body, String processid {
+	    public void userTask3(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for User Task 3
-			processService.upsert(new ProcessInstance(processid, "UserTask3"));
+			processService.upsert(new ProcessInstance(processid, "userTask3"));
 	        System.out.println("Executing User Task 3");
 	    }
 
 	    @Override
-	    public void UserTask1(Map<String, Object> body, String processid {
+	    public void userTask1(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for User Task 1
-			processService.upsert(new ProcessInstance(processid, "UserTask1"));
+			processService.upsert(new ProcessInstance(processid, "userTask1"));
 	        System.out.println("Executing User Task 1");
 	    }
 
@@ -88,8 +88,8 @@ public class WhileResourceImpl extends WhileComponent {
     private ProcessService processService = new ProcessServiceImpl();
 	private WhileService whileService = new WhileServiceImpl();
 
-    @Route(url = "call/UserTask3")
-    public Map<String, Object> UserTask3(VMJExchange exchange) {
+    @Route(url = "call/userTask3")
+    public Map<String, Object> userTask3(VMJExchange exchange) {
         Map<String, Object> res = new HashMap<>();
 
 		if (vmjExchange.getHttpMethod().equals("POST")) {
@@ -100,60 +100,62 @@ public class WhileResourceImpl extends WhileComponent {
 	        // ini juga mencegah orang dari asal tembak api
 	        List<ProcessInstance> processes = processService.getAllById(processid);
 			
-			if (hasTaskState("UserTask1"))
+			if (!(hasTaskState("userTask1")))
 			) {
-				res.put("message", "User Task 3 DENIED");
+				res.put("status", "fail");
+				res.put("message", "userTask3 DENIED");
             	return res;
 			}
 		}
 
-		whileService.UserTask3(requestBody, processid);
+        res.put("status", "ok");
+        res.put("message", "userTask3 SUCCESS");
+
+		whileService.userTask3(requestBody, processid);
 		boolean a = true;
 		boolean b = true;
 		boolean c = true;
-		whileService.ServiceTask2(requestBody, processid);
+		whileService.serviceTask2(requestBody, processid);
 		while (a || b) {
-		  if (a) {
-		    return res;
-		  }
-		  else if (b) {
-		    whileService.ScriptTask1(requestBody, processid);
-		  }
-		  if (c) break;
+		    if (a) {
+		        return res;
+		    }
+		    else if (b) {
+		        whileService.scriptTask1(requestBody, processid);
+		    }
+		    if (c) { processService.upsert(new ProcessInstance(processid, "c")); break; }
 		}
-		
+		whileService.scriptTask2(requestBody, processid);
 
-        res.put("status", "ok");
-        res.put("message", "User Task 3 SUCCESS");
         return res;
     }
 
-    @Route(url = "call/UserTask1")
-    public Map<String, Object> UserTask1(VMJExchange exchange) {
+    @Route(url = "call/userTask1")
+    public Map<String, Object> userTask1(VMJExchange exchange) {
         Map<String, Object> res = new HashMap<>();
 
         Map<String, Object> res = new HashMap<>();
         String processid = UUID.randomUUID().toString();
         processService.upsert(new ProcessInstance(processid, "%s"));
 
-		whileService.UserTask1(requestBody, processid);
+        res.put("status", "ok");
+        res.put("message", "userTask1 SUCCESS");
+
+		whileService.userTask1(requestBody, processid);
 		boolean a = true;
 		boolean b = true;
 		boolean c = true;
 		while (a || b) {
-		  if (a) {
-		    return res;
-		  }
-		  else if (b) {
-		    whileService.ScriptTask1(requestBody, processid);
-		  }
-		  if (c) break;
+		    if (a) {
+		        return res;
+		    }
+		    else if (b) {
+		        whileService.scriptTask1(requestBody, processid);
+		    }
+		    if (c) { processService.upsert(new ProcessInstance(processid, "c")); break; }
 		}
-		whileService.ScriptTask2(requestBody, processid);
-		
+		whileService.scriptTask2(requestBody, processid);
 
-        res.put("status", "ok");
-        res.put("message", "User Task 1 SUCCESS");
         return res;
     }
 

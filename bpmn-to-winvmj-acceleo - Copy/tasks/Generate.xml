@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="Generate" name="bpmn.to.winvmj.acceleo">
     <property name="ECLIPSE_HOME" value="../../../../../Users/Jim/Desktop/eclipse_Will_real/eclipse"/>
-    <property name="ECLIPSE_WORKSPACE" value="D:/Catatan Kuliah/Catatan Kuliah Semester 6/RSE/PricesIDE-REAL"/>
+    <property name="ECLIPSE_WORKSPACE" value="D:/Catatan Kuliah/Catatan Kuliah Semester 6/RSE/runtime-EclipseApplication2"/>
 
     <!-- The classpath with only the dependencies used by the project -->
     <path id="bpmn.to.winvmj.acceleo.libraryclasspath">

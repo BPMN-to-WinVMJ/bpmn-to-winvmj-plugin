@@ -1,14 +1,16 @@
 package bpmn.to.winvmj.acceleo.java.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.bpmn2.FlowNode;
+import org.eclipse.bpmn2.InclusiveGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 
-import bpmn.to.winvmj.acceleo.java.GenerateUtil;
+import bpmn.to.winvmj.acceleo.GenerateQuery;
+import bpmn.to.winvmj.acceleo.java.Util;
 
 public class SwitchComponent extends Component {
 
@@ -17,7 +19,7 @@ public class SwitchComponent extends Component {
         Set<FlowNode> visited = new HashSet<>();
 
         for (SequenceFlow f : getStart().getOutgoing()) {
-            if (GenerateUtil.canContinueFrom(f.getTargetRef(), visited)) {
+            if (GenerateQuery.canContinueFrom(f.getTargetRef(), visited, this.getEnd())) {
                 return true; // at least one branch can continue
             }
         }
@@ -27,7 +29,7 @@ public class SwitchComponent extends Component {
 	}
 
     @Override
-    public String getFromStartToUser(String bpmnName, Set<String> usedVariables, int indent) {
+    public String getFromStartToUser(String bpmnName, Map<String, String> usedVariables, int indent) {
         StringBuilder builder = new StringBuilder();
         Set<FlowNode> visited = new HashSet<>();
 
@@ -35,18 +37,28 @@ public class SwitchComponent extends Component {
         boolean first = true;
 
         for (SequenceFlow f : outs) {
-        	usedVariables.add(f.getName());
-            if (first) {
-                builder.append(GenerateUtil.SPACE.repeat(indent) + String.format("if (%s) {\n", f.getName()));
+
+        	Set<String> variables = Util.extractVariablesFromExpression(f.getName());
+        	for (String var : variables) {
+        		String varType = Util.inferTypeFromVariable(var, f.getName());
+        		usedVariables.put(var, varType); 
+        	}
+        	
+            if (first || (GatewayType.INCLUSIVE_GATEWAY.equals(((GatewayWrapper)this.getStart()).getGatewayType()))) {
+                builder.append(Util.SPACE.repeat(indent) + String.format("if (%s) {\n", f.getName()));
                 first = false;
             } else {
-                builder.append(GenerateUtil.SPACE.repeat(indent) + String.format("} else if (%s) {\n", f.getName()));
+                builder.append(Util.SPACE.repeat(indent) + String.format("else if (%s) {\n", f.getName()));
             }
+            
+            StringBuilder builderTemp = new StringBuilder();
+            GenerateQuery.buildResource(builderTemp, bpmnName, f.getTargetRef(), visited, usedVariables, indent + 1);
 
-            GenerateUtil.buildResource(builder, bpmnName, f.getTargetRef(), visited, usedVariables, indent + 1);
+        	builder.append(Util.SPACE.repeat(indent + 1) + String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", f.getName()));
+            builder.append(builderTemp.toString());
+            builder.append(Util.SPACE.repeat(indent) + "}\n");
         }
 
-        builder.append(GenerateUtil.SPACE.repeat(indent) + "}\n");
         return builder.toString();
     }
 }

@@ -14,7 +14,8 @@ import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
 
-import bpmn.to.winvmj.acceleo.java.GenerateUtil;
+import bpmn.to.winvmj.acceleo.GenerateQuery;
+import bpmn.to.winvmj.acceleo.java.Util;
 import bpmn.to.winvmj.acceleo.java.model.precond.EndPreCond;
 import bpmn.to.winvmj.acceleo.java.model.precond.FlowPreCond;
 import bpmn.to.winvmj.acceleo.java.model.precond.PickPreCond;
@@ -27,7 +28,7 @@ public class NonStructuredComponent extends Component {
 
 	@Override
 	public boolean canContinue() {
-		return GenerateUtil.canContinueFrom(start, new HashSet<>());
+		return GenerateQuery.canContinueFrom(start, new HashSet<>(), this.getEnd());
 	}
 
 	public void setPreConds(Map<FlowNode, List<PreCond>> allPreCondSets) {
@@ -39,7 +40,7 @@ public class NonStructuredComponent extends Component {
 	}
 	
     @Override
-    public String getFromStartToUser(String bpmnName, Set<String> usedVariables, int indent) {
+    public String getFromStartToUser(String bpmnName, Map<String, String> usedVariables, int indent) {
     	StringBuilder builder = new StringBuilder();
     	
     	builder.append("while(true) {\n");
@@ -48,69 +49,69 @@ public class NonStructuredComponent extends Component {
             for (PreCond p : allPreCondSets.get(el)) {
                 String event = getPreEvent(p);
             	if (el instanceof TaskWrapper t) {
-                    builder.append(GenerateUtil.SPACE + "if (").append(event).append(") {\n");
-                    builder.append(GenerateUtil.SPACE.repeat(2) + bpmnName.replaceAll(" ", "")).append("Service.").append(t.getName().replaceAll(" ", "")).append("(requestBody, processid)");
-                    builder.append(GenerateUtil.SPACE.repeat(2) + "end_").append(el.getName().replaceAll(" ", "")).append(" = true;\n");
-                    builder.append(GenerateUtil.SPACE + "}\n");
+                    builder.append(Util.SPACE + "if (").append(event).append(") {\n");
+                    builder.append(Util.SPACE.repeat(2) + bpmnName.replaceAll(" ", "")).append("Service.").append(t.getName().replaceAll(" ", "")).append("(requestBody, processid)");
+                    builder.append(Util.SPACE.repeat(2) + "end_").append(el.getName().replaceAll(" ", "")).append(" = true;\n");
+                    builder.append(Util.SPACE + "}\n");
             	} else if (el instanceof Component c) {
-            		builder.append(GenerateUtil.SPACE + "if (").append(event).append(") {\n");
+            		builder.append(Util.SPACE + "if (").append(event).append(") {\n");
                     builder.append(c.getFromStartToUser(bpmnName, usedVariables, indent + 1));
-                    builder.append(GenerateUtil.SPACE.repeat(2) + "end_").append(el.getName().replaceAll(" ", "")).append(";\n");
-                    builder.append(GenerateUtil.SPACE + "}\n");
+                    builder.append(Util.SPACE.repeat(2) + "end_").append(el.getName().replaceAll(" ", "")).append(";\n");
+                    builder.append(Util.SPACE + "}\n");
                 } else if (el instanceof ParallelGateway && el.getIncoming().size() == 1) {
-                    builder.append(GenerateUtil.SPACE + "<onEvent name=\"").append(event).append("\">\n")
-                        .append(GenerateUtil.SPACE.repeat(2) + "  <flow name=\"").append(el.getName()).append("\">\n");
+                    builder.append(Util.SPACE + "<onEvent name=\"").append(event).append("\">\n")
+                        .append(Util.SPACE.repeat(2) + "  <flow name=\"").append(el.getName()).append("\">\n");
 
                     for (SequenceFlow out : el.getOutgoing()) {
-                        builder.append(GenerateUtil.SPACE.repeat(3) + "<invoke name=\"flow(")
+                        builder.append(Util.SPACE.repeat(3) + "<invoke name=\"flow(")
                             .append(el.getName()).append(", ")
                             .append(out.getName()).append(")\"/>\n");
                     }
 
-                    builder.append(GenerateUtil.SPACE.repeat(2) + "</flow>\n")
-                        .append(GenerateUtil.SPACE + "</onEvent>\n");
+                    builder.append(Util.SPACE.repeat(2) + "</flow>\n")
+                        .append(Util.SPACE + "</onEvent>\n");
                 } else if (el instanceof ExclusiveGateway && el.getIncoming().size() == 1) {
-                    builder.append(GenerateUtil.SPACE + "<onEvent name=\"").append(event).append("\">\n")
-                        .append(GenerateUtil.SPACE.repeat(2) + "<switch name=\"").append(el.getName()).append("\">\n");
+                    builder.append(Util.SPACE + "<onEvent name=\"").append(event).append("\">\n")
+                        .append(Util.SPACE.repeat(2) + "<switch name=\"").append(el.getName()).append("\">\n");
 
                     for (SequenceFlow out : el.getOutgoing()) {
                         String cond = el.getName(); // ci // TODO: Change to support cases
-                        builder.append(GenerateUtil.SPACE.repeat(3) + "<case condition=\"")
+                        builder.append(Util.SPACE.repeat(3) + "<case condition=\"")
                             .append(cond).append("\">\n")
-                            .append(GenerateUtil.SPACE.repeat(4) + "<invoke name=\"switch(")
+                            .append(Util.SPACE.repeat(4) + "<invoke name=\"switch(")
                             .append(el.getId()).append(", ")
                             .append(out.getId()).append(", ")
                             .append(cond).append(")\"/>\n")
-                            .append(GenerateUtil.SPACE.repeat(3) + "</case>\n");
+                            .append(Util.SPACE.repeat(3) + "</case>\n");
                     }
 
-                    builder.append(GenerateUtil.SPACE.repeat(2) + "</switch>\n")
-                        .append(GenerateUtil.SPACE.repeat(1) + "</onEvent>\n");
+                    builder.append(Util.SPACE.repeat(2) + "</switch>\n")
+                        .append(Util.SPACE.repeat(1) + "</onEvent>\n");
                 } else if (el instanceof ParallelGateway && el.getIncoming().size() > 1) {
-                    builder.append(GenerateUtil.SPACE.repeat(1) + "<onEvent name=\"").append(event).append("\">\n")
-                            .append(GenerateUtil.SPACE.repeat(2) + "    <invoke name=\"end(").append(el.getName()).append(")\"/>\n")
-                            .append(GenerateUtil.SPACE.repeat(1) + "</onEvent>\n");
+                    builder.append(Util.SPACE.repeat(1) + "<onEvent name=\"").append(event).append("\">\n")
+                            .append(Util.SPACE.repeat(2) + "    <invoke name=\"end(").append(el.getName()).append(")\"/>\n")
+                            .append(Util.SPACE.repeat(1) + "</onEvent>\n");
 
                 } else if (el instanceof ExclusiveGateway && el.getIncoming().size() > 1) {
-                    builder.append(GenerateUtil.SPACE.repeat(1) + "<onEvent name=\"").append(event).append("\">\n")
-                            .append(GenerateUtil.SPACE.repeat(2) + "    <invoke name=\"end(").append(el.getName()).append(")\"/>\n")
-                            .append(GenerateUtil.SPACE.repeat(1) + "</onEvent>\n");
+                    builder.append(Util.SPACE.repeat(1) + "<onEvent name=\"").append(event).append("\">\n")
+                            .append(Util.SPACE.repeat(2) + "    <invoke name=\"end(").append(el.getName()).append(")\"/>\n")
+                            .append(Util.SPACE.repeat(1) + "</onEvent>\n");
 
                 } else if (el instanceof EventBasedGateway && el.getIncoming().size() == 1) {
-                    builder.append(GenerateUtil.SPACE.repeat(1) + "<onEvent name=\"").append(event).append("\">\n")
-                        .append(GenerateUtil.SPACE.repeat(2) + "  <pick name=\"").append(el.getName()).append("\">\n");
+                    builder.append(Util.SPACE.repeat(1) + "<onEvent name=\"").append(event).append("\">\n")
+                        .append(Util.SPACE.repeat(2) + "  <pick name=\"").append(el.getName()).append("\">\n");
 
                     for (SequenceFlow out : el.getOutgoing()) {
-                        builder.append(GenerateUtil.SPACE.repeat(3) + "<onEvent name=\"")
+                        builder.append(Util.SPACE.repeat(3) + "<onEvent name=\"")
                             .append(out.getId()).append("\">\n")
-                            .append(GenerateUtil.SPACE.repeat(4) + "<invoke name=\"pick()")
+                            .append(Util.SPACE.repeat(4) + "<invoke name=\"pick()")
                             .append(el.getId()).append(", ")
                             .append(out.getId()).append(")\"/>\n")
-                            .append(GenerateUtil.SPACE.repeat(3) + "</onEvent>\n");
+                            .append(Util.SPACE.repeat(3) + "</onEvent>\n");
                     }
 
-                    builder.append(GenerateUtil.SPACE.repeat(2) + "</pick>\n")
-                        .append(GenerateUtil.SPACE.repeat(1) + "</onEvent>\n");
+                    builder.append(Util.SPACE.repeat(2) + "</pick>\n")
+                        .append(Util.SPACE.repeat(1) + "</onEvent>\n");
                 }
             }
     	}

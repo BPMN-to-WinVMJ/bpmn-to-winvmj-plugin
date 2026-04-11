@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: bpmn.to.winvmj.acceleo;singleton:=true
 Automatic-Module-Name: bpmn.to.winvmj.acceleo
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.0.0
 Bundle-Activator: bpmn.to.winvmj.acceleo.Activator
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.20.0",
  org.eclipse.ui;bundle-version="3.120.0",
@@ -27,5 +27,5 @@ Eclipse-LazyStart: true
 Export-Package: bpmn.to.winvmj.acceleo,
  bpmn.to.winvmj.acceleo.java,
  bpmn.to.winvmj.acceleo.java.model
-Bundle-ClassPath: .,\
+Bundle-ClassPath: .,
  bin/

@@ -250,8 +250,15 @@ public class Generate extends AbstractAcceleoGenerator {
                 throw new IOException("Model has " + errors.size() + " error(s).");
             }
         }
+        
+        ClassLoader original = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(Generate.class.getClassLoader());
 
-        super.doGenerate(monitor);
+        try {
+            super.doGenerate(monitor);
+        } finally {
+            Thread.currentThread().setContextClassLoader(original);
+        }
     }
 
     

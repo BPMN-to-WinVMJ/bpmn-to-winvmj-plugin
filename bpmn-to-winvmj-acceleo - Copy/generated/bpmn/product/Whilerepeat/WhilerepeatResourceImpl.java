@@ -38,33 +38,33 @@ public class WhilerepeatResourceImpl extends WhilerepeatComponent {
     }
 
     static interface WhilerepeatService {
-        void ScriptTask3(Map<String, Object> body, String processid);
-        void ScriptTask4(Map<String, Object> body, String processid);
+        void scriptTask3(Map<String, Object> body, String processid);
+        void scriptTask4(Map<String, Object> body, String processid);
         void task2(Map<String, Object> body, String processid);
         void task1(Map<String, Object> body, String processid);
-        void ServiceTask4(Map<String, Object> body, String processid);
-        void ScriptTask5(Map<String, Object> body, String processid);
-        void ServiceTask2(Map<String, Object> body, String processid);
-        void UserTask1(Map<String, Object> body, String processid);
-        void UserTask3(Map<String, Object> body, String processid);
-        void ScriptTask6(Map<String, Object> body, String processid);
-        void UserTask4(Map<String, Object> body, String processid);
-        void ScriptTask2(Map<String, Object> body, String processid);
+        void serviceTask3(Map<String, Object> body, String processid);
+        void serviceTask4(Map<String, Object> body, String processid);
+        void scriptTask5(Map<String, Object> body, String processid);
+        void serviceTask2(Map<String, Object> body, String processid);
+        void userTask1(Map<String, Object> body, String processid);
+        void userTask3(Map<String, Object> body, String processid);
+        void scriptTask6(Map<String, Object> body, String processid);
+        void scriptTask2(Map<String, Object> body, String processid);
 
     }
 
     static class WhilerepeatServiceImpl implements WhilerepeatService {
 	    @Override
-	    public void ScriptTask3(Map<String, Object> body, String processid {
+	    public void scriptTask3(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Script Task 3
-			processService.upsert(new ProcessInstance(processid, "ScriptTask3"));
+			processService.upsert(new ProcessInstance(processid, "scriptTask3"));
 	        System.out.println("Executing Script Task 3");
 	    }
 
 	    @Override
-	    public void ScriptTask4(Map<String, Object> body, String processid {
+	    public void scriptTask4(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Script Task 4
-			processService.upsert(new ProcessInstance(processid, "ScriptTask4"));
+			processService.upsert(new ProcessInstance(processid, "scriptTask4"));
 	        System.out.println("Executing Script Task 4");
 	    }
 
@@ -83,58 +83,58 @@ public class WhilerepeatResourceImpl extends WhilerepeatComponent {
 	    }
 
 	    @Override
-	    public void ServiceTask4(Map<String, Object> body, String processid {
+	    public void serviceTask3(Map<String, Object> body, String processid {
+	        // TODO: Implement logic for Service Task 3
+			processService.upsert(new ProcessInstance(processid, "serviceTask3"));
+	        System.out.println("Executing Service Task 3");
+	    }
+
+	    @Override
+	    public void serviceTask4(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Service Task 4
-			processService.upsert(new ProcessInstance(processid, "ServiceTask4"));
+			processService.upsert(new ProcessInstance(processid, "serviceTask4"));
 	        System.out.println("Executing Service Task 4");
 	    }
 
 	    @Override
-	    public void ScriptTask5(Map<String, Object> body, String processid {
+	    public void scriptTask5(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Script Task 5
-			processService.upsert(new ProcessInstance(processid, "ScriptTask5"));
+			processService.upsert(new ProcessInstance(processid, "scriptTask5"));
 	        System.out.println("Executing Script Task 5");
 	    }
 
 	    @Override
-	    public void ServiceTask2(Map<String, Object> body, String processid {
+	    public void serviceTask2(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Service Task 2
-			processService.upsert(new ProcessInstance(processid, "ServiceTask2"));
+			processService.upsert(new ProcessInstance(processid, "serviceTask2"));
 	        System.out.println("Executing Service Task 2");
 	    }
 
 	    @Override
-	    public void UserTask1(Map<String, Object> body, String processid {
+	    public void userTask1(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for User Task 1
-			processService.upsert(new ProcessInstance(processid, "UserTask1"));
+			processService.upsert(new ProcessInstance(processid, "userTask1"));
 	        System.out.println("Executing User Task 1");
 	    }
 
 	    @Override
-	    public void UserTask3(Map<String, Object> body, String processid {
+	    public void userTask3(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for User Task 3
-			processService.upsert(new ProcessInstance(processid, "UserTask3"));
+			processService.upsert(new ProcessInstance(processid, "userTask3"));
 	        System.out.println("Executing User Task 3");
 	    }
 
 	    @Override
-	    public void ScriptTask6(Map<String, Object> body, String processid {
+	    public void scriptTask6(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Script Task 6
-			processService.upsert(new ProcessInstance(processid, "ScriptTask6"));
+			processService.upsert(new ProcessInstance(processid, "scriptTask6"));
 	        System.out.println("Executing Script Task 6");
 	    }
 
 	    @Override
-	    public void UserTask4(Map<String, Object> body, String processid {
-	        // TODO: Implement logic for User Task 4
-			processService.upsert(new ProcessInstance(processid, "UserTask4"));
-	        System.out.println("Executing User Task 4");
-	    }
-
-	    @Override
-	    public void ScriptTask2(Map<String, Object> body, String processid {
+	    public void scriptTask2(Map<String, Object> body, String processid {
 	        // TODO: Implement logic for Script Task 2
-			processService.upsert(new ProcessInstance(processid, "ScriptTask2"));
+			processService.upsert(new ProcessInstance(processid, "scriptTask2"));
 	        System.out.println("Executing Script Task 2");
 	    }
 
@@ -144,21 +144,24 @@ public class WhilerepeatResourceImpl extends WhilerepeatComponent {
     private ProcessService processService = new ProcessServiceImpl();
 	private WhilerepeatService whilerepeatService = new WhilerepeatServiceImpl();
 
-    @Route(url = "call/UserTask1")
-    public Map<String, Object> UserTask1(VMJExchange exchange) {
+    @Route(url = "call/userTask1")
+    public Map<String, Object> userTask1(VMJExchange exchange) {
         Map<String, Object> res = new HashMap<>();
 
         Map<String, Object> res = new HashMap<>();
         String processid = UUID.randomUUID().toString();
         processService.upsert(new ProcessInstance(processid, "%s"));
 
-		whilerepeatService.UserTask1(requestBody, processid);
-		boolean null = true;
+        res.put("status", "ok");
+        res.put("message", "userTask1 SUCCESS");
+
+		whilerepeatService.userTask1(requestBody, processid);
 		boolean a = true;
 		boolean b = true;
 		boolean c = true;
 		boolean d = true;
 		boolean e = true;
+		boolean var = true;
 		boolean f = true;
 		whilerepeatService.task1(requestBody, processid);
 		while (a || b) {
@@ -166,48 +169,48 @@ public class WhilerepeatResourceImpl extends WhilerepeatComponent {
 		        whilerepeatService.task2(requestBody, processid);
 		    }
 		    else if (b) {
-		        whilerepeatService.ScriptTask2(requestBody, processid);
+		        whilerepeatService.scriptTask2(requestBody, processid);
 		    }
 		    whilerepeatService.task1(requestBody, processid);
-		    if (null) break;
+		    if (var) { processService.upsert(new ProcessInstance(processid, "var")); break; }
 		}
 		
-		whilerepeatService.ServiceTask2(requestBody, processid);
-		whilerepeatService.ServiceTask4(requestBody, processId);
+		whilerepeatService.serviceTask2(requestBody, processid);
+		whilerepeatService.serviceTask4(requestBody, processid);
 		if (c) {
-		    whilerepeatService.ScriptTask3(requestBody, processid);
-		} else if (d) {
-		    whilerepeatService.ScriptTask4(requestBody, processid);
-		} else if (e) {
+		    whilerepeatService.scriptTask3(requestBody, processid);
+		}
+		else if (d) {
+		    whilerepeatService.scriptTask4(requestBody, processid);
+		}
+		else if (e) {
 		    return res;
 		}
-		whilerepeatService.ScriptTask5(requestBody, processId);
+		whilerepeatService.scriptTask5(requestBody, processid);
 		while (f) {
 		    if (f) {
-		        whilerepeatService.ScriptTask6(requestBody, processId);
-		        return res;
+		        whilerepeatService.scriptTask6(requestBody, processid);
+		        whilerepeatService.serviceTask3(requestBody, processid);
 		    }
-		    whilerepeatService.ServiceTask4(requestBody, processId);
+		    whilerepeatService.serviceTask4(requestBody, processid);
 		    if (c) {
-		        whilerepeatService.ScriptTask3(requestBody, processid);
-		    } else if (d) {
-		        whilerepeatService.ScriptTask4(requestBody, processid);
-		    } else if (e) {
+		        whilerepeatService.scriptTask3(requestBody, processid);
+		    }
+		    else if (d) {
+		        whilerepeatService.scriptTask4(requestBody, processid);
+		    }
+		    else if (e) {
 		        return res;
 		    }
-		    whilerepeatService.ScriptTask5(requestBody, processId);
-		    if (null) break;
+		    whilerepeatService.scriptTask5(requestBody, processid);
+		    if (var) { processService.upsert(new ProcessInstance(processid, "var")); break; }
 		}
-		
-		
 
-        res.put("status", "ok");
-        res.put("message", "User Task 1 SUCCESS");
         return res;
     }
 
-    @Route(url = "call/UserTask3")
-    public Map<String, Object> UserTask3(VMJExchange exchange) {
+    @Route(url = "call/userTask3")
+    public Map<String, Object> userTask3(VMJExchange exchange) {
         Map<String, Object> res = new HashMap<>();
 
 		if (vmjExchange.getHttpMethod().equals("POST")) {
@@ -218,76 +221,59 @@ public class WhilerepeatResourceImpl extends WhilerepeatComponent {
 	        // ini juga mencegah orang dari asal tembak api
 	        List<ProcessInstance> processes = processService.getAllById(processid);
 			
-			if (hasTaskState("ServiceTask4"))
+			if (!(hasTaskState("serviceTask4")))
 			) {
-				res.put("message", "User Task 3 DENIED");
+				res.put("status", "fail");
+				res.put("message", "userTask3 DENIED");
             	return res;
 			}
 		}
 
-		whilerepeatService.UserTask3(requestBody, processid);
+        res.put("status", "ok");
+        res.put("message", "userTask3 SUCCESS");
+
+		whilerepeatService.userTask3(requestBody, processid);
+		boolean c = true;
+		boolean d = true;
+		boolean e = true;
 		boolean f = true;
-		whilerepeatService.ScriptTask5(requestBody, processid);
-		ifa (f) {
-		    whilerepeatService.ScriptTask6(requestBody, processId);
-		}
-		
-
-        res.put("status", "ok");
-        res.put("message", "User Task 3 SUCCESS");
-        return res;
-    }
-
-    @Route(url = "call/UserTask4")
-    public Map<String, Object> UserTask4(VMJExchange exchange) {
-        Map<String, Object> res = new HashMap<>();
-
-		if (vmjExchange.getHttpMethod().equals("POST")) {
-
-	        // Cek apakah step sebelumnya pernah dilakukan
-	        // This also allows user yang mundur page trus isi form ulang
-	        // karena langkah sebelum page ini pasti udh dilakukan
-	        // ini juga mencegah orang dari asal tembak api
-	        List<ProcessInstance> processes = processService.getAllById(processid);
-			
-			if (hasTaskState("ScriptTask6"))
-			) {
-				res.put("message", "User Task 4 DENIED");
-            	return res;
-			}
-		}
-
-		whilerepeatService.UserTask4(requestBody, processid);
-		whilerepeatService.ServiceTask4(requestBody, processId);
-		if (c) {
-		    whilerepeatService.ScriptTask3(requestBody, processid);
-		} else if (d) {
-		    whilerepeatService.ScriptTask4(requestBody, processid);
-		} else if (e) {
-		    return res;
-		}
-		whilerepeatService.ScriptTask5(requestBody, processId);
-		while (f) {
-		    if (f) {
-		        whilerepeatService.ScriptTask6(requestBody, processId);
-		        return res;
-		    }
-		    whilerepeatService.ServiceTask4(requestBody, processId);
+		boolean var = true;
+		whilerepeatService.scriptTask5(requestBody, processid);
+		if (f) {
+		    whilerepeatService.scriptTask6(requestBody, processid);
+		    whilerepeatService.serviceTask3(requestBody, processid);
+		    whilerepeatService.serviceTask4(requestBody, processid);
 		    if (c) {
-		        whilerepeatService.ScriptTask3(requestBody, processid);
-		    } else if (d) {
-		        whilerepeatService.ScriptTask4(requestBody, processid);
-		    } else if (e) {
+		        whilerepeatService.scriptTask3(requestBody, processid);
+		    }
+		    else if (d) {
+		        whilerepeatService.scriptTask4(requestBody, processid);
+		    }
+		    else if (e) {
 		        return res;
 		    }
-		    whilerepeatService.ScriptTask5(requestBody, processId);
-		    if (null) break;
+		    whilerepeatService.scriptTask5(requestBody, processid);
+		    while (f) {
+		        if (f) {
+		            whilerepeatService.scriptTask6(requestBody, processid);
+		            whilerepeatService.serviceTask3(requestBody, processid);
+		        }
+		        whilerepeatService.serviceTask4(requestBody, processid);
+		        if (c) {
+		            whilerepeatService.scriptTask3(requestBody, processid);
+		        }
+		        else if (d) {
+		            whilerepeatService.scriptTask4(requestBody, processid);
+		        }
+		        else if (e) {
+		            return res;
+		        }
+		        whilerepeatService.scriptTask5(requestBody, processid);
+		        if (var) { processService.upsert(new ProcessInstance(processid, "var")); break; }
 		}
 		
-		
+		}
 
-        res.put("status", "ok");
-        res.put("message", "User Task 4 SUCCESS");
         return res;
     }
 

@@ -1,8 +1,10 @@
-package bpmn.to.winvmj.acceleo.java;
+package bpmn.to.winvmj.acceleo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,36 +15,38 @@ import org.eclipse.bpmn2.Gateway;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.SequenceFlow;
 import org.eclipse.bpmn2.Task;
-import org.eclipse.bpmn2.UserTask;
 
+import bpmn.to.winvmj.acceleo.java.BPMNParser;
+import bpmn.to.winvmj.acceleo.java.Util;
 import bpmn.to.winvmj.acceleo.java.model.BPMN;
 import bpmn.to.winvmj.acceleo.java.model.Component;
 import bpmn.to.winvmj.acceleo.java.model.Continuable;
 import bpmn.to.winvmj.acceleo.java.model.FlowComponent;
+import bpmn.to.winvmj.acceleo.java.model.GatewayType;
+import bpmn.to.winvmj.acceleo.java.model.GatewayWrapper;
 import bpmn.to.winvmj.acceleo.java.model.Looping;
 import bpmn.to.winvmj.acceleo.java.model.OwnedComponent;
 import bpmn.to.winvmj.acceleo.java.model.RepeatComponent;
+import bpmn.to.winvmj.acceleo.java.model.SwitchComponent;
 import bpmn.to.winvmj.acceleo.java.model.TaskType;
 import bpmn.to.winvmj.acceleo.java.model.TaskWrapper;
 import bpmn.to.winvmj.acceleo.java.model.WhileComponent;
 import bpmn.to.winvmj.acceleo.java.model.WhileRepeatComponent;
 
-public class GenerateUtil {
-	
-	public static String SPACE = "    ";
+public class GenerateQuery {
 	
 	/*
 	 * Used by acceleo query to get checker whether user can use the api or not
 	 */
-	public static String getPrior(UserTask userTask, org.eclipse.bpmn2.Process process) throws Exception {
+	public static String getPrior(FlowNode node, org.eclipse.bpmn2.Process process, Boolean startFromPrev) throws Exception {
 		BPMN bpmn = getOrGenerateBPMN(process);
 		
-		FlowNode e = findById(userTask.getId(), bpmn);
+		FlowNode e = Util.findById(node.getId(), bpmn);
 		if (e == null) {
-			throw new IllegalArgumentException("ID " + userTask.getId() + "not found on folded BPMN");
+			throw new IllegalArgumentException("ID " + node.getId() + "not found on folded BPMN");
 		}
 		
-		System.out.println("[START] getPrior on userTask " + userTask.getName());
+		System.out.println("[START] getPrior on node " + node.getName() + " " + node.getClass());
 
 		List<TaskWrapper> after =  List.of();
 		
@@ -60,27 +64,55 @@ public class GenerateUtil {
     	}
 
 		List<String> result = new ArrayList<>();
-        FlowNode prev = e.getIncoming().get(0).getSourceRef();
-        String join = "||";
+		
+		FlowNode prev = e;
+		if (startFromPrev) {
+			prev = e.getIncoming().get(0).getSourceRef();
+		}
+        
+        String join = " || ";
+        Set<FlowNode> visited = new HashSet<>();
         if (prev instanceof Component c) {
+        	if (c instanceof WhileComponent || c instanceof WhileRepeatComponent || c instanceof RepeatComponent) {
+        		result.add(String.format("hasTaskState(processes, \"%s\")", c.getOutgoing().stream().map(x -> x.getName()).collect(Collectors.joining(" || "))));
+        	}
+        	if (c instanceof SwitchComponent) {
+        		List<SequenceFlow> emptySequenceFlow = c.getEnd().getIncoming().stream().filter(x -> !(x.getSourceRef() instanceof Task)).toList();
+        		if (!emptySequenceFlow.isEmpty()) {
+        			result.addAll(emptySequenceFlow.stream().map(x -> String.format("hasTaskState(processes, \"%s\")", x.getName())).toList());
+        			visited.add(c.getStart());
+        		}
+        	}
+        	
             prev = c.getEnd();
+            
         	if (c instanceof FlowComponent || prev instanceof ParallelGateway) {
-                join = "&&";
+                join = " && ";
             }
+        	
             if (prev instanceof Component) {
             	result.addAll(getPriorHelper(prev, after, new HashSet<>()));
             } else if (prev instanceof TaskWrapper t) {
-                result.add(String.format("hasTaskState(\"%s\")",t.getName().replaceAll(" ", "")));
-            } else {
-                result.addAll(getPriorHelper(prev, after, new HashSet<>()));
+                result.add(String.format("hasTaskState(processes, \"%s\")",t.getName()));
+            } else { // Gateway
+            	// diverging gateway, use the condition as filter
+            	if (prev.getOutgoing().size() > 1) {
+            		result.add(String.format("hasTaskState(processes, \"%s\")",e.getIncoming().get(0).getName()));
+            	} else {
+            		result.addAll(getPriorHelper(prev, after, visited));
+            	}
             }
         } else if (prev instanceof Task t && !after.contains(t)){
-    		result.add(String.format("hasTaskState(\"%s\")", t.getName().replaceAll(" ", "")));
-        } else if (prev instanceof Gateway g) {
-            if (g instanceof ParallelGateway && g.getIncoming().size() > 1) {
-                join = "&&";
+    		result.add(String.format("hasTaskState(processes, \"%s\")", t.getName()));
+        } else if (prev instanceof GatewayWrapper g) {
+            if (GatewayType.PARALLEL_GATEWAY.equals(g.getGatewayType()) && g.getIncoming().size() > 1) {
+                join = " && ";
             }
-            result.addAll(getPriorHelper(g, after, new HashSet<>()));
+            if (!GatewayType.PARALLEL_GATEWAY.equals(g.getGatewayType()) && g.getOutgoing().size() > 1) {
+        		result.add(String.format("hasTaskState(processes, \"%s\")",e.getIncoming().get(0).getName()));
+        	} else {
+        		result.addAll(getPriorHelper(g, after, new HashSet<>()));
+        	}
         } else if (prev instanceof Event g) {
             result.add(g.getName());
         }
@@ -92,12 +124,12 @@ public class GenerateUtil {
             builder.replace(0, 5, "true");
         }
         
-        builder.append(String.join(join + "\r\n", result));
+        builder.append(String.join(join + "\r\n" + Util.SPACE, result));
         
         StringBuilder builder2 = new StringBuilder();
         builder2.append(builder.toString());
         
-        System.out.println("[DONE] getPrior on userTask " + userTask.getName());
+        System.out.println("[DONE] getPrior on userTask " + node.getName());
         
         return builder2.toString();
 	}
@@ -107,9 +139,12 @@ public class GenerateUtil {
 	 */
 	public static String getServiceTaskAfter(Task task, org.eclipse.bpmn2.Process process, String bpmnName) throws Exception {
 		System.out.println("[START] getServiceTaskAfter " + task.getName());
+		if (task.getName().equals("viewInvalidFormNotification")) {
+			System.out.println();
+		}
 		BPMN bpmn = getOrGenerateBPMN(process);
 		
-		FlowNode e = findById(task.getId(), bpmn);
+		FlowNode e = Util.findById(task.getId(), bpmn);
 		if (e == null) {
 			throw new IllegalArgumentException("ID " + task.getId() + "not found on folded BPMN");
 		}
@@ -117,18 +152,21 @@ public class GenerateUtil {
 		StringBuilder builder = new StringBuilder();
 		
 		FlowNode curr = null;
+		// current is the end of component find higher level component that has exit flow
 		if (e.getOutgoing().isEmpty() && e instanceof OwnedComponent oc1) {
-			curr = oc1.getOwnerComponent();
 			
-    		// current is the end of component find higher level component that has exit flow
+			System.out.println("[DEBUG] getServiceTaskAfter started on component end");
+			curr = oc1.getOwnerComponent();
     		while (curr.getOutgoing().isEmpty() && curr instanceof OwnedComponent oc)  {
     			curr = oc.getOwnerComponent();
     		}
     		
+    		// owner component still cannot continue
     		if (!((Component)curr).canContinue()) {
     			curr = curr.getOutgoing().get(0).getTargetRef();
     		}
     		
+    		// component doesn't have any task after it
     		if (!curr.getOutgoing().isEmpty() && curr.getOutgoing().get(0).getTargetRef() instanceof EndEvent) {
     			return builder.toString();
     		}
@@ -138,11 +176,14 @@ public class GenerateUtil {
 		
 		int indent = 0;
 		
-		Looping ownerLoop = getOwnerLoop((OwnedComponent) e);
+		Looping ownerLoop = Util.getOwnerLoop((OwnedComponent) e);
 		
-		Set<String> usedVariables = new HashSet<>();
+		Map<String, String> usedVariables = new HashMap<>();
 		
-		String result = getServiceTaskAfterHelper(builder, ownerLoop, curr, usedVariables, indent, bpmnName, new HashSet<>());
+		String result = getServiceTaskAfterHelper(builder, ownerLoop, curr, usedVariables, indent, bpmnName, new HashSet<>()).trim();
+		if (result.endsWith("return res;")) {
+			result = result.substring(0, result.length() - "return res;".length());
+		}
         
         System.out.println("[DONE] getServiceTaskAfter " + task.getName());
         
@@ -153,13 +194,11 @@ public class GenerateUtil {
 			StringBuilder builder,
 			Looping ownerLoop, // this attribute is solely for usertasks in a loop sequence
 			FlowNode curr,
-			Set<String> usedVariables,
+			Map<String, String> usedVariables,
 			int indent,
 			String bpmnName,
 			Set<FlowNode> visited
-		) {
-		
-		System.out.println("[DEBUG] After HELPER " + curr.getName() + " " + curr.getClass());
+		) throws Exception {
 		
         while (curr instanceof Continuable con && con.canContinue() && visited.add(curr)) {
         	if (ownerLoop != null && curr.equals(((Component)ownerLoop).getStart())) {
@@ -184,9 +223,9 @@ public class GenerateUtil {
             } else {
                 if (curr instanceof TaskWrapper tw) {
                     builder.append(
-                        String.format(SPACE.repeat(indent) + 
+                        String.format(Util.SPACE.repeat(indent) + 
                             "%sService.%s(requestBody, processid);\n", 
-                            bpmnName.toLowerCase(), curr.getName().replaceAll(" ", "")
+                            bpmnName.toLowerCase(), curr.getName()
                         )
                     );
                 } else if (curr instanceof Gateway && curr.getOutgoing().size() > 1 || ( 
@@ -207,27 +246,37 @@ public class GenerateUtil {
 
                         String res = getServiceTaskAfterHelper(builderTemp, ownerLoop, branchStart, usedVariables, indent + 1, bpmnName, visited);
 
-                        if (first && !res.isEmpty()) {
-                        	usedVariables.add(f.getName());
-                            builder.append(SPACE.repeat(indent) + 
-                                String.format("if (%s) {\n", f.getName())
-                            );
+                        if ((first || GatewayType.INCLUSIVE_GATEWAY.equals(((GatewayWrapper)curr).getGatewayType())) && !res.isEmpty()) {
+                        	Set<String> variables = Util.extractVariablesFromExpression(f.getName());
+                        	for (String var : variables) {
+                        		String varType = Util.inferTypeFromVariable(var, f.getName());
+                        		usedVariables.put(var, varType); 
+                        	}
+                            builder.append(Util.SPACE.repeat(indent) + 
+                                String.format("if (%s) {\n", f.getName()))
+                            .append(Util.SPACE.repeat(indent + 1) + 
+                                    String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", f.getName()));
                             first = false;
                         } else if (!res.isEmpty()) {
-                            builder.append(SPACE.repeat(indent) + 
-                                String.format("} else if (%s) {\n", f.getName())
-                            );
+                            builder.append(Util.SPACE.repeat(indent) + 
+                                String.format("} else if (%s) {\n", f.getName()))
+                            .append(Util.SPACE.repeat(indent + 1) + 
+                                String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", f.getName()));
                         }
                         builder.append(builderTemp.toString().indent(indent));
                     }
                     if (!first){
-                        builder.append(SPACE.repeat(indent) + "}\n");
+                        builder.append(Util.SPACE.repeat(indent) + "}\n");
                     }
                         
-                    return usedVariables.stream()
-                    .map(name -> String.format("boolean %s = true;\r\n", name))
+                    return usedVariables.entrySet().stream()
+                    .map(entry -> String.format("%s %s = true;\r\n", entry.getValue(), entry.getKey()))
                     .collect(Collectors.joining("")) + builder.toString();
                     
+                // pasang safeguard paralelgateway 
+                } else if (GatewayType.PARALLEL_GATEWAY.equals(((GatewayWrapper)curr).getGatewayType()) 
+                		&& (curr.getOutgoing().size() == 1 || ((OwnedComponent)curr).getOwnerComponent().getEnd().equals(curr))) { 
+                    builder.append(buildParallelSafeGuard(curr, indent));
                 }
             }
         	if (curr.getOutgoing().isEmpty() && curr instanceof OwnedComponent) {
@@ -245,9 +294,9 @@ public class GenerateUtil {
         	builder.append(c.getFromStartToUser(bpmnName, usedVariables, indent));
     	}
         
-        return usedVariables.stream()
-                .map(name -> String.format("boolean %s = true;\r\n", name))
-                .collect(Collectors.joining("")) + builder.toString();
+        return usedVariables.entrySet().stream()
+        .map(entry -> String.format("%s %s = true;\r\n", entry.getValue(), entry.getKey()))
+        .collect(Collectors.joining("")) + builder.toString();
 	}
 	
     private static boolean isFirstTaskOfLoop(OwnedComponent e) {
@@ -262,63 +311,6 @@ public class GenerateUtil {
         }
         if (parent == null) return false;
     	return ((FlowNode)e).getIncoming().size() == 0 || parent.getFirstTask().contains(e);
-    }
-    
-	private static FlowNode findById(String id, Component component) {
-	    for (FlowNode element : component.getElements()) {
-	        if (element.getId().equals(id)) {
-	            return element;
-	        }
-	        // Recurse into nested components
-	        if (element instanceof Component nested) {
-	        	FlowNode found = findById(id, nested);
-	            if (found != null) return found;
-	        }
-	    }
-	    return null;
-	}
-
-	// Overload to search from root BPMN
-	private static FlowNode findById(String id, BPMN bpmn) {
-	    for (FlowNode element : bpmn.getElements()) {
-	        // Check the component itself first
-	        if (element.getId().equals(id)) {
-	            return element;
-	        }
-	        // Recurse into nested components
-	        if (element instanceof Component nested) {
-	        	FlowNode found = findById(id, nested);
-	            if (found != null) return found;
-	        }
-	    }
-	    return null;
-	}
-
-    public static boolean canContinueFrom(FlowNode curr, Set<FlowNode> visited) {
-        // prevent infinite loops
-        if (!visited.add(curr)) {
-            return false;
-        }
-
-        // this element itself blocks continuation
-        if (curr instanceof Continuable && !((Continuable)curr).canContinue()) {
-            return false;
-        }
-
-        // no outgoing flow = end node → still valid continuation
-        if (curr.getOutgoing().isEmpty()) {
-            return true;
-        }
-
-        // OR semantics: if ANY outgoing branch can continue, we're good
-        for (SequenceFlow f : curr.getOutgoing()) {
-            if (canContinueFrom(f.getTargetRef(), visited)) {
-                return true;
-            }
-        }
-
-        // all downstream branches are blocked
-        return false;
     }
     
     // Loops must have unique canContinueFrom as it needs to stop searching when target gateway is found
@@ -357,7 +349,7 @@ public class GenerateUtil {
     public static List<Task> traverseForward(FlowNode e, org.eclipse.bpmn2.Process p, Boolean unwrap) throws Exception {
 		BPMN bpmn = getOrGenerateBPMN(p);
 		
-		e = findById(e.getId(), bpmn);
+		e = Util.findById(e.getId(), bpmn);
 		
         Set<FlowNode> visited = new HashSet<>();
         List<FlowNode> q = new ArrayList<>();
@@ -383,17 +375,6 @@ public class GenerateUtil {
 			: x).toList();
     }
     
-    public static void forwardDFS(
-        FlowNode current,
-        Set<FlowNode> visited) {
-
-        if (!visited.add(current)) return;
-
-        for (SequenceFlow out : current.getOutgoing()) {
-            forwardDFS(out.getTargetRef(), visited);
-        }
-    }
-    
     private static List<String> getPriorHelper(FlowNode e, List<TaskWrapper> after,  Set<FlowNode> visited) {
         List<FlowNode> q = new ArrayList<>();
         List<String> res = new ArrayList<>();
@@ -409,7 +390,7 @@ public class GenerateUtil {
             }
             if (curr instanceof TaskWrapper t) {
             	if (!after.contains(t)) {
-            		res.add(String.format("hasTaskState(\"%s\")",t.getName().replaceAll(" ", "")));
+            		res.add(String.format("hasTaskState(processes, \"%s\")",t.getName()));
             	}
             } else if (curr instanceof Component c) {
             	List<String> fromComponent = getPriorHelper(c.getEnd(), after, visited);
@@ -428,9 +409,9 @@ public class GenerateUtil {
             } else {
                 // Gateway found - collect incoming tasks and join based on gateway type
                 List<String> incomingResults = new ArrayList<>();
-                if (curr.getIncoming().isEmpty() || isStartOfLoopComponent(curr)) {
+                if (curr.getIncoming().isEmpty() || Util.isStartOfLoopComponent(curr)) {
             		// current is the start of component find higher level component that has exit flow
-            		while ((curr.getIncoming().isEmpty() && curr instanceof OwnedComponent oc) || (isStartOfLoopComponent(curr) && curr instanceof OwnedComponent oc))  {
+            		while ((curr.getIncoming().isEmpty() && curr instanceof OwnedComponent oc) || (Util.isStartOfLoopComponent(curr) && curr instanceof OwnedComponent oc))  {
             			curr = ((OwnedComponent) curr).getOwnerComponent();
             		}
                 }
@@ -450,24 +431,13 @@ public class GenerateUtil {
         return res;
     }
     
-    public static void backwardDFS(
-    	FlowNode current,
-        Set<FlowNode> visited) {
-
-        if (!visited.add(current)) return;
-
-        for (SequenceFlow in : current.getIncoming()) {
-            backwardDFS(in.getSourceRef(), visited);
-        }
-    }
-    
-    // Used in  Component.getFromStartToUser
+    // Used in  Component.getFromStartToUser to build a straight line of tasks without branchings
     public static void buildResource(
         StringBuilder builder,
         String bpmnName,
         FlowNode el,
         Set<FlowNode> visited,
-        Set<String> usedVariables, 
+        Map<String, String> usedVariables, 
         int indent
     ) {
     	System.out.println("[DEBUG] buildResource " + el.getName());
@@ -476,18 +446,21 @@ public class GenerateUtil {
         while (curr != null && visited.add(curr)) {
 
             if (curr instanceof TaskWrapper t && TaskType.isContinuable(t.getTaskType())) {
-                builder.append(SPACE.repeat(indent) + String.format(
-                        "%sService.%s(requestBody, processid);\n", 
-						bpmnName.toLowerCase(), curr.getName().replaceAll(" ", "")
+                builder.append(Util.SPACE.repeat(indent) + String.format(
+                        "%sService.%s(requestBody, processid);\r\n", 
+						bpmnName.toLowerCase(), curr.getName()
                     )
                 );
             }
+            
             // first blocking element ends the branch
             if (curr instanceof Component c) {
                 builder.append(c.getFromStartToUser(bpmnName, usedVariables, indent));
-                return;
+                if (c instanceof Continuable con && !con.canContinue()) {
+                	return;
+                }
             } else if (curr instanceof Continuable con && !con.canContinue()) {
-                builder.append(SPACE.repeat(indent) + "return res;\r\n");
+            	if (!Util.isInsideFlowComponent(curr)) builder.append(Util.SPACE.repeat(indent) + "return res;\r\n");
                 return;
             }
 
@@ -505,7 +478,64 @@ public class GenerateUtil {
         }
     }
     
-    public static BPMN getOrGenerateBPMN(org.eclipse.bpmn2.Process process) throws Exception {
+    public static String toValidVariableName(String input) {
+        if (input == null || input.isEmpty()) {
+            return "var";
+        }
+        
+        // Split on common delimiters: spaces, slashes, hyphens, underscores, dots
+        String[] parts = input.split("[\\s/\\-_.]+");
+        
+        StringBuilder result = new StringBuilder();
+        
+        for (int i = 0; i < parts.length; i++) {
+            if (parts[i].isEmpty()) continue;
+            
+            String part = parts[i].replaceAll("[^a-zA-Z0-9]", ""); // Remove any remaining non-alphanumeric
+            
+            if (part.isEmpty()) continue;
+            
+            if (i == 0) {
+                // First part: lower case first letter
+                result.append(Character.toLowerCase(part.charAt(0)));
+                if (part.length() > 1) {
+                    result.append(part.substring(1).toLowerCase());
+                }
+            } else {
+                // Subsequent parts: capitalize first letter
+                result.append(Character.toUpperCase(part.charAt(0)));
+                if (part.length() > 1) {
+                    result.append(part.substring(1).toLowerCase());
+                }
+            }
+        }
+        
+        // Ensure it starts with a letter (Java variable naming rule)
+        if (result.length() == 0 || !Character.isLetter(result.charAt(0))) {
+            result.insert(0, "var");
+        }
+        
+        return result.toString();
+    }
+    
+    public static String buildParallelSafeGuard(FlowNode curr, int indent) throws Exception {
+    	StringBuilder builder = new StringBuilder();
+        builder.append(Util.SPACE.repeat(indent + 1) + "List<ProcessInstance> processes = processService.getAllById(processid);\r\n");
+        builder.append(Util.SPACE.repeat(indent + 1) + "if (!(");
+        // Generate hasAllTaskStates check for all branches
+        String parallelBranches = GenerateQuery.getPrior(curr, null, false);
+        
+        builder.append(parallelBranches);
+        builder.append(")) {\n");
+        builder.append(Util.SPACE.repeat(indent + 2) + "res.put(\"status\", \"fail\");\r\n");
+        builder.append(Util.SPACE.repeat(indent + 2) + "res.put(\"message\", \"Parallel branches not complete\");\r\n");
+        builder.append(Util.SPACE.repeat(indent + 2) + "return res;\r\n");
+        builder.append(Util.SPACE.repeat(indent + 1) + "}\r\n");
+        
+        return builder.toString();
+    }
+    
+    private static BPMN getOrGenerateBPMN(org.eclipse.bpmn2.Process process) throws Exception {
 		if (BPMNParser.getBPMN() != null) {
 			return BPMNParser.getBPMN();
 		} else {
@@ -515,24 +545,5 @@ public class GenerateUtil {
 			BPMNParser.parse(process);
 			return BPMNParser.getBPMN();
 		}
-    }
-    
-    private static boolean isStartOfLoopComponent(FlowNode e) {
-    	if (e instanceof OwnedComponent oc) {
-    		Component parent = oc.getOwnerComponent();
-    		return (parent instanceof WhileComponent || 
-    				parent instanceof RepeatComponent || 
-    				parent instanceof WhileRepeatComponent) && 
-    				parent.getStart().equals(e);
-    	}
-    	return false;
-    }
-    
-    private static Looping getOwnerLoop(OwnedComponent curr) {
-		while(curr != null) {
-			if (curr instanceof Looping) return (Looping) curr;
-			curr = curr.getOwnerComponent();
-		}
-    	return null;
     }
 }
