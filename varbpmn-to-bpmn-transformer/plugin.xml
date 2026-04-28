@@ -6,10 +6,15 @@
             objectClass="org.eclipse.core.resources.IFile"
             nameFilter="*.bpmn2"
          id="varbpmn.to.bpmn.transformer.contribution">
+         <menu
+               id="varbpmn.menu"
+               label="VarBPMN"
+               path="additions">
+         </menu>
          <action
                label="Derive VarBPMN to BPMN"
                class="varbpmn.to.bpmn.transformer.actions.DeriveAction"
-               menubarPath="additions"
+               menubarPath="varbpmn.menu/additions"
                enablesFor="1"
                id="varbpmn.to.bpmn.transformer.action">
          </action>
