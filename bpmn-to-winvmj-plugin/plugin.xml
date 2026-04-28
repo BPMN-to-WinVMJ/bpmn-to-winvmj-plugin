@@ -28,29 +28,18 @@
       </handler>
    </extension>
 
-   <extension point="org.eclipse.ui.menus">
-      <!-- Right-click context menu in Project Explorer / Package Explorer -->
-      <menuContribution
-            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-         <command
-               commandId="bpmn.to.winvmj.plugin.commands.convert"
-               id="bpmn.to.winvmj.plugin.menus.convertCommand"
+   <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.bpmn2"
+            id="bpmn.to.winvmj.plugin.contribution">
+         <action
                label="Convert BPMN to WinVMJ"
-               icon="icons/burhan.png"
-               style="push">
-            <!-- Only show when a .bpmn2 file is selected -->
-            <visibleWhen checkEnabled="false">
-               <with variable="selection">
-                  <iterate ifEmpty="false">
-                     <adapt type="org.eclipse.core.resources.IFile">
-                        <test
-                              property="org.eclipse.core.resources.extension"
-                              value="bpmn2"/>
-                     </adapt>
-                  </iterate>
-               </with>
-            </visibleWhen>
-         </command>
-      </menuContribution>
+               class="bpmn.to.winvmj.plugin.handler.PopupConvertAction"
+               menubarPath="varbpmn.menu/additions"
+               enablesFor="1"
+               id="bpmn.to.winvmj.plugin.popup.convertAction">
+         </action>
+      </objectContribution>
    </extension>
 </plugin>
