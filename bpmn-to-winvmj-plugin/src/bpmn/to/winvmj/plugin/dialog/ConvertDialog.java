@@ -60,15 +60,15 @@ public class ConvertDialog extends TitleAreaDialog {
         bpmnText.setLayoutData(bpmnTextData);
 
         // IFML
-        new Label(container, SWT.NONE).setText("IFML File:");
-        ifmlText = new Text(container, SWT.BORDER);
-        ifmlText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        Button ifmlBrowse = new Button(container, SWT.PUSH);
-        ifmlBrowse.setText("Browse...");
-        ifmlBrowse.addListener(SWT.Selection, e -> chooseFile(ifmlText, "ifml"));
+//        new Label(container, SWT.NONE).setText("IFML File:");
+//        ifmlText = new Text(container, SWT.BORDER);
+//        ifmlText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+//        Button ifmlBrowse = new Button(container, SWT.PUSH);
+//        ifmlBrowse.setText("Browse...");
+//        ifmlBrowse.addListener(SWT.Selection, e -> chooseFile(ifmlText, "ifml"));
         
         // UML-DOP
-        new Label(container, SWT.NONE).setText("UML-DOP Generated Project:");
+        new Label(container, SWT.NONE).setText("Generated UML-DOP src/ :");
         umlDopText = new Text(container, SWT.BORDER);
         umlDopText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         Button umlDop = new Button(container, SWT.PUSH);
@@ -116,16 +116,49 @@ public class ConvertDialog extends TitleAreaDialog {
             return;
         }
 
+        File umlDopDir = new File(umlDopPath);
         try {
         	File bpmnDir = bpmnFile.getParentFile();
-            File outputFolder = new File(bpmnDir, "generated");
+        	File outputFolder = new File(bpmnDir, "generated");
+        	
+        	String importPath = "";
+        	if (!umlDopPath.isBlank()) {
+        		
+        		// Find resource folder
+        		File coreFolder = findFolderEndingWith(umlDopDir, ".core");
+                if (coreFolder != null) {
+                    File resourceFolder = findFolderFileContainingName(coreFolder, "resource");
+                    if (resourceFolder != null) {
+                    	// Change output folder to real resource dir
+                        outputFolder = resourceFolder;
+                        
+                        // Get import path for project
+                        String corePath = coreFolder.getAbsolutePath();
+                        importPath = corePath.substring(umlDopPath.length() + 1, corePath.length() - 5);
+                        importPath = importPath.replaceAll(" ", "");
+                        importPath = importPath.replaceAll("/", ".");
+                        importPath = importPath.replaceAll("\\\\", ".");
+                    } else {
+                        System.err.println("Warning: 'resource' folder not found inside " + coreFolder.getAbsolutePath());
+                        throw new IllegalArgumentException();
+                    }
+                    
+                } else {
+                    System.err.println("Warning: No '.core' folder found under " + umlDopPath);
+                    throw new IllegalArgumentException();
+                }
+        	}
             
             if (!outputFolder.exists()) {
                 outputFolder.mkdirs();
             }
 
-			boolean success = BpmnToWinVmjGenerator.transformBpmnFile(bpmnPath, outputFolder);
-			if (success) {
+			File productFolder = findFolderFileContainingName(umlDopDir, ".product.");
+			File productJavaFile = findFolderFileContainingName(productFolder, ".java");
+			
+			boolean success = BpmnToWinVmjGenerator.transformBpmnFile(bpmnPath, outputFolder, importPath, umlDopDir.getAbsolutePath());
+			boolean successEdit = BpmnToWinVmjGenerator.editProductRouter(productFolder, productJavaFile, bpmnPath, importPath);
+			if (success && successEdit) {
                 System.out.println("Conversion completed successfully!");
                 setErrorMessage(null);
                 setMessage("Conversion completed! Files generated in: " + outputFolder.getAbsolutePath());
@@ -137,18 +170,60 @@ public class ConvertDialog extends TitleAreaDialog {
             // IFML can be handled later
              File ifmlFile = ifmlPath.isBlank() ? null : new File(ifmlPath);
              
-             // UML DOP Project can be handled later
-             File umlDopProject = umlDopPath.isBlank() ? null : new File(umlDopPath);
-             
              refreshFolder(outputFolder);
              
 
         } catch (Exception ex) {
             setErrorMessage("Failed to parse BPMN: " + ex.getMessage());
+            ex.printStackTrace();
             return;
         }
 
         super.okPressed();
+    }
+    
+    /**
+     * Searches the given directory (non-recursively) for a subfolder whose name ends with the given suffix.
+     */
+    private File findFolderEndingWith(File searchRoot, String suffix) {
+        if (searchRoot == null || !searchRoot.isDirectory()) return null;
+
+        File[] children = searchRoot.listFiles();
+        if (children == null) return null;
+
+        for (File child : children) {
+            if (child.isDirectory() && child.getName().endsWith(suffix)) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Recursively searches the given directory for a subfolder with the exact given name.
+     */
+    private File findFolderFileContainingName(File searchRoot, String folderName) {
+        if (searchRoot == null || !searchRoot.isDirectory()) return null;
+
+        File[] children = searchRoot.listFiles();
+        if (children == null) return null;
+
+        for (File child : children) {
+            if (child.isDirectory()) {
+                if (child.getName().contains(folderName)) {
+                    return child;
+                }
+                // Recurse into subdirectory
+                File found = findFolderFileContainingName(child, folderName);
+                if (found != null) return found;
+            }
+            else if (child.isFile()) {
+                if (child.getName().contains(folderName)) {
+                    return child;
+                }
+            }
+        }
+        return null;
     }
     
     private static void refreshFolder(File folder) {

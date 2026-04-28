@@ -1,0 +1,407 @@
+[module Generate('http://www.omg.org/spec/BPMN/20100524/MODEL')]
+
+[template public generate(defs : bpmn2::Definitions, fileName : String, outputPath: String, importPath : String, targetPath : String)]
+[comment @main /]
+[for (p : bpmn2::Process | defs.rootElements->select(e | e.oclIsKindOf(bpmn2::Process)))]
+[file (outputPath + fileName.toUpperFirst().replaceAll(' ', '') + 'ResourceImpl.java', false, 'UTF-8')]
+[generateResourceImpl(p, fileName.toUpperFirst(), importPath)/]
+[/file]
+[file (outputPath + fileName.toUpperFirst().replaceAll(' ', '') + 'Resource.java', false, 'UTF-8')]
+[generateResource(p, fileName.toUpperFirst(), importPath, targetPath)/]
+[/file]
+[file (outputPath + fileName.toUpperFirst().replaceAll(' ', '') + 'ResourceComponent.java', false, 'UTF-8')]
+[generateResourceComponent(p, fileName.toUpperFirst(), importPath)/]
+[/file]
+[file (outputPath + fileName.toUpperFirst().replaceAll(' ', '') + 'ResourceDecorator.java', false, 'UTF-8')]
+[generateResourceDecorator(p, fileName.toUpperFirst(), importPath)/]
+[/file]
+[file ((if outputPath = '' then '../../' else outputPath endif) + fileName.toUpperFirst().replaceAll(' ', '') + 'ResourceFactory.java', false, 'UTF-8')]
+[generateResourceFactory(p, fileName.toUpperFirst(), importPath)/]
+[/file]
+[/for]
+[/template]
+
+[template public generateResource(p : bpmn2::Process, fileName : String, importPath : String, targetPath: String)]
+// @generated from [fileName /].bpmn2
+
+package [importPath /].core;
+
+import java.util.*;
+import vmj.routing.route.VMJExchange;
+
+[importAll(targetPath) /]
+
+public interface [fileName.replaceAll(' ', '')/]Resource {
+[let startevent : bpmn2::StartEvent = p.flowElements->asSequence()
+    ->select(e | e.oclIsKindOf(bpmn2::StartEvent) 
+             and not e.eContainer().oclIsKindOf(bpmn2::SubProcess))
+    ->first() ]
+[for (ut : bpmn2::Task | 
+    p.flowElements
+        ->select(e | e.oclIsKindOf(bpmn2::UserTask))
+        ->union(getTasksAfterStart(startevent, p, true))
+        ->asOrderedSet()
+        ->collect(e | e.oclAsType(bpmn2::Task))
+)]
+    Map<String, Object> [ut.name.replaceAll(' ', '')/](VMJExchange vmjExchange);
+[/for]
+[/let]
+}
+[/template]
+
+[template public generateResourceComponent(p : bpmn2::Process, fileName : String, importPath : String)]
+// @generated from [fileName /].bpmn2
+
+package [importPath /].core;
+
+import java.util.*;
+import vmj.routing.route.VMJExchange;
+import vmj.hibernate.integrator.RepositoryUtil;
+
+public abstract class [fileName.replaceAll(' ', '')/]ResourceComponent implements [fileName.replaceAll(' ', '')/]Resource {
+
+[let startevent : bpmn2::StartEvent = p.flowElements->asSequence()->select(e | e.oclIsKindOf(bpmn2::StartEvent))->first() ]
+[for (ut : bpmn2::Task | 
+    p.flowElements
+        ->select(e | e.oclIsKindOf(bpmn2::UserTask))
+        ->union(getTasksAfterStart(startevent, p, true))
+        ->asOrderedSet()
+        ->collect(e | e.oclAsType(bpmn2::Task))
+)]
+    public abstract Map<String, Object> [ut.name.replaceAll(' ', '')/](VMJExchange vmjExchange);
+[/for]
+[/let]
+}
+[/template]
+
+[template public generateResourceDecorator(p : bpmn2::Process, fileName : String, importPath : String)]
+// @generated from [fileName /].bpmn2
+
+package [importPath /].core;
+
+import java.util.*;
+import vmj.routing.route.VMJExchange;
+import vmj.hibernate.integrator.RepositoryUtil;
+
+public abstract class [fileName.replaceAll(' ', '')/]ResourceDecorator extends [fileName.replaceAll(' ', '')/]ResourceComponent {
+	protected [fileName.replaceAll(' ', '')/]ResourceComponent record;
+	
+	public [fileName.replaceAll(' ', '')/]ResourceDecorator([fileName.replaceAll(' ', '')/]ResourceComponent record) {
+        this.record = record;
+    }
+
+[let startevent : bpmn2::StartEvent = p.flowElements->asSequence()->select(e | e.oclIsKindOf(bpmn2::StartEvent))->first() ]
+[for (ut : bpmn2::Task | 
+    p.flowElements
+        ->select(e | e.oclIsKindOf(bpmn2::UserTask))
+        ->union(getTasksAfterStart(startevent, p, true))
+        ->asOrderedSet()
+        ->collect(e | e.oclAsType(bpmn2::Task))
+)]
+    public Map<String, Object> [ut.name.replaceAll(' ', '')/](VMJExchange vmjExchange) {
+		return record.[ut.name.replaceAll(' ', '')/](vmjExchange);
+	}
+[/for]
+[/let]
+}
+[/template]
+
+[template public generateResourceImpl(p : bpmn2::Process, fileName : String, importPath : String)]
+// @generated from [fileName /].bpmn2
+
+package [importPath /].core;
+
+import java.util.*;
+import vmj.routing.route.VMJExchange;
+import vmj.routing.route.Route;
+
+public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.replaceAll(' ', '')/]ResourceComponent {
+
+    static class ProcessInstance {
+        String id;
+        String state;
+        ProcessInstance(String id, String state) {
+            this.id = id;
+            this.state = state;
+        }
+    }
+
+    static interface ProcessService {
+        boolean upsert(ProcessInstance state); 
+        List<ProcessInstance> getAllById(String id);
+    }
+
+    static class ProcessServiceImpl implements ProcessService {
+        private static final List<ProcessInstance> STORE = new ArrayList<>();
+
+        public boolean upsert(ProcessInstance state) {
+            if (STORE.contains(state)) return true;
+            return STORE.add(state);
+        }
+
+        public List<ProcessInstance> getAllById(String id) {
+            return STORE.stream()
+                .filter(p -> id.equals(p.id))
+                .toList();
+        }
+    }
+
+    static interface [fileName.replaceAll(' ', '')/]Service {
+[generateServiceSignatures(p)/]
+    }
+
+    static class [fileName.replaceAll(' ', '')/]ServiceImpl implements [fileName.replaceAll(' ', '')/]Service {
+[generateServiceImplementations(p, fileName)/]
+    }
+
+    private static ProcessService processService = new ProcessServiceImpl();
+	private static [fileName.replaceAll(' ', '')/]Service [fileName.replaceAll(' ', '').toLower()/]Service = new [fileName.replaceAll(' ', '')/]ServiceImpl();
+
+[generateUserTaskResources(p, fileName)/]
+}
+[/template]
+
+[template public generateServiceSignatures(p : bpmn2::Process)]
+[for (t : bpmn2::Task | p.flowElements->select(e | e.oclIsKindOf(bpmn2::Task) and not e.oclIsKindOf(bpmn2::ScriptTask)))]
+        void [toValidVariableName(t)/](Map<String, Object> body, String processid);
+[/for]
+[/template]
+
+[template public generateServiceImplementations(p : bpmn2::Process, fileName : String)]
+[for (t : bpmn2::Task | p.flowElements->select(e | e.oclIsKindOf(bpmn2::Task) and not e.oclIsKindOf(bpmn2::ScriptTask)))]
+	    @Override
+	    public void [toValidVariableName(t)/](Map<String, Object> body, String processid) {
+	        // TODO: Implement logic for [t.name/]
+			processService.upsert(new ProcessInstance(processid, "[toValidVariableName(t)/]"));
+	        System.out.println("Executing [t.name/]");
+			[subProcessConverted(t, p, fileName) /]
+	    }
+
+[/for]
+[/template]
+
+[template public generateUserTaskResources(p : bpmn2::Process, fileName : String)]
+[let startevent : bpmn2::StartEvent = p.flowElements->asSequence()->select(e | e.oclIsKindOf(bpmn2::StartEvent))->first() ]
+[for (ut : bpmn2::Task | 
+    p.flowElements
+        ->select(e | e.oclIsKindOf(bpmn2::UserTask))
+        ->union(getTasksAfterStart(startevent, p, true))
+        ->asOrderedSet()
+        ->collect(e | e.oclAsType(bpmn2::Task))
+)]
+    @Route(url = "call/[ut.name.replaceAll(' ', '')/]")
+    public Map<String, Object> [ut.name.replaceAll(' ', '')/](VMJExchange vmjExchange) {
+        Map<String, Object> res = new HashMap<>();
+		Map<String, Object> requestBody = vmjExchange.getPayload();
+
+		[if (getTasksAfterStart(startevent, p, true)->includes(ut))]
+        String processid = UUID.randomUUID().toString();
+        processService.upsert(new ProcessInstance(processid, "[ut.name /]"));
+		res.put("processid", processid);
+		[getFormData(ut) /]
+		[else]
+		String processid = (String) requestBody.get("processInstanceId");
+		[getFormData(ut) /]
+		if (vmjExchange.getHttpMethod().equals("POST")) {
+
+	        // Cek apakah step sebelumnya pernah dilakukan
+	        // This also allows user yang mundur page trus isi form ulang
+	        // karena langkah sebelum page ini pasti udh dilakukan
+	        // ini juga mencegah orang dari asal tembak api
+	        List<ProcessInstance> processes = processService.getAllById(processid);
+			
+			if (!([traversePrior(ut, p)/])
+			) {
+				res.put("status", "fail");
+				res.put("message", "[ut.name /] DENIED");
+            	return res;
+			}
+		}
+		[/if]
+
+        res.put("status", "ok");
+        res.put("message", "[ut.name/] SUCCESS");
+
+		[fileName.replaceAll(' ', '').toLower()/]Service.[ut.name.replaceAll(' ', '') /](requestBody, processid);
+		[traverseAfter(ut, p, fileName)/]
+
+        return res;
+    }
+
+[/for]
+[/let]
+	private static boolean hasTaskState(List<ProcessInstance> processes, String... states) {
+	    return processes.stream()
+	        .anyMatch(x -> Arrays.stream(states)
+	            .anyMatch(state -> x.state.equalsIgnoreCase(state)));
+	}
+[/template]
+
+[template public traversePrior(ut : bpmn2::Task, p : bpmn2::Process)]
+[getPrior(ut, p)/]
+[/template]
+
+[template public traverseAfter(ut : bpmn2::Task, p : bpmn2::Process, fileName : String)]
+[getServiceTaskAfter(ut, p, fileName)/]
+[/template]
+
+[template public subProcessConverted(ut : bpmn2::Task, p : bpmn2::Process, fileName : String)]
+[getSubProcessIn(ut, p, fileName)/]
+[/template]
+
+[template public getFormData(task : bpmn2::Task)]
+[for (prop : bpmn2::Property | task.properties)]
+[if (prop.itemSubjectRef <> null)]
+[let itemDef : bpmn2::ItemDefinition = prop.itemSubjectRef.oclAsType(bpmn2::ItemDefinition)]
+[itemDef.toJavaFieldType()/] [prop.name/] = ([itemDef.toJavaFieldType()/]) requestBody.get("[prop.name/]");
+[/let]
+[/if]
+[/for]
+[/template]
+
+[comment Helper query: maps xs: structureRef to Java type /]
+[query public toJavaType(structureRef : OclAny) : String =
+    let typeName : String = structureRef.toString().toLower() in
+    let stripped : String = if typeName.contains(':') 
+                            then typeName.substring(typeName.indexOf(':') + 1) 
+                            else typeName 
+                            endif 
+    in
+    if      stripped = 'string'             then 'String'
+    else if stripped = 'long'               then 'Long'
+    else if stripped = 'int'                then 'Integer'
+    else if stripped = 'integer'            then 'Integer'
+    else if stripped = 'short'              then 'Short'
+    else if stripped = 'byte'               then 'Byte'
+    else if stripped = 'double'             then 'Double'
+    else if stripped = 'float'              then 'Float'
+    else if stripped = 'boolean'            then 'Boolean'
+    else if stripped = 'decimal'            then 'BigDecimal'
+    else if stripped = 'date'               then 'Date'
+    else if stripped = 'datetime'           then 'Date'
+    else if stripped = 'base64binary'       then 'byte[]'
+    else 'Object'
+    endif endif endif endif endif endif endif endif endif endif endif endif endif
+/]
+
+[comment Helper query: wraps in List<> if isCollection /]
+[query public toJavaFieldType(itemDef : bpmn2::ItemDefinition) : String =
+    let javaType : String = itemDef.structureRef.toJavaType() in
+    if itemDef.isCollection 
+    then 'List<' + javaType + '>'
+    else javaType
+    endif
+/]
+	
+[template public generateResourceFactory(p : bpmn2::Process, fileName : String, importPath : String)]
+// @generated from [fileName /].bpmn2
+
+package [importPath /];
+
+import java.util.*;
+import vmj.routing.route.VMJExchange;
+import vmj.hibernate.integrator.RepositoryUtil;
+
+public abstract class [fileName.replaceAll(' ', '')/]ResourceFactory {
+	    private static final Logger LOGGER = Logger.getLogger(ResourceFactory.class.getName());
+
+    public [fileName.replaceAll(' ', '')/]ResourceFactory()
+    {
+
+    }
+
+    public static [fileName.replaceAll(' ', '')/]Resource createResource(String fullyQualifiedName, Object ... base)
+    {
+    	[fileName.replaceAll(' ', '')/]Resource record = null;
+        if(true)
+        {
+        try {
+            Class<?> clz = Class.forName(fullyQualifiedName);
+            Constructor<?> constructor = clz.getDeclaredConstructors()['['/]0[']'/];
+            System.out.println(constructor.toString());
+            record = ([fileName.replaceAll(' ', '') /]Resource) constructor.newInstance(base);
+        } 
+        catch (IllegalArgumentException e)
+        {
+            LOGGER.severe("Failed to create instance of Account.");
+            LOGGER.severe("Given FQN: " + fullyQualifiedName);
+            LOGGER.severe("Failed to run: Check your constructor argument");
+            System.exit(20);
+        }
+        catch (ClassCastException e)
+        {   LOGGER.severe("Failed to create instance of Account.");
+            LOGGER.severe("Given FQN: " + fullyQualifiedName);
+            LOGGER.severe("Failed to cast the object");
+            System.exit(30);
+        }
+        catch (ClassNotFoundException e)
+        {
+            LOGGER.severe("Failed to create instance of Account.");
+            LOGGER.severe("Given FQN: " + fullyQualifiedName);
+            LOGGER.severe("Decorator can't be applied to the object");
+            System.exit(40);
+        }
+        catch (Exception e)
+        {
+            LOGGER.severe("Failed to create instance of Account.");
+            LOGGER.severe("Given FQN: " + fullyQualifiedName);
+            System.exit(50);
+        }
+        }
+        else
+        {
+            System.out.println("Config Fail");
+            System.exit(10);
+        }
+        return record;
+    }
+}
+[/template]
+	
+[query public getPrior(ut : bpmn2::Task, p : bpmn2::Process) : String =
+  invoke(
+    'bpmn.to.winvmj.acceleo.GenerateQuery',
+    'getPrior(org.eclipse.bpmn2.FlowNode, org.eclipse.bpmn2.Process, java.lang.Boolean)',
+    Sequence{ut, p, true}
+  )
+/]
+	
+[query public getServiceTaskAfter(ut : bpmn2::Task, p : bpmn2::Process, bpmnName : String) : String =
+  invoke(
+    'bpmn.to.winvmj.acceleo.GenerateQuery',
+    'getServiceTaskAfter(org.eclipse.bpmn2.FlowNode, org.eclipse.bpmn2.FlowElementsContainer, java.lang.String)',
+    Sequence{ut, p, bpmnName}
+  )
+/]
+
+[query public getSubProcessIn(ut : bpmn2::Task, p : bpmn2::Process, bpmnName : String) : String =
+  invoke(
+    'bpmn.to.winvmj.acceleo.GenerateQuery',
+    'getSubProcessIn(org.eclipse.bpmn2.FlowNode, org.eclipse.bpmn2.Process, java.lang.String)',
+    Sequence{ut, p, bpmnName}
+  )
+/]
+
+[query public toValidVariableName(t : bpmn2::Task) : String =
+  invoke(
+    'bpmn.to.winvmj.acceleo.GenerateQuery',
+    'toValidVariableName(java.lang.String)',
+    Sequence{t.name}
+  )
+/]
+
+[query public getTasksAfterStart(e: bpmn2::StartEvent, p : bpmn2::Process, unwrap : Boolean) : Set(bpmn2::Task) =
+    invoke(
+    'bpmn.to.winvmj.acceleo.GenerateQuery',
+    'traverseForward(org.eclipse.bpmn2.FlowNode, org.eclipse.bpmn2.Process, java.lang.Boolean)',
+    Sequence{e, p, unwrap}
+  )
+/]
+
+[query public importAll(targetPath: String) : String =
+	invoke(
+    	'bpmn.to.winvmj.acceleo.GenerateQuery',
+    	'importAll(java.lang.String)',
+		Sequence{targetPath}
+	)
+/]
