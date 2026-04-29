@@ -1,12 +1,11 @@
 package bpmn.to.winvmj.acceleo.java;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -268,32 +267,40 @@ public class Util {
         return keywords.contains(token);
     }
     
-    public static String getAllAccessibleFileAsImport(String targetPath) {
+    public static String getAllAccessibleFileAsImport(String bpmnName, String targetPath) {
         Path srcPath = Paths.get(targetPath);
-
         if (!Files.exists(srcPath) || !Files.isDirectory(srcPath)) {
+        	System.out.println("Not found");
             return "";
         }
-
         try (Stream<Path> walk = Files.walk(srcPath)) {
             return walk
                 .filter(Files::isRegularFile)
                 .filter(p -> p.toString().endsWith(".java"))
                 .filter(p -> !p.getFileName().toString().equals("package-info.java")
                           && !p.getFileName().toString().equals("module-info.java"))
+                .filter(p -> !p.getFileName().toString().equals(bpmnName + "ResourceImpl.java"))
+                .filter(p -> !p.toString().contains(".product."))
+                .filter(p -> {
+                    String parentFolder = p.getParent().getFileName().toString();
+                    return parentFolder.equals("model") || parentFolder.equals("resource");
+                })
                 .map(p -> {
                     Path relative = srcPath.relativize(p);
-                    String prefix = relative.getName(0).toString();
-                    String className = p.getFileName().toString().replace(".java", "");
-                    return "import " + prefix + "." + className + ";";
+                    System.out.println(p.getFileName());
+                    // Skip the first folder, take the rest as the import path
+                    Path withoutFirstFolder = relative.subpath(1, relative.getNameCount());
+                    String importPath = withoutFirstFolder.toString()
+                        .replace(File.separatorChar, '.')
+                        .replace(".java", "");
+                    return "import " + importPath + ";";
                 })
                 .sorted()
                 .collect(Collectors.joining("\n"));
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return "";
     }
+
 }

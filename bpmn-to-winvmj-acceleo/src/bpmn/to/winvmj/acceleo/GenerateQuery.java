@@ -618,8 +618,9 @@ public class GenerateQuery {
         return builder.toString();
     }
     
-    public static String importAll(String targetPath) {
-    	return Util.getAllAccessibleFileAsImport(targetPath);
+    public static String importAll(String bpmnName, String targetPath) {
+    	System.out.println("[START] importAll from " + targetPath);
+    	return Util.getAllAccessibleFileAsImport(bpmnName, targetPath);
     }
     
     private static BPMN getOrGenerateBPMN(org.eclipse.bpmn2.FlowElementsContainer process, boolean save) throws Exception {

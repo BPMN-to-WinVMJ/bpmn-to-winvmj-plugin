@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BPMN to WinVMJ Plugin
-Bundle-SymbolicName: id.ac.ui.cs.prices.bpmn.winvmj.plugin;singleton:=true
+Bundle-SymbolicName: bpmn.to.winvmj.plugin;singleton:=true
 Bundle-Version: 0.0.0
 Bundle-Activator: bpmn.to.winvmj.plugin.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-17

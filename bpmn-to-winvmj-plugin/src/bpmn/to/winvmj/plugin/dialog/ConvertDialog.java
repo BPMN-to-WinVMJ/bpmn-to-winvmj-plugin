@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -77,15 +76,6 @@ public class ConvertDialog extends TitleAreaDialog {
 
         return area;
     }
-
-    private void chooseFile(Text target, String extension) {
-        FileDialog dialog = new FileDialog(getShell(), SWT.OPEN);
-        dialog.setFilterExtensions(new String[] {"*."+ extension});
-        String path = dialog.open();
-        if (path != null) {
-            target.setText(path);
-        }
-    }
     
     private void chooseFolder(Text targetText) {
         DirectoryDialog dialog = new DirectoryDialog(getShell(), SWT.OPEN);
@@ -101,7 +91,7 @@ public class ConvertDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         String bpmnPath = bpmnText.getText();
-        String ifmlPath = ifmlText.getText(); // may be empty
+//        String ifmlPath = ifmlText.getText(); // may be empty
         String umlDopPath = umlDopText.getText().trim(); // may be empty
 
         if (bpmnPath == null || bpmnPath.isBlank()) {
@@ -168,7 +158,7 @@ public class ConvertDialog extends TitleAreaDialog {
             }
         	
             // IFML can be handled later
-             File ifmlFile = ifmlPath.isBlank() ? null : new File(ifmlPath);
+//             File ifmlFile = ifmlPath.isBlank() ? null : new File(ifmlPath);
              
              refreshFolder(outputFolder);
              

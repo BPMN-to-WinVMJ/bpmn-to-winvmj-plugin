@@ -4,7 +4,7 @@
 [comment @main /]
 [for (p : bpmn2::Process | defs.rootElements->select(e | e.oclIsKindOf(bpmn2::Process)))]
 [file (outputPath + fileName.toUpperFirst().replaceAll(' ', '') + 'ResourceImpl.java', false, 'UTF-8')]
-[generateResourceImpl(p, fileName.toUpperFirst(), importPath)/]
+[generateResourceImpl(p, fileName.toUpperFirst(), importPath, targetPath)/]
 [/file]
 [file (outputPath + fileName.toUpperFirst().replaceAll(' ', '') + 'Resource.java', false, 'UTF-8')]
 [generateResource(p, fileName.toUpperFirst(), importPath, targetPath)/]
@@ -28,8 +28,7 @@ package [importPath /].core;
 
 import java.util.*;
 import vmj.routing.route.VMJExchange;
-
-[importAll(targetPath) /]
+[importAll(fileName, targetPath) /]
 
 public interface [fileName.replaceAll(' ', '')/]Resource {
 [let startevent : bpmn2::StartEvent = p.flowElements->asSequence()
@@ -106,7 +105,7 @@ public abstract class [fileName.replaceAll(' ', '')/]ResourceDecorator extends [
 }
 [/template]
 
-[template public generateResourceImpl(p : bpmn2::Process, fileName : String, importPath : String)]
+[template public generateResourceImpl(p : bpmn2::Process, fileName : String, importPath : String, targetPath: String)]
 // @generated from [fileName /].bpmn2
 
 package [importPath /].core;
@@ -114,6 +113,7 @@ package [importPath /].core;
 import java.util.*;
 import vmj.routing.route.VMJExchange;
 import vmj.routing.route.Route;
+[importAll(fileName, targetPath) /]
 
 public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.replaceAll(' ', '')/]ResourceComponent {
 
@@ -398,10 +398,10 @@ public abstract class [fileName.replaceAll(' ', '')/]ResourceFactory {
   )
 /]
 
-[query public importAll(targetPath: String) : String =
-	invoke(
-    	'bpmn.to.winvmj.acceleo.GenerateQuery',
-    	'importAll(java.lang.String)',
-		Sequence{targetPath}
-	)
+[query public importAll(bpmnName: String, targetPath: String) : String =
+    invoke(
+        'bpmn.to.winvmj.acceleo.GenerateQuery',
+        'importAll(java.lang.String, java.lang.String)',
+        Sequence{bpmnName, targetPath}
+    )->any(true).toString()
 /]
