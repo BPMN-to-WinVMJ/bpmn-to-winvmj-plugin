@@ -105,20 +105,13 @@ public class DeriveAction implements IObjectActionDelegate {
 				Path inputBpmnPath = Paths.get(selectedFile.getLocation().toOSString());
 				Path baseFolder = inputBpmnPath.getParent();
 
-				File configFile = askUserFile("Pilih File Konfigurasi FeatureIDE", new String[] { "*.xml", "*.*" }, baseFolder);
-				if (configFile == null) {
+				SelectedInputs inputs = selectInputsWithBack(baseFolder);
+				if (inputs == null) {
 					return;
 				}
-
-				File modelFile = askUserFile("Pilih File Model Feature (.uvl)", new String[] { "*.uvl", "*.*" }, configFile.toPath().getParent());
-				if (modelFile == null) {
-					return;
-				}
-
-				File mappingFile = askUserFile("Pilih File Mapping feature_to_var.json", new String[] { "*.json", "*.*" }, configFile.toPath().getParent());
-				if (mappingFile == null) {
-					return;
-				}
+				File configFile = inputs.configFile;
+				File modelFile = inputs.modelFile;
+				File mappingFile = inputs.mappingFile;
 
 				List<String> selectedFeatures = readSelectedFeatures(configFile.toPath());
 				if (selectedFeatures.isEmpty()) {
@@ -458,6 +451,62 @@ public class DeriveAction implements IObjectActionDelegate {
 		return new File(selectedPath);
 	}
 
+	private SelectedInputs selectInputsWithBack(Path baseFolder) {
+		File configFile = null;
+		File modelFile = null;
+		Path preferredDirectory = baseFolder;
+		int step = 0;
+
+		while (true) {
+			if (step == 0) {
+				configFile = askUserFile("Pilih File Konfigurasi FeatureIDE", new String[] { "*.xml", "*.*" }, preferredDirectory);
+				if (configFile == null) {
+					return null;
+				}
+				preferredDirectory = configFile.toPath().getParent();
+				step = 1;
+				continue;
+			}
+
+			if (step == 1) {
+				modelFile = askUserFile("Pilih File Model Feature (.uvl)", new String[] { "*.uvl", "*.*" }, preferredDirectory);
+				if (modelFile == null) {
+					boolean backToConfig = MessageDialog.openQuestion(
+						shell,
+						"Kembali ke langkah sebelumnya?",
+						"Pemilihan model dibatalkan.\nPilih Yes untuk kembali memilih file konfigurasi.\nPilih No untuk membatalkan proses."
+					);
+					if (backToConfig) {
+						step = 0;
+						preferredDirectory = configFile != null ? configFile.toPath().getParent() : baseFolder;
+						continue;
+					}
+					return null;
+				}
+				preferredDirectory = modelFile.toPath().getParent();
+				step = 2;
+				continue;
+			}
+
+			File mappingFile = askUserFile("Pilih File Mapping feature_to_var.json", new String[] { "*.json", "*.*" }, preferredDirectory);
+			if (mappingFile == null) {
+				boolean backToModel = MessageDialog.openQuestion(
+					shell,
+					"Kembali ke langkah sebelumnya?",
+					"Pemilihan mapping dibatalkan.\nPilih Yes untuk kembali memilih file model.\nPilih No untuk membatalkan proses."
+				);
+				if (backToModel) {
+					step = 1;
+					preferredDirectory = modelFile != null ? modelFile.toPath().getParent() : baseFolder;
+					continue;
+				}
+				return null;
+			}
+
+			return new SelectedInputs(configFile, modelFile, mappingFile);
+		}
+	}
+
 	private Document parseXml(Path xmlPath) throws Exception {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
@@ -600,6 +649,18 @@ public class DeriveAction implements IObjectActionDelegate {
 		private String inclusionVariability;
 		private Connector connector;
 		private List<String> receiver;
+	}
+
+	private static class SelectedInputs {
+		private final File configFile;
+		private final File modelFile;
+		private final File mappingFile;
+
+		private SelectedInputs(File configFile, File modelFile, File mappingFile) {
+			this.configFile = configFile;
+			this.modelFile = modelFile;
+			this.mappingFile = mappingFile;
+		}
 	}
 
 	private static class JsonParser {
