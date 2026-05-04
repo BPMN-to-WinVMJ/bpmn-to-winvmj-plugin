@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" id="_bCoTcAo0EfGv3ZY7ytEv0A" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.4.RC1-v20220528-0836-B1">
+  <bpmn2:process id="Process_1" name="Process 1">
+    <bpmn2:startEvent id="StartEvent_1" name="Start">
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:task id="Task_2" name="Masuk ke Penyetoran Simpanan">
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="StartEvent_1" targetRef="Task_2"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" sourceRef="Task_2" targetRef="Task_4"/>
+    <bpmn2:task id="Task_4" name="Pilih Metode Pembayaran">
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="Task_7" name="Melakukan Pembayaran">
+      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="SequenceFlow_10" sourceRef="Task_4" targetRef="Task_7"/>
+    <bpmn2:task id="Task_8" name="Melakukan Verifikasi Transaksi">
+      <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="SequenceFlow_11" sourceRef="Task_7" targetRef="Task_8"/>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_2" name="Exclusive Gateway 2">
+      <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_12" sourceRef="Task_8" targetRef="ExclusiveGateway_2"/>
+    <bpmn2:task id="Task_9" name="Menolak Pembayaran">
+      <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="SequenceFlow_13" name="Tidak Berhasil" sourceRef="ExclusiveGateway_2" targetRef="Task_9"/>
+    <bpmn2:task id="Task_10" name="Update Saldo Simpanan">
+      <bpmn2:incoming>SF_CONN_Task_11_1</bpmn2:incoming>
+      <bpmn2:outgoing>SF_CONN_Task_10_2</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="SequenceFlow_14" name="Berhasil" sourceRef="ExclusiveGateway_2" targetRef="Task_11"/>
+    <bpmn2:task id="Task_11" name="Buat Transaksi Simpanan">
+      <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
+      <bpmn2:outgoing>SF_CONN_Task_11_1</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:endEvent id="EndEvent_4" name="End Event 1">
+      <bpmn2:incoming>SequenceFlow_19</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_5" name="Exclusive Gateway 5">
+      <bpmn2:incoming>SF_CONN_Task_10_2</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_19</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_16" sourceRef="Task_9" targetRef="ExclusiveGateway_5"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_19" sourceRef="ExclusiveGateway_5" targetRef="EndEvent_4"/>
+    <bpmn2:sequenceFlow id="SF_CONN_Task_10_2" sourceRef="Task_10" targetRef="ExclusiveGateway_5"/>
+    <bpmn2:sequenceFlow id="SF_CONN_Task_11_1" sourceRef="Task_11" targetRef="Task_10"/>
+  </bpmn2:process>
+</bpmn2:definitions>

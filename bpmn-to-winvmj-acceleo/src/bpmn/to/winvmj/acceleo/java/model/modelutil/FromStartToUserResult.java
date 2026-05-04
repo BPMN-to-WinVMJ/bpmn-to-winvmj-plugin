@@ -1,5 +1,9 @@
 package bpmn.to.winvmj.acceleo.java.model.modelutil;
 
+import org.eclipse.bpmn2.FlowNode;
+
+import bpmn.to.winvmj.acceleo.java.Util;
+
 public class FromStartToUserResult {
 	private String result;
 	private boolean canContinueInclusive;

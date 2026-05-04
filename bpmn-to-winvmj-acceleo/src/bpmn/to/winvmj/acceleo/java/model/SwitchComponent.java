@@ -48,20 +48,23 @@ public class SwitchComponent extends Component {
         		usedVariables.add(new Variable(var, varType)); 
         	}
         	
-            if (first || isInclusive) {
-                builder.append(Util.SPACE.repeat(indent) + String.format("if (%s) {\r\n", f.getName()));
-                if (isInclusive) builder.append(Util.SPACE.repeat(indent + 1) + "boolean canContinue = true;\r\n");
-                first = false;
-            } else {
-                builder.append(Util.SPACE.repeat(indent) + String.format("else if (%s) {\r\n", f.getName()));
-            }
-            
             StringBuilder builderTemp = new StringBuilder();
             canContinueInclusive &= GenerateQuery.buildStraightLine(builderTemp, bpmnName, f.getTargetRef(), visited, usedVariables, indent + 1);
 
-        	builder.append(Util.SPACE.repeat(indent + 1) + String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", f.getName()));
-            builder.append(builderTemp.toString());
-            builder.append(Util.SPACE.repeat(indent) + "}\r\n");
+            if (first || isInclusive && !builderTemp.isEmpty()) {
+                builder.append(Util.SPACE.repeat(indent) + String.format("if (%s) {\r\n", f.getName()));
+                if (isInclusive) builder.append(Util.SPACE.repeat(indent + 1) + "boolean canContinue = true;\r\n");
+                first = false;
+            } else if (!builderTemp.isEmpty()){
+                builder.append(Util.SPACE.repeat(indent) + String.format("else if (%s) {\r\n", f.getName()));
+            }
+            
+            if (!builderTemp.isEmpty()) {
+            	builder.append(Util.SPACE.repeat(indent + 1) + String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", Util.removeWeirdChar(f.getName())));
+                builder.append(builderTemp.toString());
+                builder.append(Util.SPACE.repeat(indent) + "}\r\n");
+            }
+
         }
         
         return new FromStartToUserResult(builder.toString(), canContinueInclusive);

@@ -41,7 +41,7 @@ public class WhileComponent extends Component implements Looping {
         while (parent != null && parent.getOutgoing().isEmpty()) {
         	parent = parent.getOwnerComponent();
         }
-        List<String> exitBranch = parent.getOutgoing().stream().map(x -> x.getName()).toList();
+        List<String> exitBranch = parent.getOutgoing().stream().filter(x -> x.getName() != null).map(x -> x.getName()).toList();
         branches.addAll(exitBranch);
         
         for (String expression : branches) {
@@ -68,10 +68,17 @@ public class WhileComponent extends Component implements Looping {
         	
             builder.append(Util.SPACE.repeat(indent +1) + "}\n");
         }
-        String joined = exitBranch.stream().collect(Collectors.joining(" || "));
-        builder.append(Util.SPACE.repeat(indent + 1) + String.format("if (%s) { processService.upsert(new ProcessInstance(processid, \"%s\")); break; }\r\n", joined, joined));
-
+        boolean isEmpty = exitBranch.isEmpty();
+        if (!isEmpty) {
+        	String joined = exitBranch.stream().collect(Collectors.joining(" || "));
+            builder.append(Util.SPACE.repeat(indent + 1) + String.format("if (%s) { processService.upsert(new ProcessInstance(processid, \"%s\")); break; }\r\n", joined, Util.removeWeirdChar(joined)));
+        }
+        
         builder.append(Util.SPACE.repeat(indent) + "}\n");
+        
+        if (isEmpty) {
+	        builder.append(Util.SPACE.repeat(indent) + String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));", Util.removeWeirdChar(this.getName())));
+        }
         return new FromStartToUserResult(builder.toString(), canContinueInclusive);
 	}
 	

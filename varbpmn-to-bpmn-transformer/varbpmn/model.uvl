@@ -1,0 +1,12 @@
+namespace Koperasi
+
+features
+	Koperasi {abstract true}
+		optional
+			"Simpanan Sukarela"
+		mandatory
+			Transaction
+				alternative
+					CatatTransaksiThenUpdateSaldo
+					UpdateSaldoThenCatatTransaksi
+

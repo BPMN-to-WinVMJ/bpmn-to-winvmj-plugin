@@ -33,7 +33,7 @@ public class RepeatComponent extends Component {
         while (parent != null && parent.getOutgoing().isEmpty()) {
         	parent = parent.getOwnerComponent();
         }
-        List<String> exitBranch = parent.getOutgoing().stream().map(x -> x.getName()).toList();
+        List<String> exitBranch = parent.getOutgoing().stream().filter(x -> x.getName() != null).map(x -> x.getName()).toList();
         branches.addAll(exitBranch);
         
     	String loopCondition = this.getEnd().getOutgoing().stream().map(SequenceFlow::getName).collect(Collectors.joining(" || "));
@@ -51,9 +51,16 @@ public class RepeatComponent extends Component {
         	builder.append(Util.SPACE.repeat(indent) + "do {\r\n");
         	GenerateQuery.buildStraightLine(builder, bpmnName, this.start.getOutgoing().get(0).getTargetRef(), visited, usedVariables, indent + 1);
         	
-        	String joined = exitBranch.stream().collect(Collectors.joining(" || "));
-        	builder.append(Util.SPACE.repeat(indent + 1) + String.format("if (%s) { processService.upsert(new ProcessInstance(processid, \"%s\")); break; }\r\n", joined, joined));
+        	if (!exitBranch.isEmpty()) {
+            	String joined = exitBranch.stream().collect(Collectors.joining(" || "));
+            	builder.append(Util.SPACE.repeat(indent + 1) + String.format("if (%s) { processService.upsert(new ProcessInstance(processid, \"%s\")); break; }\r\n", joined, Util.removeWeirdChar(joined)));
+        	}
         	builder.append(Util.SPACE.repeat(indent) + String.format("} while (%s);\n", loopCondition));
+
+	        if (exitBranch.isEmpty()) {
+		        builder.append(Util.SPACE.repeat(indent) + String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));", Util.removeWeirdChar(this.getName())));
+	        }
+	        
         	return new FromStartToUserResult(builder.toString(), true);
         } else {
         	GenerateQuery.buildStraightLine(builder, bpmnName, this.start.getOutgoing().get(0).getTargetRef(), visited, usedVariables, indent);

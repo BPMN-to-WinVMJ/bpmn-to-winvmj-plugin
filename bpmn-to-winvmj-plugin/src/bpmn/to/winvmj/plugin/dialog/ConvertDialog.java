@@ -1,6 +1,13 @@
 package bpmn.to.winvmj.plugin.dialog;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -146,8 +153,15 @@ public class ConvertDialog extends TitleAreaDialog {
 			File productFolder = findFolderFileContainingName(umlDopDir, ".product.");
 			File productJavaFile = findFolderFileContainingName(productFolder, ".java");
 			
-			boolean success = BpmnToWinVmjGenerator.transformBpmnFile(bpmnPath, outputFolder, importPath, umlDopDir.getAbsolutePath());
-			boolean successEdit = BpmnToWinVmjGenerator.editProductRouter(productFolder, productJavaFile, bpmnPath, importPath);
+			System.out.println("product file name : " + productJavaFile.getName());
+			Map<String, String> services = scrapeServiceInstances(productJavaFile);
+			boolean success = BpmnToWinVmjGenerator.transformBpmnFile(bpmnPath, outputFolder, importPath, umlDopDir.getAbsolutePath(), services);
+			boolean successEdit = BpmnToWinVmjGenerator.editProductRouter(
+					productFolder, 
+					productJavaFile, 
+					bpmnPath, 
+					importPath,
+					services);
 			if (success && successEdit) {
                 System.out.println("Conversion completed successfully!");
                 setErrorMessage(null);
@@ -229,5 +243,30 @@ public class ConvertDialog extends TitleAreaDialog {
             System.err.println("Error refreshing folder: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    
+    private static Map<String, String> scrapeServiceInstances(File productJavaFile) throws IOException {
+        Map<String, String> serviceMap = new LinkedHashMap<>();
+        List<String> lines = Files.readAllLines(productJavaFile.toPath());
+
+        // Matches: SomeType varName = SomeFactory\n.createSomeService("fully.qualified.ClassName"
+        // Works across single-line or two-line declarations
+        String joined = String.join("\n", lines);
+
+        Pattern pattern = Pattern.compile(
+        	    "(\\w+Service)\\s+(\\w+)\\s*=\\s*\\w+ServiceFactory\\s*\\.\\s*\\w+\\(\\s*\"([^\"]+)\""
+        	);
+
+    	Matcher matcher = pattern.matcher(joined);
+    	while (matcher.find()) {
+    	    String type      = matcher.group(1); // AccountService  ← compile-time type
+    	    String varName   = matcher.group(2); // overdraftAccount2Service
+    	    String implClass = matcher.group(3); // accountpl.account.overdraft.service.AccountServiceImpl
+    	    serviceMap.put(varName, type);       // store type instead of implClass
+    	}
+    
+        System.out.println("serviceMap " + serviceMap.toString());
+
+        return serviceMap;
     }
 }

@@ -49,7 +49,7 @@ public class BPMNParser {
         		bpmn.addSubProcess(sp.getId(), sp);
         	}
         	
-        	if (!(fe instanceof ScriptTask)) {
+        	if (!(fe instanceof ScriptTask || fe instanceof SequenceFlow)) {
         		fe.setName(GenerateQuery.toValidVariableName(fe.getName()));
         	}
 
@@ -109,49 +109,79 @@ public class BPMNParser {
                     throw new IllegalArgumentException(
                         "Task is branching: " + targetElem.getName());
                 }
-                
-                if (targetElem instanceof SubProcess sp) {
-                    flow.setTargetRef(sp.getOutgoing().get(0).getTargetRef());
-                    for (SequenceFlow sq : sp.getOutgoing()) {
-                    	sq.setTargetRef(null);
+
+                if (targetElem instanceof SubProcess || sourceElem instanceof SubProcess) {
+                    List<SubProcess> subProcessChain = new ArrayList<>();
+
+                    // Traverse FORWARD from targetElem
+                    FlowNode current = targetElem;
+                    FlowNode lastNonSub = null;
+                    while (current instanceof SubProcess sp) {
+                        subProcessChain.add(sp);
+                        FlowNode next = sp.getOutgoing().isEmpty() ? null
+                                : sp.getOutgoing().get(0).getTargetRef();
+                        for (SequenceFlow sq : sp.getOutgoing()) sq.setTargetRef(null);
+                        sp.getOutgoing().clear();
+                        lastNonSub = next;
+                        current = next;
                     }
-                    sp.getOutgoing().clear();
-                    if(sourceElem instanceof Task task) {
-    					TaskWrapper tw = new TaskWrapper();
-    					tw.setDelegate(task);
-    					tw.setTaskType(task);
-    					List<SequenceFlow> temp = List.copyOf(task.getIncoming());
-    					for (SequenceFlow floww : temp) {
-    						floww.setTargetRef(tw);
-    					}
-    					temp = List.copyOf(task.getOutgoing());
-    					for (SequenceFlow floww : temp) {
-    						floww.setSourceRef(tw);
-    					}
-    					tw.addSubProcess(sp);
-    	            	bpmn.getO().put(task.getId(), task);
-    	                bpmn.getT().put(task.getId(), task);
-    	                if (task instanceof ReceiveTask rt) {
-    	                	bpmn.getTr().put(rt.getId(), rt);
-    	                }
-                    } else if (sourceElem instanceof Gateway gateway) {
-                    	GatewayWrapper gw = new GatewayWrapper();
-            			gw.setDelegate(gateway);
-            			gw.setGatewayType(gateway);
-            			List<SequenceFlow> temp = List.copyOf(gateway.getIncoming());
-            			for (SequenceFlow floww : temp) {
-            				floww.setTargetRef(gw);
-            			}
-            			temp = List.copyOf(gateway.getOutgoing());
-            			for (SequenceFlow floww : temp) {
-            				floww.setSourceRef(gw);
-            			}
-            			gw.addSubProcess(sp);
-                    	bpmn.getG().put(gw.getId(), gw);
-                    	bpmn.getO().put(gw.getId(), gw);
+
+                    // If sourceElem itself is a SubProcess, walk BACKWARD until Task/Gateway
+                    FlowNode realSource = sourceElem;
+                    if (sourceElem instanceof SubProcess) {
+                        current = sourceElem;
+                        while (current instanceof SubProcess sp) {
+                            if (!subProcessChain.contains(sp)) subProcessChain.add(0, sp);
+                            FlowNode prev = sp.getIncoming().isEmpty() ? null
+                                    : sp.getIncoming().get(0).getSourceRef();
+                            current = prev;
+                        }
+                        realSource = current; // the Task or Gateway at the start of the chain
+                    }
+
+                    if (lastNonSub != null) flow.setTargetRef(lastNonSub);
+
+                    if (realSource instanceof Task task) {
+                    	
+                    	FlowNode existing = bpmn.getO().get(task.getId());
+                        boolean shouldAdd = existing == null  || (existing instanceof Task && !(existing instanceof TaskWrapper))
+                            || (existing instanceof TaskWrapper t && t.getSubProcesses().size() < subProcessChain.size());
+                        
+                        if (shouldAdd) {
+	                        TaskWrapper tw = new TaskWrapper();
+	                        tw.setDelegate(task);
+	                        tw.setTaskType(task);
+	                        List<SequenceFlow> temp = List.copyOf(task.getIncoming());
+	                        for (SequenceFlow floww : temp) floww.setTargetRef(tw);
+	                        temp = List.copyOf(task.getOutgoing());
+	                        for (SequenceFlow floww : temp) floww.setSourceRef(tw);
+	                        for (SubProcess sp : subProcessChain) {
+	                        	tw.addSubProcess(sp);
+	                        }
+	                        bpmn.getO().put(task.getId(), tw); // store tw, not task
+	                        bpmn.getT().put(task.getId(), tw); // store tw, not task
+	                        if (task instanceof ReceiveTask rt) bpmn.getTr().put(rt.getId(), rt);
+                        }
+                    } else if (realSource instanceof Gateway gateway) {
+                    	FlowNode existing = bpmn.getO().get(gateway.getId());
+                        boolean shouldAdd = existing == null  || (existing instanceof Task && !(existing instanceof GatewayWrapper))
+                            || (existing instanceof GatewayWrapper t && t.getSubProcesses().size() < subProcessChain.size());
+                        
+                        if (shouldAdd) {
+	                        GatewayWrapper gw = new GatewayWrapper();
+	                        gw.setDelegate(gateway);
+	                        gw.setGatewayType(gateway);
+	                        List<SequenceFlow> temp = List.copyOf(gateway.getIncoming());
+	                        for (SequenceFlow floww : temp) floww.setTargetRef(gw);
+	                        temp = List.copyOf(gateway.getOutgoing());
+	                        for (SequenceFlow floww : temp) floww.setSourceRef(gw);
+	                        for (SubProcess sp : subProcessChain) gw.addSubProcess(sp);
+	                        bpmn.getG().put(gw.getId(), gw);
+	                        bpmn.getO().put(gw.getId(), gw);
+                        }
                     }
                 }
-
+                
                 bpmn.getF().put(flow.getId(), flow);
             }
         }
@@ -1101,7 +1131,6 @@ public class BPMNParser {
         sb.append("Component ").append(c.getName()).append("\n");
         System.out.println(c.getName());
         sb.append("  Entry: ").append(c.getIncoming().stream().map(x -> x.getSourceRef()).filter(x -> !x.equals(c)).map(x -> x.getName()).toList()).append("\n");
-
         for (FlowNode n : c.getElements()) {
             sb.append("  ").append(isBlankOrNull(n.getName()) ? n.getId() : n.getName()).append(" " + n.getClass() + " ").append("\n");
         }

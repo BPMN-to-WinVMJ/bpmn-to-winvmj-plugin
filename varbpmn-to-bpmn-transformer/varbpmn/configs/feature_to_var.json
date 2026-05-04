@@ -1,0 +1,110 @@
+{
+    "Koperasi": [
+        {
+            "id": "Task_3",
+            "name": "Memilih Jenis Simpanan",
+            "inclusionVariability": "3"
+        },
+        {
+            "id": "Task_5",
+            "name": "Masukkan Nominal",
+            "inclusionVariability": "3"
+        }
+    ],
+    "Simpanan Sukarela": [
+        {
+            "id": "Task_3",
+            "name": "Memilih Jenis Simpanan",
+            "inclusionVariability": "1"
+        },
+        {
+            "id": "Task_5",
+            "name": "Masukkan Nominal",
+            "inclusionVariability": "1"
+        }
+    ],
+    "CatatTransaksiThenUpdateSaldo": [
+        {
+            "id": "ParallelGateway_7",
+            "name": "Paralel Gateway 7",
+            "connector": {
+                "name": "0",
+                "select": "Task_11"
+            }
+        },
+        {
+            "id": "Task_10",
+            "name": "Update Saldo Simpanan",
+            "connector": {
+                "name": "2",
+                "select": "ParallelGateway_4"
+            },
+            "receiver": [
+                "0",
+                "1"
+            ]
+        },
+        {
+            "id": "Task_11",
+            "name": "Buat Transaksi Simpanan",
+            "connector": {
+                "name": "1",
+                "select": "Task_10"
+            },
+            "receiver": [
+                "0",
+                "2"
+            ]
+        },
+        {
+            "id": "ParallelGateway_4",
+            "name": "Paralel Gateway 4",
+            "receiver": [
+                "1",
+                "2"
+            ]
+        }
+    ],
+    "UpdateSaldoThenCatatTransaksi": [
+        {
+            "id": "ParallelGateway_7",
+            "name": "Paralel Gateway 7",
+            "connector": {
+                "name": "0",
+                "select": "Task_10"
+            }
+        },
+        {
+            "id": "Task_10",
+            "name": "Update Saldo Simpanan",
+            "connector": {
+                "name": "2",
+                "select": "Task_11"
+            },
+            "receiver": [
+                "0",
+                "1"
+            ]
+        },
+        {
+            "id": "Task_11",
+            "name": "Buat Transaksi Simpanan",
+            "connector": {
+                "name": "1",
+                "select": "ParallelGateway_4"
+            },
+            "receiver": [
+                "0",
+                "2"
+            ]
+        },
+        {
+            "id": "ParallelGateway_4",
+            "name": "Paralel Gateway 4",
+            "receiver": [
+                "1",
+                "2"
+            ]
+        }
+    ]
+}

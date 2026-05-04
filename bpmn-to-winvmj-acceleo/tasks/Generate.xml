@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="Generate" name="bpmn.to.winvmj.acceleo">
-    <property name="ECLIPSE_HOME" value="../../../../../Users/Jim/Desktop/eclipse_Will_real/eclipse"/>
+    <property name="ECLIPSE_HOME" value="../../../../../Users/Jim/Desktop/956444-PricesIDE-202604"/>
     <property name="ECLIPSE_WORKSPACE" value="D:/Catatan Kuliah/Catatan Kuliah Semester 6/RSE/PricesIDE-REAL"/>
 
     <!-- The classpath with only the dependencies used by the project -->
     <path id="bpmn.to.winvmj.acceleo.libraryclasspath">
         <pathelement location="${ECLIPSE_WORKSPACE}/bpmn.to.winvmj.acceleo/bin"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_17.0.9.v20231028-0858/jre/lib/jrt-fs.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.osgi.annotation.versioning_1.1.2.202109301733.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.osgi.annotation.bundle_2.0.0.202202082230.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.osgi.service.component.annotations_1.5.1.202212101352.jar"/>
@@ -43,10 +42,10 @@
         <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.emf.codegen.ecore_2.36.0.v20231002-1035.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.emf.codegen_2.23.0.v20230211-1150.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.bpmn2_1.5.2.Final-v20221120-1014.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.bpmn2.modeler.core_1.5.4.RC1-v20221118-1047-B1.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.bpmn2.modeler.core_1.5.4.RC1-v20220528-0836-B1.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.wst.wsdl_1.3.1.v202308012257.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/javax.wsdl_1.6.3.v20230730-0710.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.bpmn2.modeler.ui_1.5.4.RC1-v20221118-1047-B1.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.bpmn2.modeler.ui_1.5.4.RC1-v20220528-0836-B1.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.core.resources_3.20.0.v20231102-0934.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/com.google.guava_33.2.0.jre.jar"/>
     </path>

@@ -79,12 +79,17 @@ public class GenerateQuery {
         Set<FlowNode> visited = new HashSet<>();
         if (prev instanceof Component c) {
         	if (c instanceof WhileComponent || c instanceof WhileRepeatComponent || c instanceof RepeatComponent) {
-        		result.add(String.format("hasTaskState(processes, \"%s\")", c.getOutgoing().stream().map(x -> x.getName()).collect(Collectors.joining(" || "))));
+        		String condition = c.getOutgoing().stream().map(x -> x.getName()).collect(Collectors.joining(" || "));
+        		if (!condition.isBlank()) {
+            		result.add(String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(condition)));
+        		} else {
+        			result.add(String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(c.getName())));
+        		}
         	}
         	if (c instanceof SwitchComponent) {
         		List<SequenceFlow> emptySequenceFlow = c.getEnd().getIncoming().stream().filter(x -> !(x.getSourceRef() instanceof Task)).toList();
         		if (!emptySequenceFlow.isEmpty()) {
-        			result.addAll(emptySequenceFlow.stream().map(x -> String.format("hasTaskState(processes, \"%s\")", x.getName())).toList());
+        			result.addAll(emptySequenceFlow.stream().map(x -> String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(x.getName()))).toList());
         			visited.add(c.getStart());
         		}
         	}
@@ -98,24 +103,24 @@ public class GenerateQuery {
             if (prev instanceof Component) {
             	result.addAll(getPriorHelper(prev, after, new HashSet<>()));
             } else if (prev instanceof TaskWrapper t) {
-                result.add(String.format("hasTaskState(processes, \"%s\")",t.getName()));
+                result.add(String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(t.getName())));
             } else { // Gateway
             	// diverging gateway, use the condition as filter
             	if (prev.getOutgoing().size() > 1) {
-            		result.add(String.format("hasTaskState(processes, \"%s\")",e.getIncoming().get(0).getName()));
+            		result.add(String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(e.getIncoming().get(0).getName())));
             	} else {
             		result.addAll(getPriorHelper(prev, after, visited));
             	}
             }
         
         } else if (prev instanceof Task t && !after.contains(t)){
-    		result.add(String.format("hasTaskState(processes, \"%s\")", t.getName()));
+    		result.add(String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(t.getName())));
         } else if (prev instanceof GatewayWrapper g) {
             if (GatewayType.PARALLEL_GATEWAY.equals(g.getGatewayType()) && g.getIncoming().size() > 1) {
                 join = " && ";
             }
             if (!GatewayType.PARALLEL_GATEWAY.equals(g.getGatewayType()) && g.getOutgoing().size() > 1) {
-        		result.add(String.format("hasTaskState(processes, \"%s\")",e.getIncoming().get(0).getName()));
+        		result.add(String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(e.getIncoming().get(0).getName())));
         	} else {
         		result.addAll(getPriorHelper(g, after, new HashSet<>()));
         	}
@@ -155,6 +160,7 @@ public class GenerateQuery {
 		for (SubProcess sp : resultingNode.getSubProcesses()) {
 			builder.append(getServiceTaskAfter(resultingNode, sp, bpmnName));
 		}
+		System.out.println("[DONE] getSubProcess " + node.getName());
 		return builder.toString();
 	}
 	
@@ -229,7 +235,8 @@ public class GenerateQuery {
 			result = result.substring(0, result.length() - "return res;".length());
 		}
         
-        System.out.println("[DONE] getServiceTaskAfter " + node.getName());
+		System.out.println(isProcess ? "[DONE] getServiceTaskAfter " + node.getName() : "[START] getServiceTaskAfter SubProcess " + node.getName());
+		
         
         return result;
 	}
@@ -268,13 +275,13 @@ public class GenerateQuery {
         	if (curr instanceof Component co) {
         		FromStartToUserResult result = co.getFromStartToUser(bpmnName, usedVariables, indent);
                 builder.append(result.getResult());
-                if (!result.getCanContinueInclusive()) {
+                if (!result.getCanContinueInclusive() && Util.isInsideFlowComponent(curr)) {
                 	builder.append(Util.SPACE.repeat(indent + indentIfInclusive) + "if (canContinue) {\r\n");
                 	indentIfInclusive += 1;
                 }
             } else {
                 if (curr instanceof TaskWrapper tw) {
-                	Util.writeTask(tw, builder, bpmnName, indent + indentIfInclusive);
+                	Util.writeTask(tw, builder, bpmnName, usedVariables, indent + indentIfInclusive);
                 } else if (curr instanceof Gateway && curr.getOutgoing().size() > 1 || ( 
                 		// if di bawah ini perlu untuk definisiin diverging gateway di loop component yang sebenarnya pasti punya >= 2 
                 		// tapi sequence flow yang keluar dari komponen itu dimiliki oleh komponen bukan branch maka kalau end gateway nya punya outgoing.size() == 1, sebenarnya
@@ -291,8 +298,7 @@ public class GenerateQuery {
 
                         StringBuilder builderTemp = new StringBuilder();
 
-                        String res = getSubProcessIn(curr, null, bpmnName);
-                		getServiceTaskAfterHelper(builderTemp, ownerLoop, branchStart, usedVariables, indent + 1, bpmnName, visited);
+                        String res = getServiceTaskAfterHelper(builderTemp, ownerLoop, branchStart, usedVariables, indent + 1, bpmnName, visited);
 
                         boolean inclusive = GatewayType.INCLUSIVE_GATEWAY.equals(((GatewayWrapper)curr).getGatewayType());
                         if ((first || inclusive) && !res.isEmpty()) {
@@ -304,13 +310,13 @@ public class GenerateQuery {
                             builder.append(Util.SPACE.repeat(indent + indentIfInclusive) + 
                                 String.format("if (%s) {\n", f.getName()))
                             .append(Util.SPACE.repeat(indent + indentIfInclusive + 1) + 
-                                    String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", f.getName()));
+                                    String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", Util.removeWeirdChar(f.getName())));
                             first = false;
                         } else if (!res.isEmpty()) {
                             builder.append(Util.SPACE.repeat(indent) + 
                                 String.format("} else if (%s) {\n", f.getName()))
                             .append(Util.SPACE.repeat(indent + indentIfInclusive + 1) + 
-                                String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", f.getName()));
+                                String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", Util.removeWeirdChar(f.getName())));
                         }
                         builder.append(builderTemp.toString().indent(indent + indentIfInclusive));
                     }
@@ -411,6 +417,7 @@ public class GenerateQuery {
 	
     // Used by getPrior to filter out tasks in a loop
     public static List<Task> traverseForward(FlowNode e, org.eclipse.bpmn2.Process p, Boolean unwrap) throws Exception {
+    	System.out.println("[DEBUG] traverseForward " + e.getName());
 		BPMN bpmn = getOrGenerateBPMN(p, true);
 		
 		e = Util.findById(e.getId(), bpmn);
@@ -454,7 +461,7 @@ public class GenerateQuery {
             }
             if (curr instanceof TaskWrapper t) {
             	if (!after.contains(t)) {
-            		res.add(String.format("hasTaskState(processes, \"%s\")",t.getName()));
+            		res.add(String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(t.getName())));
             	}
             } else if (curr instanceof Component c) {
             	List<String> fromComponent = getPriorHelper(c.getEnd(), after, visited);
@@ -505,7 +512,6 @@ public class GenerateQuery {
         Set<Variable> usedVariables, 
         int indent
     ) {
-    	System.out.println("[DEBUG] buildStraightLine " + el.getName());
     	FlowNode curr = el;
     	
     	int indentIfInclusive = 0;
@@ -517,13 +523,13 @@ public class GenerateQuery {
             if (curr instanceof Component c) {
             	FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent);
                 builder.append(result.getResult());
-                if (!(curr instanceof SequenceComponent) && !result.getCanContinueInclusive()) {
+                if (!(curr instanceof SequenceComponent) && !result.getCanContinueInclusive() && Util.isInsideFlowComponent(curr)) {
                 	builder.append(Util.SPACE.repeat(indent + indentIfInclusive) + "if (canContinue) {\r\n");
                 	indentIfInclusive += 1;
                 }
                 if (c instanceof Continuable con && !con.canContinue()) {
                 	closeInclusiveIf(builder, indent, indentIfInclusive);
-                	return result.getCanContinueInclusive();
+                	return result.getCanContinueInclusive() && Util.isInsideFlowComponent(curr);
                 }
             } 
             // Found un-continuable task
@@ -541,7 +547,7 @@ public class GenerateQuery {
             // ----------------------------------------------------------------------------
 
             if (curr instanceof TaskWrapper tw && TaskType.isContinuable(tw.getTaskType())) {
-            	Util.writeTask(tw, builder, bpmnName, indent + indentIfInclusive);
+            	Util.writeTask(tw, builder, bpmnName, usedVariables, indent + indentIfInclusive);
             }
 
             // on components, end objects have 0 outgoing elements
@@ -552,7 +558,7 @@ public class GenerateQuery {
             
             // handle loops and forks and switches
             if (curr instanceof Gateway) {
-            	builder.append(Util.SPACE.repeat(indent + indentIfInclusive) + "if (canContinue) {\r\n");
+            	if (Util.isInsideFlowComponent(curr)) builder.append(Util.SPACE.repeat(indent + indentIfInclusive) + "if (canContinue) {\r\n");
             	return true;
             }
 

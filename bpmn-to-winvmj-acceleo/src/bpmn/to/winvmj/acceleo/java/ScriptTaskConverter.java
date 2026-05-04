@@ -3,6 +3,7 @@ package bpmn.to.winvmj.acceleo.java;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,19 +11,25 @@ import org.eclipse.bpmn2.ScriptTask;
 import org.eclipse.bpmn2.SubProcess;
 
 import bpmn.to.winvmj.acceleo.GenerateQuery;
+import bpmn.to.winvmj.acceleo.java.model.Variable;
 import bpmn.to.winvmj.acceleo.java.model.modelutil.TaskType;
 import bpmn.to.winvmj.acceleo.java.model.modelutil.TaskWrapper;
 
 public class ScriptTaskConverter {
 	
-	public static void appendStatementFromScriptTask(StringBuilder sb, TaskWrapper scriptTask, String bpmnName, int indent) {
+	public static void appendStatementFromScriptTask(
+			StringBuilder sb, 
+			TaskWrapper scriptTask, 
+			String bpmnName, 
+			Set<Variable> usedVariable,
+			int indent) {
 	    if (!TaskType.SCRIPT_TASK.equals(scriptTask.getTaskType()) || scriptTask == null || scriptTask.getName() == null) return;
 
 	    String name = scriptTask.getName().trim();
 	    String lower = name.toLowerCase();
 	    
 	    String stmt;
-	    ScriptTask task = (ScriptTask)scriptTask.getDelegate();
+	    ScriptTask task = (ScriptTask) scriptTask.getDelegate();
 	    if (task.getScriptFormat() != null && !task.getScriptFormat().isBlank()) {
 	        try {
 	            stmt = Files.readString(Path.of(task.getScriptFormat())).indent(indent);
@@ -33,7 +40,7 @@ public class ScriptTaskConverter {
 	    } else if (task.getScriptFormat() != null && !task.getScript().isBlank()) {
 	    	stmt = task.getScript().indent(indent);
 	    } else {
-	    	stmt = resolveStatement(lower);
+	    	stmt = resolveStatement(lower, name, usedVariable);
 	    }
 	    
 	    sb.append(Util.SPACE.repeat(indent) + "// From ScriptTask ").append(name).append("\n");
@@ -44,13 +51,14 @@ public class ScriptTaskConverter {
     		for (SubProcess sp : scriptTask.getSubProcesses()) {
     			builder.append(GenerateQuery.getServiceTaskAfter(scriptTask, sp, bpmnName));
     		}
+    		sb.append(builder.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	    
 	}
 	
-    public static String resolveStatement(String s) {
+    public static String resolveStatement(String s, String real, Set<Variable> usedVariable) {
     	
     	Matcher m;
     	s = s.trim();
@@ -59,31 +67,61 @@ public class ScriptTaskConverter {
         // DECLARATION / INITIALIZATION
         // -------------------------------------------------------------------------
 
-    	// "create int a = 1" | "declare String name = hello" | "init char x = x"
-    	m = match(s, "(create|init|initiate|initialize|declare|define)\\s+(int|double|float|long|boolean|char|String)\\s+(\\w+)\\s*=\\s*(.+)");
+    	// "create int a = 1" | "declare String name = hello" | "init char x = x | init char x as x"
+    	m = match(s, "(assign|create|init|initiate|initialize|declare|define)\\s+([\\w<>,\\s]+?)\\s+(\\w+)\\s*(?:=|as)\\s*(.+)");
     	if (m.find()) {
-    	    String type = m.group(2);
-    	    String name = m.group(3);
-    	    String value = m.group(4).trim();
-    	    return type + " " + name + " = " + formatValue(type, value) + ";";
+    	    Matcher mOriginal = Pattern.compile(
+    	    		"(assign|create|init|initiate|initialize|declare|define)\\s+([\\w<>,\\s]+?)\\s+(\\w+)\\s*(?:=|as)\\s*(.+)",
+    	            Pattern.CASE_INSENSITIVE
+	        ).matcher(real);
+	        mOriginal.find();
+    	    String type = mOriginal.group(2);
+    	    String name = mOriginal.group(3);
+    	    String value = mOriginal.group(4).trim();
+    	    usedVariable.add(new Variable(name, type));
+    	    return name + " = " + formatValue(type, value) + ";";
     	}
 
     	// "create a = 1" | "declare name = hello" (infer type from value)
-    	m = match(s, "(create|init|initiate|initialize|declare|define)\\s+(\\w+)\\s*=\\s*(.+)");
+    	m = match(s, "(assign|create|init|initiate|initialize|declare|define)\\s+(\\w+)\\s*=\\s*(.+)");
     	if (m.find()) {
     	    String name = m.group(2);
     	    String value = m.group(3).trim();
     	    String type = inferType(value);
-    	    return type + " " + name + " = " + formatValue(type, value) + ";";
+    	    usedVariable.add(new Variable(name, type));
+    	    return name + " = " + formatValue(type, value) + ";";
     	}
     	
         // "create order as Order" | "create user as UserEntity"
         m = match(s, "(create|init|initiate|initialize|declare|define)\\s+(\\w+)\\s+as\\s+(\\w+)");
-        if (m.find()) return m.group(3) + " " + m.group(2) + " = new " + m.group(3) + "();";
+        if (m.find()) {
+    	    Matcher mOriginal = Pattern.compile(
+    	            "(create|init|initiate|initialize|declare|define)\\\\s+(\\\\w+)\\\\s+as\\\\s+(\\\\w+)",
+    	            Pattern.CASE_INSENSITIVE
+	        ).matcher(real);
+	        mOriginal.find();
+    	    String name = mOriginal.group(2);
+    	    String type = mOriginal.group(3);
+        	usedVariable.add(new Variable(name, type));
+        	return m.group(2) + " = new " + m.group(3) + "();";
+        }
 
         // "create order" | "create user"
         m = match(s, "(create|init|initiate|initialize|declare|define)\\s+(\\w+)");
-        if (m.find()) return "Object " + m.group(1) + " = new Object();";
+        if (m.find()) {
+    	    String name = m.group(2);
+        	usedVariable.add(new Variable(name, "Object"));
+        	return m.group(1) + " = new Object();";
+        }
+        
+        m = match(real, "([A-Z]\\w*(?:<[\\w<>, ]+>)?)\\s+(\\w+)\\s*=\\s*(.+?)\\s*;?$");
+        if (m.find()) {
+            String type  = m.group(1); // "List<Account>"
+            String name  = m.group(2); // "accounts"
+            String value = m.group(3); // "accountservice.getAllAccount()"
+            usedVariable.add(new Variable(name, type));
+            return name + " = " + value + ";";
+        }
         
         // -------------------------------------------------------------------------
         // LOGGING / PRINTING
@@ -124,7 +162,7 @@ public class ScriptTaskConverter {
         // RESPONSE / MAP OPERATIONS
         // "add a to response" / "put a in map" / "remove a from map"
         // -------------------------------------------------------------------------
-        m = match(s, "add\\s+(\\w+)\\s+to\\s+(?:response|res)");
+        m = match(s, "add\\s+(.+?)\\s+to\\s+(?:response|res)");
         if (m.find()) return "response.put(\"" + m.group(1) + "\", " + m.group(1) + ");";
 
         m = match(s, "put\\s+(\\w+)\\s+in(?:to)?\\s+(\\w+)");
@@ -135,6 +173,9 @@ public class ScriptTaskConverter {
 
         m = match(s, "remove\\s+(\\w+)\\s+from\\s+(\\w+)");
         if (m.find()) return m.group(2) + ".remove(\"" + m.group(1) + "\");";
+        
+        m = match(s, "([a-zA-Z_][\\w.]*?)\\s*\\.?\\s*([a-zA-Z_]\\w*)\\s*\\(([^)]*)\\)");
+        if (m.find()) return s + ";";
         
         return "// TODO: implement '" + s + "'";
     }

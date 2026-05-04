@@ -1,10 +1,17 @@
 [module Generate('http://www.omg.org/spec/BPMN/20100524/MODEL')]
 
-[template public generate(defs : bpmn2::Definitions, fileName : String, outputPath: String, importPath : String, targetPath : String)]
+[template public generate(
+	defs : bpmn2::Definitions, 
+	fileName : String, 
+	outputPath : String, 
+    importPath : String, 
+	targetPath : String,
+    varNames : Sequence(String), 
+	varClasses : Sequence(String))]
 [comment @main /]
 [for (p : bpmn2::Process | defs.rootElements->select(e | e.oclIsKindOf(bpmn2::Process)))]
 [file (outputPath + fileName.toUpperFirst().replaceAll(' ', '') + 'ResourceImpl.java', false, 'UTF-8')]
-[generateResourceImpl(p, fileName.toUpperFirst(), importPath, targetPath)/]
+[generateResourceImpl(p, fileName.toUpperFirst(), importPath, targetPath, varNames, varClasses)/]
 [/file]
 [file (outputPath + fileName.toUpperFirst().replaceAll(' ', '') + 'Resource.java', false, 'UTF-8')]
 [generateResource(p, fileName.toUpperFirst(), importPath, targetPath)/]
@@ -24,11 +31,11 @@
 [template public generateResource(p : bpmn2::Process, fileName : String, importPath : String, targetPath: String)]
 // @generated from [fileName /].bpmn2
 
-package [importPath /].core;
+package [importPath /].core.resource;
 
 import java.util.*;
-import vmj.routing.route.VMJExchange;
-[importAll(fileName, targetPath) /]
+import id.ac.ui.cs.prices.winvmj.core.VMJExchange;
+[comment][importAll(fileName, targetPath) /][/comment]
 
 public interface [fileName.replaceAll(' ', '')/]Resource {
 [let startevent : bpmn2::StartEvent = p.flowElements->asSequence()
@@ -51,11 +58,11 @@ public interface [fileName.replaceAll(' ', '')/]Resource {
 [template public generateResourceComponent(p : bpmn2::Process, fileName : String, importPath : String)]
 // @generated from [fileName /].bpmn2
 
-package [importPath /].core;
+package [importPath /].core.resource;
 
 import java.util.*;
-import vmj.routing.route.VMJExchange;
-import vmj.hibernate.integrator.RepositoryUtil;
+import id.ac.ui.cs.prices.winvmj.core.Route;
+import id.ac.ui.cs.prices.winvmj.core.VMJExchange;
 
 public abstract class [fileName.replaceAll(' ', '')/]ResourceComponent implements [fileName.replaceAll(' ', '')/]Resource {
 
@@ -76,11 +83,11 @@ public abstract class [fileName.replaceAll(' ', '')/]ResourceComponent implement
 [template public generateResourceDecorator(p : bpmn2::Process, fileName : String, importPath : String)]
 // @generated from [fileName /].bpmn2
 
-package [importPath /].core;
+package [importPath /].core.resource;
 
 import java.util.*;
-import vmj.routing.route.VMJExchange;
-import vmj.hibernate.integrator.RepositoryUtil;
+import id.ac.ui.cs.prices.winvmj.core.Route;
+import id.ac.ui.cs.prices.winvmj.core.VMJExchange;
 
 public abstract class [fileName.replaceAll(' ', '')/]ResourceDecorator extends [fileName.replaceAll(' ', '')/]ResourceComponent {
 	protected [fileName.replaceAll(' ', '')/]ResourceComponent record;
@@ -105,18 +112,33 @@ public abstract class [fileName.replaceAll(' ', '')/]ResourceDecorator extends [
 }
 [/template]
 
-[template public generateResourceImpl(p : bpmn2::Process, fileName : String, importPath : String, targetPath: String)]
+[template public generateResourceImpl(
+	p : bpmn2::Process, 
+	fileName : String, 
+	importPath : String, 
+	targetPath: String,
+	varNames : Sequence(String), 
+	varClasses : Sequence(String))]
 // @generated from [fileName /].bpmn2
 
-package [importPath /].core;
+package [importPath /].core.resource;
 
 import java.util.*;
-import vmj.routing.route.VMJExchange;
-import vmj.routing.route.Route;
-[importAll(fileName, targetPath) /]
+import id.ac.ui.cs.prices.winvmj.core.Route;
+import id.ac.ui.cs.prices.winvmj.core.VMJExchange;
+import id.ac.ui.cs.prices.winvmj.core.exceptions.*;
+import id.ac.ui.cs.prices.winvmj.auth.annotations.Restricted;
+[let cls : String = varClasses->first()]
+import [importPath /].core.service.[cls/];
+[/let]
 
 public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.replaceAll(' ', '')/]ResourceComponent {
 
+[for (name : String | varNames)]
+[let cls : String = varClasses->at(varNames->indexOf(name))]
+    public static [cls/] [name/];
+[/let]
+[/for]
     static class ProcessInstance {
         String id;
         String state;
@@ -163,14 +185,14 @@ public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.repla
 
 [template public generateServiceSignatures(p : bpmn2::Process)]
 [for (t : bpmn2::Task | p.flowElements->select(e | e.oclIsKindOf(bpmn2::Task) and not e.oclIsKindOf(bpmn2::ScriptTask)))]
-        void [toValidVariableName(t)/](Map<String, Object> body, String processid);
+        void [toValidVariableName(t)/](Map<String, Object> body, String processid, Map<String, Object> response);
 [/for]
 [/template]
 
 [template public generateServiceImplementations(p : bpmn2::Process, fileName : String)]
 [for (t : bpmn2::Task | p.flowElements->select(e | e.oclIsKindOf(bpmn2::Task) and not e.oclIsKindOf(bpmn2::ScriptTask)))]
 	    @Override
-	    public void [toValidVariableName(t)/](Map<String, Object> body, String processid) {
+	    public void [toValidVariableName(t)/](Map<String, Object> body, String processid, Map<String, Object> response) {
 	        // TODO: Implement logic for [t.name/]
 			processService.upsert(new ProcessInstance(processid, "[toValidVariableName(t)/]"));
 	        System.out.println("Executing [t.name/]");
@@ -191,13 +213,13 @@ public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.repla
 )]
     @Route(url = "call/[ut.name.replaceAll(' ', '')/]")
     public Map<String, Object> [ut.name.replaceAll(' ', '')/](VMJExchange vmjExchange) {
-        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
 		Map<String, Object> requestBody = vmjExchange.getPayload();
 
 		[if (getTasksAfterStart(startevent, p, true)->includes(ut))]
         String processid = UUID.randomUUID().toString();
         processService.upsert(new ProcessInstance(processid, "[ut.name /]"));
-		res.put("processid", processid);
+		response.put("processid", processid);
 		[getFormData(ut) /]
 		[else]
 		String processid = (String) requestBody.get("processInstanceId");
@@ -212,20 +234,20 @@ public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.repla
 			
 			if (!([traversePrior(ut, p)/])
 			) {
-				res.put("status", "fail");
-				res.put("message", "[ut.name /] DENIED");
-            	return res;
+				response.put("status", "fail");
+				response.put("message", "[ut.name /] DENIED");
+            	return response;
 			}
 		}
 		[/if]
 
-        res.put("status", "ok");
-        res.put("message", "[ut.name/] SUCCESS");
+        response.put("status", "ok");
+        response.put("message", "[ut.name/] SUCCESS");
 
-		[fileName.replaceAll(' ', '').toLower()/]Service.[ut.name.replaceAll(' ', '') /](requestBody, processid);
+		[fileName.replaceAll(' ', '').toLower()/]Service.[ut.name.replaceAll(' ', '') /](requestBody, processid, response);
 		[traverseAfter(ut, p, fileName)/]
 
-        return res;
+        return response;
     }
 
 [/for]
@@ -298,28 +320,29 @@ public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.repla
 
 package [importPath /];
 
-import java.util.*;
-import vmj.routing.route.VMJExchange;
-import vmj.hibernate.integrator.RepositoryUtil;
+import id.ac.ui.cs.prices.winvmj.core.VMJExchange;
+import java.util.logging.Logger;
+import java.lang.reflect.Constructor;
+import [importPath /].core.resource.[fileName.replaceAll(' ', '') /]ResourceImpl;
 
 public abstract class [fileName.replaceAll(' ', '')/]ResourceFactory {
-	    private static final Logger LOGGER = Logger.getLogger(ResourceFactory.class.getName());
+	private static final Logger LOGGER = Logger.getLogger([fileName.replaceAll(' ', '')/]ResourceFactory.class.getName());
 
     public [fileName.replaceAll(' ', '')/]ResourceFactory()
     {
 
     }
 
-    public static [fileName.replaceAll(' ', '')/]Resource createResource(String fullyQualifiedName, Object ... base)
+    public static [fileName.replaceAll(' ', '')/]ResourceImpl createResource(String fullyQualifiedName, Object ... base)
     {
-    	[fileName.replaceAll(' ', '')/]Resource record = null;
+    	[fileName.replaceAll(' ', '')/]ResourceImpl record = null;
         if(true)
         {
         try {
             Class<?> clz = Class.forName(fullyQualifiedName);
             Constructor<?> constructor = clz.getDeclaredConstructors()['['/]0[']'/];
             System.out.println(constructor.toString());
-            record = ([fileName.replaceAll(' ', '') /]Resource) constructor.newInstance(base);
+            record = ([fileName.replaceAll(' ', '') /]ResourceImpl) constructor.newInstance(base);
         } 
         catch (IllegalArgumentException e)
         {

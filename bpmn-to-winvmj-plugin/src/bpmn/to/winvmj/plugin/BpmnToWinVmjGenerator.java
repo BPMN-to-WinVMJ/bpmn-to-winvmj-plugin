@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BpmnToWinVmjGenerator {
     
@@ -21,7 +22,7 @@ public class BpmnToWinVmjGenerator {
 	 * importPath is the package path on the bpmn2 generated files
 	 * targetPath is the src folder from uml-dop
 	 */
-    public static boolean transformBpmnFile(String bpmnFilePath, File outputFolder, String importPath, String targetPath) {
+    public static boolean transformBpmnFile(String bpmnFilePath, File outputFolder, String importPath, String targetPath, Map<String, String> services) {
 
         try {
             
@@ -33,7 +34,7 @@ public class BpmnToWinVmjGenerator {
             String fileName = file.getName();
             String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
             
-            List<String> argument = new ArrayList<>();
+            List<Object> argument = new ArrayList<>();
             
             // Add fileName to acceleo generator
             argument.add(nameWithoutExtension);
@@ -50,6 +51,8 @@ public class BpmnToWinVmjGenerator {
             	argument.add(importPath);
             }
             argument.add(targetPath);
+            argument.add(services.keySet().stream().toList());
+            argument.add(services.values().stream().toList());
             
             // Add 
             AcceleoServicesRegistry.INSTANCE.addServiceClass("bpmn.to.winvmj.acceleo",
@@ -70,7 +73,12 @@ public class BpmnToWinVmjGenerator {
     /*
      * umlDopProductPath is the location of generated .product. folder before compiled to .jar in src/
      */
-    public static boolean editProductRouter(File umlDopProductPath, File productJavaFile, String bpmnFilePath, String importPath) throws IOException {
+    public static boolean editProductRouter(
+    		File umlDopProductPath, 
+    		File productJavaFile, 
+    		String bpmnFilePath, 
+    		String importPath, 
+    		Map<String, String> serviceMap) throws IOException {
         File file = new File(bpmnFilePath);
         String fileName = file.getName();
         String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
@@ -82,7 +90,7 @@ public class BpmnToWinVmjGenerator {
     	// Find the line to insert after
     	int insertImportIndex = -1;
     	for (int i = 0; i < lines.size(); i++) {
-    	    if (lines.get(i).contains("import vmj.routing.route.Router;")) {
+    		if (lines.get(i).matches(".*import\\s+.*\\.Router;.*")) {
     	    	insertImportIndex = i++; // insert AFTER this line
     	        break;
     	    }
@@ -97,24 +105,42 @@ public class BpmnToWinVmjGenerator {
     	}
 
     	if (insertImportIndex != -1) {
-    	    lines.add(insertImportIndex++, "import %s.%sResourceFactory;".formatted(importPath, nameCapital));
-    	    lines.add(insertImportIndex, "import %s.core.%sResource;".formatted(importPath, nameCapital));
+    		String resourceVar = nameWithoutExtension + "resource";
+    		
+    		addWithCheck(lines, insertImportIndex++, "import %s.%sResourceFactory;".formatted(importPath, nameCapital));
+    		addWithCheck(lines, insertImportIndex, "import %s.core.resource.%sResourceImpl;".formatted(importPath, nameCapital));
     	    
-    	    lines.add(insertImportRouterAdd++, 
-    	    		"\t\t%sResource %sresource = %sResourceFactory.createResource(\"%s.core.%sResourceImpl\");"
-    	    		.formatted(nameCapital, nameWithoutExtension, nameCapital, importPath, nameCapital)
+    		addWithCheck(lines, insertImportRouterAdd++, 
+    	    		"\t\t%sResourceImpl %s = %sResourceFactory.createResource(\"%s.core.resource.%sResourceImpl\");"
+    	    		.formatted(nameCapital, resourceVar, nameCapital, importPath, nameCapital)
     		);
-    	    lines.add(insertImportRouterAdd++, 
-    	    		"\t\tRouter.route(%sresource);"
-    	    		.formatted(nameWithoutExtension)
+    		addWithCheck(lines, insertImportRouterAdd++, 
+    	    		"\t\tRouter.route(%s);"
+    	    		.formatted(resourceVar)
     		);
-    	    lines.add(insertImportRouterAdd++, 
+    		addWithCheck(lines, insertImportRouterAdd++, 
     	    		"\t\tSystem.out.println(\"%sResource endpoints binding\");"
     	    		.formatted(nameCapital)
     		);
+    		
+    	    // --- Inject service assignments after Router.route ---
+    	    for (Map.Entry<String, String> entry : serviceMap.entrySet()) {
+    	        String serviceVarName  = entry.getKey();   // e.g. overdraftAccount2Service
+    	        String fieldName = serviceVarName;         // e.g. resource.overdraftAccount2Service
+    	        addWithCheck(lines, insertImportRouterAdd++,
+    	                "\t\t%s.%s = %s;".formatted(resourceVar, fieldName, serviceVarName));
+    	    }
+    	    
     	    Files.write(filePath, lines);   
     	    return true;
     	}
     	return false;
+    }
+    
+    private static void addWithCheck(List<String> lines, int index, String s) {
+    	if (lines.contains(s)) {
+    		return;
+    	}
+    	lines.add(index, s);
     }
 }

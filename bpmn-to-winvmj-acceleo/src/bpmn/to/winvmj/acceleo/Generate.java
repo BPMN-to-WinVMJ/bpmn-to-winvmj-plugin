@@ -129,8 +129,6 @@ public class Generate extends AbstractAcceleoGenerator {
         initialize(model, targetFolder, arguments);
     }
 
-    // ── Main ───────────────────────────────────────────────────────────────────
-
     public static void main(String[] args) {
         try {
             if (args.length < 2) {
@@ -151,11 +149,13 @@ public class Generate extends AbstractAcceleoGenerator {
             String fileName = file.getName();
             String nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
             
-            List<String> argument = new ArrayList<>();
+            List<Object> argument = new ArrayList<>();
             argument.add(nameWithoutExtension);
             argument.add("bpmn/product/" + fileName.substring(0, 1).toUpperCase() + fileName.substring(1).replaceAll(" ", "") + '/');
             argument.add("");
             argument.add("");
+            argument.add(List.of("accountService"));
+            argument.add(List.of("AccountService"));
 
             Generate generator = new Generate(modelURI, folder, argument);
 

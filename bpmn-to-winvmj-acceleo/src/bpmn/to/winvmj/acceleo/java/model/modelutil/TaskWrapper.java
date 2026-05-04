@@ -29,8 +29,6 @@ public class TaskWrapper extends TaskImpl implements Continuable, OwnedComponent
         super();
     }
 
-    // ── Accessors ──────────────────────────────────────────────────────────────
-
     public Task getDelegate()            { return delegate; }
     public void setDelegate(Task v)      { this.delegate = v; }
     
@@ -53,10 +51,12 @@ public class TaskWrapper extends TaskImpl implements Continuable, OwnedComponent
     }
     
     public void addSubProcess(SubProcess subProcess) {
+    	System.out.println("addSubProcess " + this.subProcesses.size());
     	this.subProcesses.add(subProcess);
     }
 
     public List<SubProcess> getSubProcesses() {
+    	System.out.println("getSubProces " + this.subProcesses.size());
     	return this.subProcesses;
     }
     

@@ -20,6 +20,7 @@ import bpmn.to.winvmj.acceleo.java.model.Component;
 import bpmn.to.winvmj.acceleo.java.model.FlowComponent;
 import bpmn.to.winvmj.acceleo.java.model.RepeatComponent;
 import bpmn.to.winvmj.acceleo.java.model.SwitchComponent;
+import bpmn.to.winvmj.acceleo.java.model.Variable;
 import bpmn.to.winvmj.acceleo.java.model.WhileComponent;
 import bpmn.to.winvmj.acceleo.java.model.WhileRepeatComponent;
 import bpmn.to.winvmj.acceleo.java.model.modelutil.GatewayType;
@@ -98,6 +99,7 @@ public class Util {
     
     public static boolean isInsideFlowComponent(FlowNode e) {
         FlowNode curr = e;
+        if (e instanceof FlowComponent) return true;
         while (curr instanceof OwnedComponent oc) {
             Component parent = oc.getOwnerComponent();
             if (parent instanceof FlowComponent) return true;
@@ -149,13 +151,18 @@ public class Util {
     	return null;
     }
     
-    public static void writeTask(TaskWrapper task, StringBuilder builder, String bpmnName, int indent) {
+    public static void writeTask(
+    		TaskWrapper task, 
+    		StringBuilder builder, 
+    		String bpmnName, 
+    		Set<Variable> usedVariables, 
+    		int indent) {
     	if (TaskType.SCRIPT_TASK.equals(task.getTaskType())) {
-    		ScriptTaskConverter.appendStatementFromScriptTask(builder, task, bpmnName, indent);
+    		ScriptTaskConverter.appendStatementFromScriptTask(builder, task, bpmnName, usedVariables, indent);
     	} else {
     		builder.append(
     				String.format(Util.SPACE.repeat(indent) + 
-                        "%sService.%s(requestBody, processid);\n", 
+                        "%sService.%s(requestBody, processid, response);\n", 
                         bpmnName.toLowerCase(), task.getName()));
     	}
     }
@@ -185,27 +192,36 @@ public class Util {
     
     public static Set<String> extractVariablesFromExpression(String expression) {
         Set<String> variables = new HashSet<>();
-        
+
         if (expression == null || expression.isEmpty()) {
             return variables;
         }
-        
+
+        // Remove string literals first: "balance", "anything"
+        String cleaned = expression.replaceAll("\"[^\"]*\"", "");
+
+        // Remove cast expressions like (int), (String) when followed by identifier
+        cleaned = cleaned.replaceAll("\\([a-zA-Z_][a-zA-Z0-9_]*\\)(?=[\\s a-zA-Z0-9_\"'\\(])", "");
+
         // Remove whitespace
-        String cleaned = expression.replaceAll("\\s+", "");
-        
-        // Split on operators and keep only valid identifiers
-        // Pattern matches: word characters (a-zA-Z0-9_) that form valid Java identifiers
+        cleaned = cleaned.replaceAll("\\s+", "");
+
         Pattern pattern = Pattern.compile("[a-zA-Z_][a-zA-Z0-9_]*");
         Matcher matcher = pattern.matcher(cleaned);
-        
+
         while (matcher.find()) {
             String token = matcher.group();
-            // Exclude Java keywords
+            int end = matcher.end();
+            int start = matcher.start();
+
+            if (end < cleaned.length() && cleaned.charAt(end) == '(') continue;   // method call
+            if (start > 0 && cleaned.charAt(start - 1) == '.') continue;          // object member
+
             if (!isJavaKeyword(token)) {
                 variables.add(token);
             }
         }
-        
+
         return variables;
     }
     
@@ -303,4 +319,8 @@ public class Util {
         return "";
     }
 
+    
+    public static String removeWeirdChar(String s) {
+    	return s.replace("\"", "").replace("\\", "");
+    }
 }

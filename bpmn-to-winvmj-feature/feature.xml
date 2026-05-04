@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="id.ac.ui.cs.prices.bpmn.winvmj.feature"
-      label="id.ac.ui.cs.prices.bpmn.winvmj"
+      id="bpmn.to.winvmj.feature"
+      label="bpmn.to.winvmj"
       version="0.0.0">
 
    <description>
@@ -17,7 +17,7 @@
    </license>
 
    <plugin
-         id="id.ac.ui.cs.prices.bpmn.winvmj.plugin"
+         id="bpmn.to.winvmj.plugin"
          version="0.0.0"/>
 
    <plugin

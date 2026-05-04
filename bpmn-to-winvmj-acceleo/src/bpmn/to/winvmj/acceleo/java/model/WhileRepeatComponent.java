@@ -48,7 +48,7 @@ public class WhileRepeatComponent extends Component implements Looping {
 	        while (parent != null && parent.getOutgoing().isEmpty()) {
 	        	parent = parent.getOwnerComponent();
 	        }
-	        List<String> exitBranch = parent.getOutgoing().stream().map(x -> x.getName()).toList();
+	        List<String> exitBranch = parent.getOutgoing().stream().filter(x -> x.getName() != null).map(x -> x.getName()).toList();
 	        branches.addAll(exitBranch);
 	        
 	        for (String expression : branches) {
@@ -80,11 +80,18 @@ public class WhileRepeatComponent extends Component implements Looping {
 	            builder.append(Util.SPACE.repeat(indent + 1) + "}\r\n");
 	        }
 	        // get top line method calls after each loop sequence
+	        
 	        GenerateQuery.buildStraightLine(builder, bpmnName, this.getStart().getOutgoing().get(0).getTargetRef(), new HashSet<>(visited), usedVariables, indent + 1);
-	        String joined = exitBranch.stream().collect(Collectors.joining(" || "));
-	        builder.append(Util.SPACE.repeat(indent + 1) + String.format("if (%s) { processService.upsert(new ProcessInstance(processid, \"%s\")); break; }\r\n", joined, joined));
+	        
+	        if (!exitBranch.isEmpty()) {
+		        String joined = exitBranch.stream().collect(Collectors.joining(" || "));
+		        builder.append(Util.SPACE.repeat(indent + 1) + String.format("if (%s) { processService.upsert(new ProcessInstance(processid, \"%s\")); break; }\r\n", joined, Util.removeWeirdChar(joined)));
+	        }
 
-	        builder.append("}\r\n\r\n");
+	        builder.append(Util.SPACE.repeat(indent) + "}\r\n\r\n");
+	        if (exitBranch.isEmpty()) {
+		        builder.append(Util.SPACE.repeat(indent) + String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));", Util.removeWeirdChar(this.getName())));
+	        }
 	        return new FromStartToUserResult(builder.toString(), canContinueInclusive);
 		} else if (!topContinuable) {
 			// get top line until can't continue
