@@ -17,11 +17,15 @@
    </license>
 
    <plugin
-         id="bpmn.to.winvmj.plugin"
+         id="bpmn.to.winvmj.acceleo"
          version="0.0.0"/>
 
    <plugin
-         id="bpmn.to.winvmj.acceleo"
+         id="varbpmn.to.bpmn.transformer"
+         version="0.0.0"/>
+
+   <plugin
+         id="bpmn.to.winvmj.plugin"
          version="0.0.0"/>
 
 </feature>
