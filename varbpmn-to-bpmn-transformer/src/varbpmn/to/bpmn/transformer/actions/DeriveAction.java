@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,21 +21,32 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.osgi.framework.Bundle;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -73,7 +85,7 @@ public class DeriveAction implements IObjectActionDelegate {
 		"cardinality", "group", "abstract", "true", "false"
 	);
 
-	private IFile selectedFile;
+	private IProject selectedProject;
 	private Shell shell;
 
 	@Override
@@ -84,85 +96,121 @@ public class DeriveAction implements IObjectActionDelegate {
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		// Logika untuk mengekstrak file yang sedang di-klik kanan
+		this.selectedProject = null;
 		if (selection instanceof IStructuredSelection) {
 			Object firstElement = ((IStructuredSelection) selection).getFirstElement();
-			if (firstElement instanceof IFile) {
-				this.selectedFile = (IFile) firstElement;
+			if (firstElement instanceof IProject) {
+				this.selectedProject = (IProject) firstElement;
+			} else if (firstElement instanceof IFile) {
+				this.selectedProject = ((IFile) firstElement).getProject();
 			}
 		}
 	}
 
 	@Override
 	public void run(IAction action) {
-		if (selectedFile != null) {
+		if (selectedProject != null) {
 			try {
-				if (!selectedFile.getName().toLowerCase().endsWith(".bpmn2")) {
-					MessageDialog.openError(shell, "Error", "File yang dipilih harus berekstensi .bpmn2");
+				Path varProjectRoot = Paths.get(selectedProject.getLocation().toOSString());
+				Path varSrc = varProjectRoot.resolve("src");
+				Path varBpmnDir = varSrc.resolve("varbpmn");
+				Path mappingDir = varSrc.resolve("feature_to_varbpmn");
+				Path outDir = varProjectRoot.resolve("out");
+
+				if (!Files.isDirectory(varBpmnDir)) {
+					MessageDialog.openError(shell, "Error", "Folder varBPMN tidak ditemukan: " + varBpmnDir);
+					return;
+				}
+				if (!Files.isDirectory(mappingDir)) {
+					MessageDialog.openError(shell, "Error", "Folder mapping tidak ditemukan: " + mappingDir);
 					return;
 				}
 
-				Path inputBpmnPath = Paths.get(selectedFile.getLocation().toOSString());
-				Path baseFolder = inputBpmnPath.getParent();
-
-				SelectedInputs inputs = selectInputsWithBack(baseFolder);
-				if (inputs == null) {
+				FeatureIdeInputs featureIdeInputs = selectFeatureIdeInputsWithBack(varProjectRoot.getParent());
+				if (featureIdeInputs == null) {
 					return;
 				}
-				File configFile = inputs.configFile;
-				File modelFile = inputs.modelFile;
-				File mappingFile = inputs.mappingFile;
 
-				List<String> selectedFeatures = readSelectedFeatures(configFile.toPath());
+				List<String> selectedFeatures = readSelectedFeatures(featureIdeInputs.configPath);
 				if (selectedFeatures.isEmpty()) {
 					MessageDialog.openError(shell, "Error", "Tidak ada feature yang terpilih pada file konfigurasi.");
 					return;
 				}
 
-				Set<String> modelFeatures = readModelFeatures(modelFile.toPath());
+				Set<String> modelFeatures = readModelFeatures(featureIdeInputs.modelPath);
+				Set<String> abstractFeatures = readAbstractFeatures(featureIdeInputs.modelPath);
+
 				List<String> missingFeatures = new ArrayList<>();
+				List<String> selectedConcreteFeatures = new ArrayList<>();
 				for (String feature : selectedFeatures) {
 					if (!modelFeatures.contains(feature)) {
 						missingFeatures.add(feature);
+					} else if (!abstractFeatures.contains(feature)) {
+						selectedConcreteFeatures.add(feature);
 					}
 				}
 				if (!missingFeatures.isEmpty()) {
 					throw new Exception("Feature di config tidak ditemukan di model: " + String.join(", ", missingFeatures));
 				}
-
-				Map<String, List<MappingEntry>> featureMappings = parseFeatureMappings(mappingFile.toPath());
-
-				// Prompt for output file
-				FileDialog outDialog = new FileDialog(shell, SWT.SAVE);
-				outDialog.setText("Pilih Lokasi Output BPMN");
-				outDialog.setFilterExtensions(new String[] { "*.bpmn2", "*.*" });
-				outDialog.setFileName(selectedFile.getName().replace(".bpmn2", "_derived.bpmn2"));
-				if (baseFolder != null && Files.exists(baseFolder)) {
-					outDialog.setFilterPath(baseFolder.toAbsolutePath().toString());
-				}
-				String outputPathStr = outDialog.open();
-				if (outputPathStr == null || outputPathStr.trim().isEmpty()) {
+				if (selectedConcreteFeatures.isEmpty()) {
+					MessageDialog.openError(shell, "Error", "Tidak ada concrete feature yang terpilih (non-abstract).");
 					return;
 				}
-				Path derivedOutputPath = Paths.get(outputPathStr);
 
-				// Use a temp file for varbpmn
-				Path tempVarBpmn = Files.createTempFile("varbpmn_", ".bpmn2");
-				try {
-					annotateVariability(inputBpmnPath, tempVarBpmn, selectedFeatures, featureMappings);
-					runAtlDerivation(tempVarBpmn, derivedOutputPath);
-				} finally {
-					try { Files.deleteIfExists(tempVarBpmn); } catch (Exception ignore) {}
+				if (!Files.exists(outDir)) {
+					Files.createDirectories(outDir);
 				}
 
-				selectedFile.getParent().refreshLocal(IResource.DEPTH_ONE, null);
+				List<Path> varBpmnFiles = new ArrayList<>();
+				try (Stream<Path> files = Files.list(varBpmnDir)) {
+					files.filter(Files::isRegularFile)
+						.filter(path -> path.getFileName().toString().toLowerCase().endsWith(".bpmn2"))
+						.sorted(Comparator.comparing(path -> path.getFileName().toString().toLowerCase()))
+						.forEach(varBpmnFiles::add);
+				}
+				if (varBpmnFiles.isEmpty()) {
+					MessageDialog.openError(shell, "Error", "Tidak ada file .bpmn2 di folder: " + varBpmnDir);
+					return;
+				}
+
+				int successCount = 0;
+				List<String> skippedMappings = new ArrayList<>();
+
+				for (Path inputBpmnPath : varBpmnFiles) {
+					String fileName = inputBpmnPath.getFileName().toString();
+					String baseName = fileName.substring(0, fileName.length() - ".bpmn2".length());
+					Path mappingPath = mappingDir.resolve(baseName + ".json");
+					if (!Files.exists(mappingPath)) {
+						skippedMappings.add(baseName + ".json");
+						continue;
+					}
+
+					Map<String, List<MappingEntry>> featureMappings = parseFeatureMappings(mappingPath);
+					Path derivedOutputPath = outDir.resolve(baseName + ".bpmn2");
+
+					Path tempVarBpmn = Files.createTempFile("varbpmn_", ".bpmn2");
+					try {
+						annotateVariability(inputBpmnPath, tempVarBpmn, selectedConcreteFeatures, featureMappings);
+						runAtlDerivation(tempVarBpmn, derivedOutputPath);
+						successCount++;
+					} finally {
+						try {
+							Files.deleteIfExists(tempVarBpmn);
+						} catch (Exception ignore) {
+						}
+					}
+				}
+
+				selectedProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 				MessageDialog.openInformation(shell, "Transformasi Berhasil",
-					"Derivasi sukses dieksekusi.\n\n"
-						+ "Config: " + configFile.getName() + "\n"
-						+ "Model: " + modelFile.getName() + "\n"
-						+ "Mapping: " + mappingFile.getName() + "\n\n"
-						+ "BPMN variant: " + derivedOutputPath.getFileName());
+					"Batch derivasi selesai.\n\n"
+						+ "FeatureIDE project: " + featureIdeInputs.projectRoot.getFileName() + "\n"
+						+ "Config: " + featureIdeInputs.configPath.getFileName() + "\n"
+						+ "Model: " + featureIdeInputs.modelPath.getFileName() + "\n"
+						+ "Berhasil ditransformasi: " + successCount + " file\n"
+						+ "Output folder: " + outDir + "\n"
+						+ (skippedMappings.isEmpty() ? "" : ("\nMapping tidak ditemukan:\n- " + String.join("\n- ", skippedMappings))));
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -171,7 +219,7 @@ public class DeriveAction implements IObjectActionDelegate {
 						+ "Silakan cek Error Log untuk detail lebih lanjut.");
 			}
 		} else {
-			MessageDialog.openError(shell, "Error", "Tidak ada file yang dipilih.");
+			MessageDialog.openError(shell, "Error", "Tidak ada project yang dipilih.");
 		}
 	}
 
@@ -420,91 +468,131 @@ public class DeriveAction implements IObjectActionDelegate {
 		return result;
 	}
 
-	private File resolveMappingFile(File configFile) {
-		File configDirectory = configFile.getParentFile();
-		if (configDirectory == null) {
-			return null;
+	private Set<String> readAbstractFeatures(Path modelPath) throws IOException {
+		String content = Files.readString(modelPath, StandardCharsets.UTF_8);
+		Set<String> abstractFeatures = new HashSet<>();
+		Matcher abstractMatcher = Pattern.compile("(?i)\\babstract\\s+(?:\"([^\"]+)\"|([A-Za-z_][A-Za-z0-9_]*))").matcher(content);
+		while (abstractMatcher.find()) {
+			String quoted = trimToNull(abstractMatcher.group(1));
+			String unquoted = trimToNull(abstractMatcher.group(2));
+			if (quoted != null) {
+				abstractFeatures.add(quoted);
+			} else if (unquoted != null) {
+				abstractFeatures.add(unquoted);
+			}
 		}
-
-		File sibling = new File(configDirectory, "feature_to_var.json");
-		if (sibling.exists() && sibling.isFile()) {
-			return sibling;
-		}
-
-		return null;
+		return abstractFeatures;
 	}
 
-	private File askUserFile(String title, String[] filterExtensions, Path preferredDirectory) {
-		FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-		dialog.setText(title);
-		dialog.setFilterExtensions(filterExtensions);
-
-		if (preferredDirectory != null && Files.exists(preferredDirectory)) {
-			dialog.setFilterPath(preferredDirectory.toAbsolutePath().toString());
-		}
-
-		String selectedPath = dialog.open();
-		if (selectedPath == null || selectedPath.trim().isEmpty()) {
-			return null;
-		}
-
-		return new File(selectedPath);
-	}
-
-	private SelectedInputs selectInputsWithBack(Path baseFolder) {
-		File configFile = null;
-		File modelFile = null;
-		Path preferredDirectory = baseFolder;
+	private FeatureIdeInputs selectFeatureIdeInputsWithBack(Path preferredDirectory) {
+		IProject featureProject = null;
 		int step = 0;
 
 		while (true) {
 			if (step == 0) {
-				configFile = askUserFile("Pilih File Konfigurasi FeatureIDE", new String[] { "*.xml", "*.*" }, preferredDirectory);
-				if (configFile == null) {
+				featureProject = chooseFeatureIdeProjectFromWorkspace();
+				if (featureProject == null) {
 					return null;
 				}
-				preferredDirectory = configFile.toPath().getParent();
 				step = 1;
 				continue;
 			}
 
-			if (step == 1) {
-				modelFile = askUserFile("Pilih File Model Feature (.uvl)", new String[] { "*.uvl", "*.*" }, preferredDirectory);
-				if (modelFile == null) {
-					boolean backToConfig = MessageDialog.openQuestion(
-						shell,
-						"Kembali ke langkah sebelumnya?",
-						"Pemilihan model dibatalkan.\nPilih Yes untuk kembali memilih file konfigurasi.\nPilih No untuk membatalkan proses."
-					);
-					if (backToConfig) {
-						step = 0;
-						preferredDirectory = configFile != null ? configFile.toPath().getParent() : baseFolder;
-						continue;
-					}
-					return null;
-				}
-				preferredDirectory = modelFile.toPath().getParent();
-				step = 2;
-				continue;
-			}
-
-			File mappingFile = askUserFile("Pilih File Mapping feature_to_var.json", new String[] { "*.json", "*.*" }, preferredDirectory);
-			if (mappingFile == null) {
-				boolean backToModel = MessageDialog.openQuestion(
+			IFile configFile = chooseConfigFileFromWorkspace(featureProject);
+			Path configPath = configFile != null ? Paths.get(configFile.getLocation().toOSString()) : null;
+			if (configPath == null) {
+				boolean backToProject = MessageDialog.openQuestion(
 					shell,
 					"Kembali ke langkah sebelumnya?",
-					"Pemilihan mapping dibatalkan.\nPilih Yes untuk kembali memilih file model.\nPilih No untuk membatalkan proses."
+					"Pemilihan config dibatalkan.\nPilih Yes untuk memilih ulang project FeatureIDE.\nPilih No untuk membatalkan proses."
 				);
-				if (backToModel) {
-					step = 1;
-					preferredDirectory = modelFile != null ? modelFile.toPath().getParent() : baseFolder;
+				if (backToProject) {
+					step = 0;
 					continue;
 				}
 				return null;
 			}
 
-			return new SelectedInputs(configFile, modelFile, mappingFile);
+			Path featureProjectRoot = Paths.get(featureProject.getLocation().toOSString());
+			Path modelPath = Paths.get(featureProject.getFile("model.uvl").getLocation().toOSString());
+			return new FeatureIdeInputs(featureProjectRoot, modelPath, configPath);
 		}
+	}
+
+	private boolean isValidFeatureIdeProject(IProject project) {
+		if (project == null || !project.exists()) {
+			return false;
+		}
+		return project.getFile("model.uvl").exists() && project.getFolder("configs").exists();
+	}
+
+	private IProject chooseFeatureIdeProjectFromWorkspace() {
+		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
+			shell,
+			new LabelProvider() {
+				@Override
+				public String getText(Object element) {
+					if (element instanceof IResource) {
+						return ((IResource) element).getName();
+					}
+					return super.getText(element);
+				}
+			},
+			new ResourceTreeContentProvider()
+		);
+		dialog.setTitle("Pilih Project FeatureIDE");
+		dialog.setMessage("Pilih project workspace yang berisi model.uvl dan folder configs.");
+		dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
+		dialog.setAllowMultiple(false);
+		dialog.setValidator(selection -> {
+			if (selection.length == 1 && selection[0] instanceof IProject && isValidFeatureIdeProject((IProject) selection[0])) {
+				return Status.OK_STATUS;
+			}
+			return new Status(IStatus.ERROR, PLUGIN_ID, "Pilih project FeatureIDE yang valid.");
+		});
+
+		if (dialog.open() != Window.OK) {
+			return null;
+		}
+		Object result = dialog.getFirstResult();
+		return result instanceof IProject ? (IProject) result : null;
+	}
+
+	private IFile chooseConfigFileFromWorkspace(IProject featureProject) {
+		IFolder configsFolder = featureProject.getFolder("configs");
+		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
+			shell,
+			new LabelProvider() {
+				@Override
+				public String getText(Object element) {
+					if (element instanceof IResource) {
+						return ((IResource) element).getName();
+					}
+					return super.getText(element);
+				}
+			},
+			new ResourceTreeContentProvider()
+		);
+		dialog.setTitle("Pilih Config");
+		dialog.setMessage("Pilih file config (.xml) dari folder configs.");
+		dialog.setInput(configsFolder);
+		dialog.setAllowMultiple(false);
+		dialog.setValidator(selection -> {
+			if (selection.length == 1 && selection[0] instanceof IFile) {
+				IFile file = (IFile) selection[0];
+				String ext = file.getFileExtension();
+				if (ext != null && "xml".equalsIgnoreCase(ext)) {
+					return Status.OK_STATUS;
+				}
+			}
+			return new Status(IStatus.ERROR, PLUGIN_ID, "Pilih satu file .xml.");
+		});
+
+		if (dialog.open() != Window.OK) {
+			return null;
+		}
+		Object result = dialog.getFirstResult();
+		return result instanceof IFile ? (IFile) result : null;
 	}
 
 	private Document parseXml(Path xmlPath) throws Exception {
@@ -651,15 +739,57 @@ public class DeriveAction implements IObjectActionDelegate {
 		private List<String> receiver;
 	}
 
-	private static class SelectedInputs {
-		private final File configFile;
-		private final File modelFile;
-		private final File mappingFile;
+	private static class FeatureIdeInputs {
+		private final Path projectRoot;
+		private final Path modelPath;
+		private final Path configPath;
 
-		private SelectedInputs(File configFile, File modelFile, File mappingFile) {
-			this.configFile = configFile;
-			this.modelFile = modelFile;
-			this.mappingFile = mappingFile;
+		private FeatureIdeInputs(Path projectRoot, Path modelPath, Path configPath) {
+			this.projectRoot = projectRoot;
+			this.modelPath = modelPath;
+			this.configPath = configPath;
+		}
+	}
+
+	private static class ResourceTreeContentProvider implements ITreeContentProvider {
+		@Override
+		public Object[] getElements(Object inputElement) {
+			return getChildren(inputElement);
+		}
+
+		@Override
+		public Object[] getChildren(Object parentElement) {
+			try {
+				if (parentElement instanceof IWorkspaceRoot) {
+					return ((IWorkspaceRoot) parentElement).getProjects();
+				}
+				if (parentElement instanceof IContainer) {
+					return ((IContainer) parentElement).members();
+				}
+			} catch (Exception ignored) {
+			}
+			return new Object[0];
+		}
+
+		@Override
+		public Object getParent(Object element) {
+			if (element instanceof IResource) {
+				return ((IResource) element).getParent();
+			}
+			return null;
+		}
+
+		@Override
+		public boolean hasChildren(Object element) {
+			return getChildren(element).length > 0;
+		}
+
+		@Override
+		public void dispose() {
+		}
+
+		@Override
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 	}
 

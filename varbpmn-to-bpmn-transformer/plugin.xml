@@ -3,18 +3,12 @@
 <plugin>
    <extension point="org.eclipse.ui.popupMenus">
       <objectContribution
-            objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.bpmn2"
+            objectClass="org.eclipse.core.resources.IProject"
          id="varbpmn.to.bpmn.transformer.contribution">
-         <menu
-               id="varbpmn.menu"
-               label="VarBPMN"
-               path="additions">
-         </menu>
          <action
-               label="Derive VarBPMN to BPMN"
+               label="Derive varBPMN to BPMN"
                class="varbpmn.to.bpmn.transformer.actions.DeriveAction"
-               menubarPath="varbpmn.menu/additions"
+               menubarPath="additions"
                enablesFor="1"
                id="varbpmn.to.bpmn.transformer.action">
          </action>
