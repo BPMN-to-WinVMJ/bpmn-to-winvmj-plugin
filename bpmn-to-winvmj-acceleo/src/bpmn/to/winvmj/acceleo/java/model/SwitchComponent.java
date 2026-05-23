@@ -30,7 +30,7 @@ public class SwitchComponent extends Component {
 	}
 
     @Override
-    public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent) {
+    public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent, boolean isProcess) {
         StringBuilder builder = new StringBuilder();
         Set<FlowNode> visited = new HashSet<>();
 
@@ -49,9 +49,9 @@ public class SwitchComponent extends Component {
         	}
         	
             StringBuilder builderTemp = new StringBuilder();
-            canContinueInclusive &= GenerateQuery.buildStraightLine(builderTemp, bpmnName, f.getTargetRef(), visited, usedVariables, indent + 1);
+            canContinueInclusive &= GenerateQuery.buildStraightLine(builderTemp, bpmnName, f.getTargetRef(), visited, usedVariables, indent + 1, isProcess);
 
-            if (first || isInclusive && !builderTemp.isEmpty()) {
+            if ((first || isInclusive) && !builderTemp.isEmpty()) {
                 builder.append(Util.SPACE.repeat(indent) + String.format("if (%s) {\r\n", f.getName()));
                 if (isInclusive) builder.append(Util.SPACE.repeat(indent + 1) + "boolean canContinue = true;\r\n");
                 first = false;
@@ -60,7 +60,7 @@ public class SwitchComponent extends Component {
             }
             
             if (!builderTemp.isEmpty()) {
-            	builder.append(Util.SPACE.repeat(indent + 1) + String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", Util.removeWeirdChar(f.getName())));
+            	builder.append(Util.SPACE.repeat(indent + 1) + String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", Util.removeWeirdChar(f.getName() == null ? "" : f.getName())));
                 builder.append(builderTemp.toString());
                 builder.append(Util.SPACE.repeat(indent) + "}\r\n");
             }

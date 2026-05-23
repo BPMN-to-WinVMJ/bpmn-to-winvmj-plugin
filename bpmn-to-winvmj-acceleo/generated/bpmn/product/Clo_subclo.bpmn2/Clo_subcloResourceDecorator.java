@@ -1,10 +1,10 @@
 // @generated from Clo_subclo.bpmn2
 
-package .core;
+package .core.resource;
 
 import java.util.*;
-import vmj.routing.route.VMJExchange;
-import vmj.hibernate.integrator.RepositoryUtil;
+import id.ac.ui.cs.prices.winvmj.core.Route;
+import id.ac.ui.cs.prices.winvmj.core.VMJExchange;
 
 public abstract class Clo_subcloResourceDecorator extends Clo_subcloResourceComponent {
 	protected Clo_subcloResourceComponent record;
@@ -13,22 +13,16 @@ public abstract class Clo_subcloResourceDecorator extends Clo_subcloResourceComp
         this.record = record;
     }
 
-    public Map<String, Object> mapSubCloToClo(VMJExchange vmjExchange) {
-		return record.mapSubCloToClo(vmjExchange);
+    public Map<String, Object> manageGradeComponent(VMJExchange vmjExchange) {
+		return record.manageGradeComponent(vmjExchange);
 	}
     public Map<String, Object> entryComponentGrades(VMJExchange vmjExchange) {
 		return record.entryComponentGrades(vmjExchange);
 	}
-    public Map<String, Object> starter(VMJExchange vmjExchange) {
-		return record.starter(vmjExchange);
-	}
     public Map<String, Object> mapGradeComponentsToCloAndSubClo(VMJExchange vmjExchange) {
 		return record.mapGradeComponentsToCloAndSubClo(vmjExchange);
 	}
-    public Map<String, Object> crudGradeComponent(VMJExchange vmjExchange) {
-		return record.crudGradeComponent(vmjExchange);
-	}
-    public Map<String, Object> crudSubClo(VMJExchange vmjExchange) {
-		return record.crudSubClo(vmjExchange);
+    public Map<String, Object> manageSubClo(VMJExchange vmjExchange) {
+		return record.manageSubClo(vmjExchange);
 	}
 }

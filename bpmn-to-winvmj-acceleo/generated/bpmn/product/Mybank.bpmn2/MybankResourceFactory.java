@@ -1,30 +1,30 @@
-// @generated from Clo_subclo.bpmn2
+// @generated from Mybank.bpmn2
 
 package ;
 
 import id.ac.ui.cs.prices.winvmj.core.VMJExchange;
 import java.util.logging.Logger;
 import java.lang.reflect.Constructor;
-import .core.resource.Clo_subcloResourceImpl;
+import .core.resource.MybankResourceImpl;
 
-public abstract class Clo_subcloResourceFactory {
-	private static final Logger LOGGER = Logger.getLogger(Clo_subcloResourceFactory.class.getName());
+public abstract class MybankResourceFactory {
+	private static final Logger LOGGER = Logger.getLogger(MybankResourceFactory.class.getName());
 
-    public Clo_subcloResourceFactory()
+    public MybankResourceFactory()
     {
 
     }
 
-    public static Clo_subcloResourceImpl createResource(String fullyQualifiedName, Object ... base)
+    public static MybankResourceImpl createResource(String fullyQualifiedName, Object ... base)
     {
-    	Clo_subcloResourceImpl record = null;
+    	MybankResourceImpl record = null;
         if(true)
         {
         try {
             Class<?> clz = Class.forName(fullyQualifiedName);
             Constructor<?> constructor = clz.getDeclaredConstructors()[0];
             System.out.println(constructor.toString());
-            record = (Clo_subcloResourceImpl) constructor.newInstance(base);
+            record = (MybankResourceImpl) constructor.newInstance(base);
         } 
         catch (IllegalArgumentException e)
         {

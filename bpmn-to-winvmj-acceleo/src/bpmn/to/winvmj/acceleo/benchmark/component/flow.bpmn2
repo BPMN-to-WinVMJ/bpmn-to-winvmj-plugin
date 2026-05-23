@@ -1,27 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="_b2ji4PCaEfCYWcuZGOX0yw" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.4.RC1-v20221118-1047-B1">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="_b2ji4PCaEfCYWcuZGOX0yw" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.4.RC1-v20220528-0836-B1">
   <bpmn2:process id="Process_1" name="Process 1" isExecutable="false">
     <bpmn2:startEvent id="StartEvent_1" name="Start Event 1">
+      <bpmn2:extensionElements>
+        <ext:style ext:shapeForeground="#000000" ext:shapeBackground="#ffffff" ext:labelForeground="#000000"/>
+      </bpmn2:extensionElements>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:parallelGateway id="ParallelGateway_1" name="Parallel Gateway 1" gatewayDirection="Diverging">
+      <bpmn2:extensionElements>
+        <ext:style ext:shapeForeground="#000000" ext:shapeBackground="#ffffff" ext:labelForeground="#000000"/>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
     </bpmn2:parallelGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_3" sourceRef="UserTask_2" targetRef="ParallelGateway_1"/>
     <bpmn2:parallelGateway id="ParallelGateway_2" name="Parallel Gateway 2" gatewayDirection="Converging">
+      <bpmn2:extensionElements>
+        <ext:style ext:shapeForeground="#000000" ext:shapeBackground="#ffffff" ext:labelForeground="#000000"/>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
     </bpmn2:parallelGateway>
     <bpmn2:endEvent id="EndEvent_1" name="End Event 1">
+      <bpmn2:extensionElements>
+        <ext:style ext:shapeForeground="#000000" ext:shapeBackground="#ffffff" ext:labelForeground="#000000"/>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="UserTask_3" targetRef="EndEvent_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="ParallelGateway_1" targetRef="ServiceTask_3"/>
     <bpmn2:serviceTask id="ServiceTask_1" name="Service Task 1">
+      <bpmn2:extensionElements>
+        <ext:style ext:shapeForeground="#000000" ext:shapeBackground="#ffffff" ext:labelForeground="#000000"/>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
     </bpmn2:serviceTask>
@@ -29,15 +44,24 @@
     <bpmn2:sequenceFlow id="SequenceFlow_6" sourceRef="ServiceTask_1" targetRef="ParallelGateway_2"/>
     <bpmn2:sequenceFlow id="SequenceFlow_7" sourceRef="ServiceTask_3" targetRef="ParallelGateway_2"/>
     <bpmn2:userTask id="UserTask_2" name="User Task 2">
+      <bpmn2:extensionElements>
+        <ext:style ext:shapeForeground="#000000" ext:shapeBackground="#ffffff" ext:labelForeground="#000000"/>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_4" sourceRef="StartEvent_1" targetRef="UserTask_2"/>
     <bpmn2:serviceTask id="ServiceTask_3" name="Service Task 3">
+      <bpmn2:extensionElements>
+        <ext:style ext:shapeForeground="#000000" ext:shapeBackground="#ffffff" ext:labelForeground="#000000"/>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:userTask id="UserTask_3" name="User Task 3">
+      <bpmn2:extensionElements>
+        <ext:style ext:shapeForeground="#000000" ext:shapeBackground="#ffffff" ext:labelForeground="#000000"/>
+      </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:userTask>

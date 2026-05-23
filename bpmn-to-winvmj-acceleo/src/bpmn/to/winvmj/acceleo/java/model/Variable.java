@@ -34,7 +34,7 @@ public class Variable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Variable variable = (Variable) o;
-        return Objects.equals(name, variable.name);
+        return name.equals(variable.name);
     }
 
     @Override

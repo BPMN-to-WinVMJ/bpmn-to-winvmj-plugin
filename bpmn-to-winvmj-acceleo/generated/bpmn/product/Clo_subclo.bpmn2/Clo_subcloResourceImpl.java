@@ -1,13 +1,18 @@
 // @generated from Clo_subclo.bpmn2
 
-package .core;
+package .core.resource;
 
 import java.util.*;
-import vmj.routing.route.VMJExchange;
-import vmj.routing.route.Route;
+import java.util.concurrent.CompletableFuture;
+import id.ac.ui.cs.prices.winvmj.core.Route;
+import id.ac.ui.cs.prices.winvmj.core.VMJExchange;
+import id.ac.ui.cs.prices.winvmj.core.exceptions.*;
+import id.ac.ui.cs.prices.winvmj.auth.annotations.Restricted;
+import .core.service.AccountService;
 
 public class Clo_subcloResourceImpl extends Clo_subcloResourceComponent {
 
+    public static AccountService accountService;
     static class ProcessInstance {
         String id;
         String state;
@@ -38,48 +43,26 @@ public class Clo_subcloResourceImpl extends Clo_subcloResourceComponent {
     }
 
     static interface Clo_subcloService {
-        void manageGradeComponent(Map<String, Object> body, String processid);
-        void gradeStudentAssessmentResult(Map<String, Object> body, String processid);
-        void entryComponentGrades(Map<String, Object> body, String processid);
-        void mapGradeComponentsToCloAndSubClo(Map<String, Object> body, String processid);
-        void starter(Map<String, Object> body, String processid);
-        void manageSubClo(Map<String, Object> body, String processid);
-        void conductTeachingAndStudentAssessmentActivities(Map<String, Object> body, String processid);
+        void conductTeachingAndStudentAssessmentActivities(Map<String, Object> requestBody, String processid, Map<String, Object> response);
+        void mapGradeComponentsToCloAndSubClo(Map<String, Object> requestBody, String processid, Map<String, Object> response);
+        void entryComponentGrades(Map<String, Object> requestBody, String processid, Map<String, Object> response);
+        void manageSubClo(Map<String, Object> requestBody, String processid, Map<String, Object> response);
+        void gradeStudentAssessmentResult(Map<String, Object> requestBody, String processid, Map<String, Object> response);
+        void manageGradeComponent(Map<String, Object> requestBody, String processid, Map<String, Object> response);
 
     }
 
     static class Clo_subcloServiceImpl implements Clo_subcloService {
 	    @Override
-	    public void manageGradeComponent(Map<String, Object> body, String processid) {
-	        // TODO: Implement logic for manage Grade Component
-			processService.upsert(new ProcessInstance(processid, "manageGradeComponent"));
-	        System.out.println("Executing manage Grade Component");
-			// From ScriptTask init uang as int
-			lalalalallalalalallalalalla
-			
-			
-			// From ScriptTask increment uang 100
-			uang += 100;
-	    }
-
-	    @Override
-	    public void gradeStudentAssessmentResult(Map<String, Object> body, String processid) {
-	        // TODO: Implement logic for gradeStudentAssessmentResult
-			processService.upsert(new ProcessInstance(processid, "gradeStudentAssessmentResult"));
-	        System.out.println("Executing gradeStudentAssessmentResult");
+	    public void conductTeachingAndStudentAssessmentActivities(Map<String, Object> requestBody, String processid, Map<String, Object> response) {
+	        // TODO: Implement logic for Conduct Teaching and Student Assessment Activities
+			processService.upsert(new ProcessInstance(processid, "conductTeachingAndStudentAssessmentActivities"));
+	        System.out.println("Executing Conduct Teaching and Student Assessment Activities");
 			
 	    }
 
 	    @Override
-	    public void entryComponentGrades(Map<String, Object> body, String processid) {
-	        // TODO: Implement logic for entryComponentGrades
-			processService.upsert(new ProcessInstance(processid, "entryComponentGrades"));
-	        System.out.println("Executing entryComponentGrades");
-			
-	    }
-
-	    @Override
-	    public void mapGradeComponentsToCloAndSubClo(Map<String, Object> body, String processid) {
+	    public void mapGradeComponentsToCloAndSubClo(Map<String, Object> requestBody, String processid, Map<String, Object> response) {
 	        // TODO: Implement logic for mapGradeComponentsToCloAndSubClo
 			processService.upsert(new ProcessInstance(processid, "mapGradeComponentsToCloAndSubClo"));
 	        System.out.println("Executing mapGradeComponentsToCloAndSubClo");
@@ -87,15 +70,15 @@ public class Clo_subcloResourceImpl extends Clo_subcloResourceComponent {
 	    }
 
 	    @Override
-	    public void starter(Map<String, Object> body, String processid) {
-	        // TODO: Implement logic for starter
-			processService.upsert(new ProcessInstance(processid, "starter"));
-	        System.out.println("Executing starter");
+	    public void entryComponentGrades(Map<String, Object> requestBody, String processid, Map<String, Object> response) {
+	        // TODO: Implement logic for entryComponentGrades
+			processService.upsert(new ProcessInstance(processid, "entryComponentGrades"));
+	        System.out.println("Executing entryComponentGrades");
 			
 	    }
 
 	    @Override
-	    public void manageSubClo(Map<String, Object> body, String processid) {
+	    public void manageSubClo(Map<String, Object> requestBody, String processid, Map<String, Object> response) {
 	        // TODO: Implement logic for manageSubClo
 			processService.upsert(new ProcessInstance(processid, "manageSubClo"));
 	        System.out.println("Executing manageSubClo");
@@ -103,10 +86,18 @@ public class Clo_subcloResourceImpl extends Clo_subcloResourceComponent {
 	    }
 
 	    @Override
-	    public void conductTeachingAndStudentAssessmentActivities(Map<String, Object> body, String processid) {
-	        // TODO: Implement logic for conductTeachingAndStudentAssessmentActivities
-			processService.upsert(new ProcessInstance(processid, "conductTeachingAndStudentAssessmentActivities"));
-	        System.out.println("Executing conductTeachingAndStudentAssessmentActivities");
+	    public void gradeStudentAssessmentResult(Map<String, Object> requestBody, String processid, Map<String, Object> response) {
+	        // TODO: Implement logic for gradeStudentAssessmentResult
+			processService.upsert(new ProcessInstance(processid, "gradeStudentAssessmentResult"));
+	        System.out.println("Executing gradeStudentAssessmentResult");
+			
+	    }
+
+	    @Override
+	    public void manageGradeComponent(Map<String, Object> requestBody, String processid, Map<String, Object> response) {
+	        // TODO: Implement logic for manageGradeComponent
+			processService.upsert(new ProcessInstance(processid, "manageGradeComponent"));
+	        System.out.println("Executing manageGradeComponent");
 			
 	    }
 
@@ -116,80 +107,14 @@ public class Clo_subcloResourceImpl extends Clo_subcloResourceComponent {
     private static ProcessService processService = new ProcessServiceImpl();
 	private static Clo_subcloService clo_subcloService = new Clo_subcloServiceImpl();
 
-    @Route(url = "call/manageGradeComponent")
-    public Map<String, Object> manageGradeComponent(VMJExchange vmjExchange) {
-        Map<String, Object> res = new HashMap<>();
-		Map<String, Object> requestBody = vmjExchange.getPayload();
-
-		String processid = (String) requestBody.get("processInstanceId");
-		Object taskVar1 = (Object) requestBody.get("taskVar1");
-		Object A = (Object) requestBody.get("A");
-		
-		if (vmjExchange.getHttpMethod().equals("POST")) {
-
-	        // Cek apakah step sebelumnya pernah dilakukan
-	        // This also allows user yang mundur page trus isi form ulang
-	        // karena langkah sebelum page ini pasti udh dilakukan
-	        // ini juga mencegah orang dari asal tembak api
-	        List<ProcessInstance> processes = processService.getAllById(processid);
-			
-			if (!(hasTaskState(processes, "no") || 
-			    hasTaskState(processes, "Map Sub-CLO to CLO"))
-			) {
-				res.put("status", "fail");
-				res.put("message", "manageGradeComponent DENIED");
-            	return res;
-			}
-		}
-
-        res.put("status", "ok");
-        res.put("message", "manageGradeComponent SUCCESS");
-
-		clo_subcloService.manageGradeComponent(requestBody, processid);
-		
-
-        return res;
-    }
-
-    @Route(url = "call/entryComponentGrades")
-    public Map<String, Object> entryComponentGrades(VMJExchange vmjExchange) {
-        Map<String, Object> res = new HashMap<>();
-		Map<String, Object> requestBody = vmjExchange.getPayload();
-
-		String processid = (String) requestBody.get("processInstanceId");
-		
-		if (vmjExchange.getHttpMethod().equals("POST")) {
-
-	        // Cek apakah step sebelumnya pernah dilakukan
-	        // This also allows user yang mundur page trus isi form ulang
-	        // karena langkah sebelum page ini pasti udh dilakukan
-	        // ini juga mencegah orang dari asal tembak api
-	        List<ProcessInstance> processes = processService.getAllById(processid);
-			
-			if (!(hasTaskState(processes, "gradeStudentAssessmentResult"))
-			) {
-				res.put("status", "fail");
-				res.put("message", "entryComponentGrades DENIED");
-            	return res;
-			}
-		}
-
-        res.put("status", "ok");
-        res.put("message", "entryComponentGrades SUCCESS");
-
-		clo_subcloService.entryComponentGrades(requestBody, processid);
-		
-
-        return res;
-    }
-
     @Route(url = "call/mapGradeComponentsToCloAndSubClo")
     public Map<String, Object> mapGradeComponentsToCloAndSubClo(VMJExchange vmjExchange) {
-        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
 		Map<String, Object> requestBody = vmjExchange.getPayload();
 
+        
+
 		String processid = (String) requestBody.get("processInstanceId");
-		
 		if (vmjExchange.getHttpMethod().equals("POST")) {
 
 	        // Cek apakah step sebelumnya pernah dilakukan
@@ -200,60 +125,30 @@ public class Clo_subcloResourceImpl extends Clo_subcloResourceComponent {
 			
 			if (!(hasTaskState(processes, "manageGradeComponent"))
 			) {
-				res.put("status", "fail");
-				res.put("message", "mapGradeComponentsToCloAndSubClo DENIED");
-            	return res;
+				response.put("status", "FAIL");
+				response.put("message", "mapGradeComponentsToCloAndSubClo DENIED");
+            	return response;
 			}
+
+            response.put("status", "ok");
+            response.put("message", "mapGradeComponentsToCloAndSubClo SUCCESS");
+
+            clo_subcloService.mapGradeComponentsToCloAndSubClo(requestBody, processid, response);
+            clo_subcloService.conductTeachingAndStudentAssessmentActivities(requestBody, processid, response);
+            clo_subcloService.gradeStudentAssessmentResult(requestBody, processid, response);
 		}
 
-        res.put("status", "ok");
-        res.put("message", "mapGradeComponentsToCloAndSubClo SUCCESS");
-
-		clo_subcloService.mapGradeComponentsToCloAndSubClo(requestBody, processid);
-		clo_subcloService.conductTeachingAndStudentAssessmentActivities(requestBody, processid);
-		clo_subcloService.gradeStudentAssessmentResult(requestBody, processid);
-
-        return res;
+        return response;
     }
 
-    @Route(url = "call/starter")
-    public Map<String, Object> starter(VMJExchange vmjExchange) {
-        Map<String, Object> res = new HashMap<>();
+    @Route(url = "call/entryComponentGrades")
+    public Map<String, Object> entryComponentGrades(VMJExchange vmjExchange) {
+        Map<String, Object> response = new HashMap<>();
 		Map<String, Object> requestBody = vmjExchange.getPayload();
 
-        String processid = UUID.randomUUID().toString();
-        processService.upsert(new ProcessInstance(processid, "starter"));
-		res.put("processid", processid);
-		
-
-        res.put("status", "ok");
-        res.put("message", "starter SUCCESS");
-
-		clo_subcloService.starter(requestBody, processid);
-		boolean no = false;
-		boolean needcloYes = false;
-		if (needcloYes) {
-		    boolean canContinue = true;
-		    processService.upsert(new ProcessInstance(processid, "needcloYes"));
-		    canContinue = false;
-		}
-		if (no) {
-		    boolean canContinue = true;
-		    processService.upsert(new ProcessInstance(processid, "no"));
-		}
-		if (canContinue) {
-		}
-
-        return res;
-    }
-
-    @Route(url = "call/manageSubClo")
-    public Map<String, Object> manageSubClo(VMJExchange vmjExchange) {
-        Map<String, Object> res = new HashMap<>();
-		Map<String, Object> requestBody = vmjExchange.getPayload();
+        
 
 		String processid = (String) requestBody.get("processInstanceId");
-		
 		if (vmjExchange.getHttpMethod().equals("POST")) {
 
 	        // Cek apakah step sebelumnya pernah dilakukan
@@ -262,22 +157,61 @@ public class Clo_subcloResourceImpl extends Clo_subcloResourceComponent {
 	        // ini juga mencegah orang dari asal tembak api
 	        List<ProcessInstance> processes = processService.getAllById(processid);
 			
-			if (!(hasTaskState(processes, "needcloYes"))
+			if (!(hasTaskState(processes, "gradeStudentAssessmentResult"))
 			) {
-				res.put("status", "fail");
-				res.put("message", "manageSubClo DENIED");
-            	return res;
+				response.put("status", "FAIL");
+				response.put("message", "entryComponentGrades DENIED");
+            	return response;
 			}
+
+            response.put("status", "ok");
+            response.put("message", "entryComponentGrades SUCCESS");
+
+            clo_subcloService.entryComponentGrades(requestBody, processid, response);
+            
 		}
 
-        res.put("status", "ok");
-        res.put("message", "manageSubClo SUCCESS");
+        return response;
+    }
 
-		clo_subcloService.manageSubClo(requestBody, processid);
+    @Route(url = "call/manageSubClo")
+    public Map<String, Object> manageSubClo(VMJExchange vmjExchange) {
+        Map<String, Object> response = new HashMap<>();
+		Map<String, Object> requestBody = vmjExchange.getPayload();
+
+        
+
+        String processid = UUID.randomUUID().toString();
+        processService.upsert(new ProcessInstance(processid, "manageSubClo"));
+		response.put("processid", processid);
+
+		clo_subcloService.manageSubClo(requestBody, processid, response);
 		// From ScriptTask Map Sub-CLO to CLO
+		processService.upsert(new ProcessInstance(processid, "Map Sub-CLO to CLO"));
 		// TODO: implement 'map sub-clo to clo'
+		
+		
+		
 
-        return res;
+        return response;
+    }
+
+    @Route(url = "call/manageGradeComponent")
+    public Map<String, Object> manageGradeComponent(VMJExchange vmjExchange) {
+        Map<String, Object> response = new HashMap<>();
+		Map<String, Object> requestBody = vmjExchange.getPayload();
+
+        
+
+        String processid = UUID.randomUUID().toString();
+        processService.upsert(new ProcessInstance(processid, "manageGradeComponent"));
+		response.put("processid", processid);
+
+		clo_subcloService.manageGradeComponent(requestBody, processid, response);
+		
+		
+
+        return response;
     }
 
 	private static boolean hasTaskState(List<ProcessInstance> processes, String... states) {

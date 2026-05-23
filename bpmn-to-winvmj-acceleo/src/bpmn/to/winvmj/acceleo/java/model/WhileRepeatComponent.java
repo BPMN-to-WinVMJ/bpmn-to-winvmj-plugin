@@ -30,7 +30,7 @@ public class WhileRepeatComponent extends Component implements Looping {
     }
 
 	@Override
-	public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent) {
+	public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent, boolean isProcess) {
 		StringBuilder builder = new StringBuilder();
 		Set<FlowNode> visited = new HashSet<>();
 		
@@ -60,7 +60,7 @@ public class WhileRepeatComponent extends Component implements Looping {
 	        }
 
 	        // get top line method calls first
-	        GenerateQuery.buildStraightLine(builder, bpmnName, this.getStart().getOutgoing().get(0).getTargetRef(), new HashSet<>(visited), usedVariables, indent);
+	        GenerateQuery.buildStraightLine(builder, bpmnName, this.getStart().getOutgoing().get(0).getTargetRef(), new HashSet<>(visited), usedVariables, indent, isProcess);
 	        
 	        builder.append(String.format(Util.SPACE.repeat(indent) + "while (%s) {\r\n", loopCondition));
 	        
@@ -75,13 +75,13 @@ public class WhileRepeatComponent extends Component implements Looping {
 	                builder.append(Util.SPACE.repeat(indent + 1) + String.format("else if (%s) {\r\n", f.getName()));
 	            }
 	            
-	            canContinueInclusive &= GenerateQuery.buildStraightLine(builder, bpmnName, f.getTargetRef(), new HashSet<>(visited), usedVariables, indent + 2);
+	            canContinueInclusive &= GenerateQuery.buildStraightLine(builder, bpmnName, f.getTargetRef(), new HashSet<>(visited), usedVariables, indent + 2, isProcess);
 	        	
 	            builder.append(Util.SPACE.repeat(indent + 1) + "}\r\n");
 	        }
 	        // get top line method calls after each loop sequence
 	        
-	        GenerateQuery.buildStraightLine(builder, bpmnName, this.getStart().getOutgoing().get(0).getTargetRef(), new HashSet<>(visited), usedVariables, indent + 1);
+	        GenerateQuery.buildStraightLine(builder, bpmnName, this.getStart().getOutgoing().get(0).getTargetRef(), new HashSet<>(visited), usedVariables, indent + 1, isProcess);
 	        
 	        if (!exitBranch.isEmpty()) {
 		        String joined = exitBranch.stream().collect(Collectors.joining(" || "));
@@ -95,7 +95,7 @@ public class WhileRepeatComponent extends Component implements Looping {
 	        return new FromStartToUserResult(builder.toString(), canContinueInclusive);
 		} else if (!topContinuable) {
 			// get top line until can't continue
-			GenerateQuery.buildStraightLine(builder, bpmnName, this.getStart().getOutgoing().get(0).getTargetRef(), visited, usedVariables, indent + 1);
+			GenerateQuery.buildStraightLine(builder, bpmnName, this.getStart().getOutgoing().get(0).getTargetRef(), visited, usedVariables, indent + 1, isProcess);
 			return new FromStartToUserResult(builder.toString(), false);
 		}
 		return new FromStartToUserResult("", true);

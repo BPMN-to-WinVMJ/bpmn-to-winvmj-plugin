@@ -10,6 +10,7 @@
 	varClasses : Sequence(String))]
 [comment @main /]
 [for (p : bpmn2::Process | defs.rootElements->select(e | e.oclIsKindOf(bpmn2::Process)))]
+[/]
 [file (outputPath + fileName.toUpperFirst().replaceAll(' ', '') + 'ResourceImpl.java', false, 'UTF-8')]
 [generateResourceImpl(p, fileName.toUpperFirst(), importPath, targetPath, varNames, varClasses)/]
 [/file]
@@ -124,6 +125,7 @@ public abstract class [fileName.replaceAll(' ', '')/]ResourceDecorator extends [
 package [importPath /].core.resource;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import id.ac.ui.cs.prices.winvmj.core.Route;
 import id.ac.ui.cs.prices.winvmj.core.VMJExchange;
 import id.ac.ui.cs.prices.winvmj.core.exceptions.*;
@@ -185,14 +187,14 @@ public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.repla
 
 [template public generateServiceSignatures(p : bpmn2::Process)]
 [for (t : bpmn2::Task | p.flowElements->select(e | e.oclIsKindOf(bpmn2::Task) and not e.oclIsKindOf(bpmn2::ScriptTask)))]
-        void [toValidVariableName(t)/](Map<String, Object> body, String processid, Map<String, Object> response);
+        void [toValidVariableName(t)/](Map<String, Object> requestBody, String processid, Map<String, Object> response);
 [/for]
 [/template]
 
 [template public generateServiceImplementations(p : bpmn2::Process, fileName : String)]
 [for (t : bpmn2::Task | p.flowElements->select(e | e.oclIsKindOf(bpmn2::Task) and not e.oclIsKindOf(bpmn2::ScriptTask)))]
 	    @Override
-	    public void [toValidVariableName(t)/](Map<String, Object> body, String processid, Map<String, Object> response) {
+	    public void [toValidVariableName(t)/](Map<String, Object> requestBody, String processid, Map<String, Object> response) {
 	        // TODO: Implement logic for [t.name/]
 			processService.upsert(new ProcessInstance(processid, "[toValidVariableName(t)/]"));
 	        System.out.println("Executing [t.name/]");
@@ -215,15 +217,18 @@ public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.repla
     public Map<String, Object> [ut.name.replaceAll(' ', '')/](VMJExchange vmjExchange) {
         Map<String, Object> response = new HashMap<>();
 		Map<String, Object> requestBody = vmjExchange.getPayload();
+        [getFormData(ut) /]
 
 		[if (getTasksAfterStart(startevent, p, true)->includes(ut))]
         String processid = UUID.randomUUID().toString();
         processService.upsert(new ProcessInstance(processid, "[ut.name /]"));
 		response.put("processid", processid);
-		[getFormData(ut) /]
+
+		[fileName.replaceAll(' ', '').toLower()/]Service.[ut.name.replaceAll(' ', '') /](requestBody, processid, response);
+		[traverseAfter(ut, p, fileName)/]
+		
 		[else]
 		String processid = (String) requestBody.get("processInstanceId");
-		[getFormData(ut) /]
 		if (vmjExchange.getHttpMethod().equals("POST")) {
 
 	        // Cek apakah step sebelumnya pernah dilakukan
@@ -234,18 +239,18 @@ public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.repla
 			
 			if (!([traversePrior(ut, p)/])
 			) {
-				response.put("status", "fail");
+				response.put("status", "FAIL");
 				response.put("message", "[ut.name /] DENIED");
             	return response;
 			}
+
+            response.put("status", "ok");
+            response.put("message", "[ut.name/] SUCCESS");
+
+            [fileName.replaceAll(' ', '').toLower()/]Service.[ut.name.replaceAll(' ', '') /](requestBody, processid, response);
+            [traverseAfter(ut, p, fileName)/]
 		}
 		[/if]
-
-        response.put("status", "ok");
-        response.put("message", "[ut.name/] SUCCESS");
-
-		[fileName.replaceAll(' ', '').toLower()/]Service.[ut.name.replaceAll(' ', '') /](requestBody, processid, response);
-		[traverseAfter(ut, p, fileName)/]
 
         return response;
     }
@@ -284,10 +289,12 @@ public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.repla
 [comment Helper query: maps xs: structureRef to Java type /]
 [query public toJavaType(structureRef : OclAny) : String =
     let typeName : String = structureRef.toString().toLower() in
-    let stripped : String = if typeName.contains(':') 
-                            then typeName.substring(typeName.indexOf(':') + 1) 
-                            else typeName 
-                            endif 
+    let stripped : String = if typeName.contains('#')
+                            then typeName.substring(typeName.lastIndexOf('#') + 1, typeName.size() - 1)
+                            else if typeName.contains(':')
+                            then typeName.substring(typeName.lastIndexOf(':') + 1, typeName.size() - 1)
+                            else typeName
+                            endif endif
     in
     if      stripped = 'string'             then 'String'
     else if stripped = 'long'               then 'Long'
@@ -298,7 +305,7 @@ public class [fileName.replaceAll(' ', '')/]ResourceImpl extends [fileName.repla
     else if stripped = 'double'             then 'Double'
     else if stripped = 'float'              then 'Float'
     else if stripped = 'boolean'            then 'Boolean'
-    else if stripped = 'decimal'            then 'BigDecimal'
+    else if stripped = 'decimal'            then 'Double'
     else if stripped = 'date'               then 'Date'
     else if stripped = 'datetime'           then 'Date'
     else if stripped = 'base64binary'       then 'byte[]'

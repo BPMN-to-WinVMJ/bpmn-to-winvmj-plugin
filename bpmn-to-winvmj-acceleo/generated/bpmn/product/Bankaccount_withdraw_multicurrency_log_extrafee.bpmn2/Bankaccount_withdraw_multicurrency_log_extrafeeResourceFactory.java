@@ -1,30 +1,30 @@
-// @generated from Clo_subclo.bpmn2
+// @generated from Bankaccount_withdraw_multicurrency_log_extrafee.bpmn2
 
 package ;
 
 import id.ac.ui.cs.prices.winvmj.core.VMJExchange;
 import java.util.logging.Logger;
 import java.lang.reflect.Constructor;
-import .core.resource.Clo_subcloResourceImpl;
+import .core.resource.Bankaccount_withdraw_multicurrency_log_extrafeeResourceImpl;
 
-public abstract class Clo_subcloResourceFactory {
-	private static final Logger LOGGER = Logger.getLogger(Clo_subcloResourceFactory.class.getName());
+public abstract class Bankaccount_withdraw_multicurrency_log_extrafeeResourceFactory {
+	private static final Logger LOGGER = Logger.getLogger(Bankaccount_withdraw_multicurrency_log_extrafeeResourceFactory.class.getName());
 
-    public Clo_subcloResourceFactory()
+    public Bankaccount_withdraw_multicurrency_log_extrafeeResourceFactory()
     {
 
     }
 
-    public static Clo_subcloResourceImpl createResource(String fullyQualifiedName, Object ... base)
+    public static Bankaccount_withdraw_multicurrency_log_extrafeeResourceImpl createResource(String fullyQualifiedName, Object ... base)
     {
-    	Clo_subcloResourceImpl record = null;
+    	Bankaccount_withdraw_multicurrency_log_extrafeeResourceImpl record = null;
         if(true)
         {
         try {
             Class<?> clz = Class.forName(fullyQualifiedName);
             Constructor<?> constructor = clz.getDeclaredConstructors()[0];
             System.out.println(constructor.toString());
-            record = (Clo_subcloResourceImpl) constructor.newInstance(base);
+            record = (Bankaccount_withdraw_multicurrency_log_extrafeeResourceImpl) constructor.newInstance(base);
         } 
         catch (IllegalArgumentException e)
         {

@@ -40,7 +40,7 @@ public class NonStructuredComponent extends Component {
 	}
 	
     @Override
-    public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent) {
+    public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent, boolean isProcess) {
     	StringBuilder builder = new StringBuilder();
     	
     	builder.append("while(true) {\n");
@@ -55,7 +55,7 @@ public class NonStructuredComponent extends Component {
                     builder.append(Util.SPACE + "}\n");
             	} else if (el instanceof Component c) {
             		builder.append(Util.SPACE + "if (").append(event).append(") {\n");
-                    builder.append(c.getFromStartToUser(bpmnName, usedVariables, indent + 1));
+                    builder.append(c.getFromStartToUser(bpmnName, usedVariables, indent + 1, isProcess));
                     builder.append(Util.SPACE.repeat(2) + "end_").append(el.getName().replaceAll(" ", "")).append(";\n");
                     builder.append(Util.SPACE + "}\n");
                 } else if (el instanceof ParallelGateway && el.getIncoming().size() == 1) {

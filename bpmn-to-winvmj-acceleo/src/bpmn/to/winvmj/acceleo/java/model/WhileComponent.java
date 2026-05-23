@@ -24,7 +24,7 @@ public class WhileComponent extends Component implements Looping {
     }
     
 	@Override
-	public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent) {
+	public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent, boolean isProcess) {
         StringBuilder builder = new StringBuilder();
         Set<FlowNode> visited = new HashSet<>();
         visited.add(start);
@@ -64,7 +64,7 @@ public class WhileComponent extends Component implements Looping {
                 builder.append(Util.SPACE.repeat(indent + 1) + String.format("else if (%s) {\n", f.getName()));
             }
             
-            canContinueInclusive &= GenerateQuery.buildStraightLine(builder, bpmnName, f.getTargetRef(), new HashSet<>(visited), usedVariables, indent + 2);
+            canContinueInclusive &= GenerateQuery.buildStraightLine(builder, bpmnName, f.getTargetRef(), new HashSet<>(visited), usedVariables, indent + 2, isProcess);
         	
             builder.append(Util.SPACE.repeat(indent +1) + "}\n");
         }

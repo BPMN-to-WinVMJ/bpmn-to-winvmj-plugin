@@ -28,7 +28,7 @@ public class PickComponent extends Component {
     
 
     @Override
-    public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent) {
+    public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent, boolean isProcess) {
         StringBuilder builder = new StringBuilder();
         Set<FlowNode> visited = new HashSet<>();
 
@@ -43,7 +43,7 @@ public class PickComponent extends Component {
                 builder.append(Util.SPACE.repeat(indent) + String.format("} else if (%s) {\n", f.getName()));
             }
 
-            GenerateQuery.buildStraightLine(builder, bpmnName, f.getTargetRef(), visited, usedVariables, indent + 1);
+            GenerateQuery.buildStraightLine(builder, bpmnName, f.getTargetRef(), visited, usedVariables, indent + 1, isProcess);
         }
 
         builder.append("}\n");

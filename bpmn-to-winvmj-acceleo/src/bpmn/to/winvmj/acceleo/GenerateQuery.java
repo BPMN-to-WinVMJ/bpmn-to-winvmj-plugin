@@ -14,6 +14,7 @@ import org.eclipse.bpmn2.ItemDefinition;
 import org.eclipse.bpmn2.ParallelGateway;
 import org.eclipse.bpmn2.Property;
 import org.eclipse.bpmn2.SequenceFlow;
+import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.bpmn2.Task;
 
@@ -44,7 +45,7 @@ public class GenerateQuery {
 	 * Used by acceleo query to get checker whether user can use the api or not
 	 */
 	public static String getPrior(FlowNode node, org.eclipse.bpmn2.Process process, Boolean startFromPrev) throws Exception {
-		BPMN bpmn = getOrGenerateBPMN(process, true);
+		BPMN bpmn = getOrGenerateBPMN(process);
 		
 		FlowNode e = Util.findById(node.getId(), bpmn);
 		if (e == null) {
@@ -78,6 +79,7 @@ public class GenerateQuery {
         String join = " || ";
         Set<FlowNode> visited = new HashSet<>();
         if (prev instanceof Component c) {
+        	
         	if (c instanceof WhileComponent || c instanceof WhileRepeatComponent || c instanceof RepeatComponent) {
         		String condition = c.getOutgoing().stream().map(x -> x.getName()).collect(Collectors.joining(" || "));
         		if (!condition.isBlank()) {
@@ -87,13 +89,20 @@ public class GenerateQuery {
         		}
         	}
         	if (c instanceof SwitchComponent) {
+        		// On switch component, if exist a path that consist only of sequence flow, then use that sequence flow name as prerequisite
         		List<SequenceFlow> emptySequenceFlow = c.getEnd().getIncoming().stream().filter(x -> !(x.getSourceRef() instanceof Task)).toList();
-        		if (!emptySequenceFlow.isEmpty()) {
-        			result.addAll(emptySequenceFlow.stream().map(x -> String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(x.getName()))).toList());
+        		// Special case found when empty sequence flow starts immediately after start event -> don't add this
+        		FlowNode temp = c;
+        		while (temp.getIncoming().isEmpty() && temp instanceof OwnedComponent oc)  {
+        			temp = oc.getOwnerComponent();
+        		}
+        		if (!emptySequenceFlow.isEmpty() && !(temp.getIncoming().get(0) instanceof StartEvent)) {
+        			result.addAll(emptySequenceFlow.stream().map(seqFlow -> String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(seqFlow.getName()))).toList());
         			visited.add(c.getStart());
         		}
         	}
         	
+        	// Get last element of previous component
             prev = c.getEnd();
             
         	if (c instanceof FlowComponent || prev instanceof ParallelGateway) {
@@ -108,7 +117,7 @@ public class GenerateQuery {
             	// diverging gateway, use the condition as filter
             	if (prev.getOutgoing().size() > 1) {
             		result.add(String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(e.getIncoming().get(0).getName())));
-            	} else {
+            	} else { // converging, traverse backwards again
             		result.addAll(getPriorHelper(prev, after, visited));
             	}
             }
@@ -119,6 +128,7 @@ public class GenerateQuery {
             if (GatewayType.PARALLEL_GATEWAY.equals(g.getGatewayType()) && g.getIncoming().size() > 1) {
                 join = " && ";
             }
+            // On parallel gateway, diverging branch does not have boolean requirements
             if (!GatewayType.PARALLEL_GATEWAY.equals(g.getGatewayType()) && g.getOutgoing().size() > 1) {
         		result.add(String.format("hasTaskState(processes, \"%s\")", Util.removeWeirdChar(e.getIncoming().get(0).getName())));
         	} else {
@@ -150,7 +160,7 @@ public class GenerateQuery {
 	 */
 	public static String getSubProcessIn(FlowNode node, org.eclipse.bpmn2.Process process, String bpmnName) throws Exception {
 		System.out.println("[START] getSubProcess " + node.getName());
-		BPMN bpmn = getOrGenerateBPMN(process, true);
+		BPMN bpmn = getOrGenerateBPMN(process);
 		
 		OwnSubProcess resultingNode = (OwnSubProcess) Util.findById(node.getId(), bpmn);
 		if (resultingNode == null) {
@@ -171,7 +181,7 @@ public class GenerateQuery {
 		boolean isProcess = process instanceof org.eclipse.bpmn2.Process;
 		System.out.println(isProcess ? "[START] getServiceTaskAfter " + node.getName() : "[START] getServiceTaskAfter SubProcess " + node.getName());
 		
-		BPMN bpmn = getOrGenerateBPMN(process, isProcess);
+		BPMN bpmn = getOrGenerateBPMN(process);
 		
 		FlowNode e;
 		if (isProcess) e = Util.findById(node.getId(), bpmn);
@@ -216,21 +226,20 @@ public class GenerateQuery {
 		Looping ownerLoop = Util.getOwnerLoop((OwnedComponent) e);
 		
 		Set<Variable> usedVariables = new HashSet<>();
-		if (node instanceof TaskWrapper tw) {
+		usedVariables.add(new Variable("response", ""));
+		usedVariables.add(new Variable("res", ""));
+		usedVariables.add(new Variable("requestBody", ""));
+		usedVariables.add(new Variable("body", ""));
+		if (e instanceof TaskWrapper tw) {
 			for (Property property : tw.getProperties()) {
 			    ItemDefinition itemDef = (ItemDefinition) property.getItemSubjectRef();
+			    
 			    if (itemDef == null) continue;
-
 			    usedVariables.add(new Variable(property.getName(), ""));
 			}
 		}
 		
-		
-		if (!isProcess) {
-			System.out.println();
-		}
-		
-		String result = getServiceTaskAfterHelper(builder, ownerLoop, curr, usedVariables, indent, bpmnName, new HashSet<>()).trim();
+		String result = getServiceTaskAfterHelper(builder, ownerLoop, curr, usedVariables, indent, bpmnName, new HashSet<>(), isProcess).trim();
 		if (result.endsWith("return res;")) {
 			result = result.substring(0, result.length() - "return res;".length());
 		}
@@ -248,7 +257,8 @@ public class GenerateQuery {
 			Set<Variable> usedVariables,
 			int indent,
 			String bpmnName,
-			Set<FlowNode> visited
+			Set<FlowNode> visited,
+			boolean isProcess
 		) throws Exception {
 		
 		int indentIfInclusive = 0;
@@ -256,7 +266,7 @@ public class GenerateQuery {
         	// Current is gateway of a loop component
         	if (ownerLoop != null && curr.equals(((Component)ownerLoop).getStart())) {
         		Component c = (Component)ownerLoop;
-        		FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent);
+        		FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent, isProcess);
         		builder.append(result.getResult());
         		
         		curr = c;
@@ -273,7 +283,7 @@ public class GenerateQuery {
             	
         	}
         	if (curr instanceof Component co) {
-        		FromStartToUserResult result = co.getFromStartToUser(bpmnName, usedVariables, indent);
+        		FromStartToUserResult result = co.getFromStartToUser(bpmnName, usedVariables, indent, isProcess);
                 builder.append(result.getResult());
                 if (!result.getCanContinueInclusive() && Util.isInsideFlowComponent(curr)) {
                 	builder.append(Util.SPACE.repeat(indent + indentIfInclusive) + "if (canContinue) {\r\n");
@@ -285,7 +295,7 @@ public class GenerateQuery {
                 } else if (curr instanceof Gateway && curr.getOutgoing().size() > 1 || ( 
                 		// if di bawah ini perlu untuk definisiin diverging gateway di loop component yang sebenarnya pasti punya >= 2 
                 		// tapi sequence flow yang keluar dari komponen itu dimiliki oleh komponen bukan branch maka kalau end gateway nya punya outgoing.size() == 1, sebenarnya
-                		// dia punya branching path tapi ke catatnya agak cacat aja.
+                		// dia punya branching path tapi ke catat oleh komponen 1, dan gateway 1.
                 		((curr instanceof Gateway && curr.getOutgoing().size() == 1) &&
                 		(((OwnedComponent) curr).getOwnerComponent() instanceof WhileComponent && ((OwnedComponent) curr).getOwnerComponent().getEnd().equals(curr)) ||
                 		(((OwnedComponent) curr).getOwnerComponent() instanceof RepeatComponent && ((OwnedComponent) curr).getOwnerComponent().getEnd().equals(curr)) || 
@@ -298,7 +308,7 @@ public class GenerateQuery {
 
                         StringBuilder builderTemp = new StringBuilder();
 
-                        String res = getServiceTaskAfterHelper(builderTemp, ownerLoop, branchStart, usedVariables, indent + 1, bpmnName, visited);
+                        String res = getServiceTaskAfterHelper(builderTemp, ownerLoop, branchStart, usedVariables, indent + 1, bpmnName, visited, isProcess);
 
                         boolean inclusive = GatewayType.INCLUSIVE_GATEWAY.equals(((GatewayWrapper)curr).getGatewayType());
                         if ((first || inclusive) && !res.isEmpty()) {
@@ -337,7 +347,7 @@ public class GenerateQuery {
                 // add safeguard for parallel gateway 
                 } else if (GatewayType.PARALLEL_GATEWAY.equals(((GatewayWrapper)curr).getGatewayType()) 
                 		&& (curr.getOutgoing().size() == 1 || ((OwnedComponent)curr).getOwnerComponent().getEnd().equals(curr))) { 
-                    builder.append(buildParallelSafeGuard(curr, indent));
+                    builder.append(buildParallelSafeGuard(curr, indent, isProcess, usedVariables));
                 }
             }
         	if (curr.getOutgoing().isEmpty() && curr instanceof OwnedComponent) {
@@ -352,7 +362,7 @@ public class GenerateQuery {
         // Loops break on un-continuable component, but that component might still have some call-able tasks
         if (curr instanceof Component c && !c.canContinue()) {
         	System.out.println("last current is component " + c.getClass());
-        	FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent);
+        	FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent, isProcess);
         	builder.append(result.getResult());
     	}
         
@@ -415,10 +425,11 @@ public class GenerateQuery {
         return false;
     }
 	
+    // Used by acceleo to check whether a task is after start event or not
     // Used by getPrior to filter out tasks in a loop
     public static List<Task> traverseForward(FlowNode e, org.eclipse.bpmn2.Process p, Boolean unwrap) throws Exception {
     	System.out.println("[DEBUG] traverseForward " + e.getName());
-		BPMN bpmn = getOrGenerateBPMN(p, true);
+		BPMN bpmn = getOrGenerateBPMN(p);
 		
 		e = Util.findById(e.getId(), bpmn);
 		
@@ -437,6 +448,9 @@ public class GenerateQuery {
             } else if (curr instanceof Component c) {
                 res.addAll(traverseForward(c.getStart(), p, unwrap));
             } else {
+            	while (curr.getOutgoing().size() == 0 && curr instanceof OwnedComponent oc) {
+            		curr = oc.getOwnerComponent();
+            	}
                 q.addAll(curr.getOutgoing().stream().map(x -> x.getTargetRef()).toList());
             }
         }
@@ -510,7 +524,8 @@ public class GenerateQuery {
         FlowNode el,
         Set<FlowNode> visited,
         Set<Variable> usedVariables, 
-        int indent
+        int indent,
+        boolean isProcess
     ) {
     	FlowNode curr = el;
     	
@@ -521,7 +536,7 @@ public class GenerateQuery {
             // ------------------- First blocking element ends the branch -----------------
             // Found un-continuable component
             if (curr instanceof Component c) {
-            	FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent);
+            	FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent, isProcess);
                 builder.append(result.getResult());
                 if (!(curr instanceof SequenceComponent) && !result.getCanContinueInclusive() && Util.isInsideFlowComponent(curr)) {
                 	builder.append(Util.SPACE.repeat(indent + indentIfInclusive) + "if (canContinue) {\r\n");
@@ -607,18 +622,19 @@ public class GenerateQuery {
         return result.toString();
     }
     
-    public static String buildParallelSafeGuard(FlowNode curr, int indent) throws Exception {
+    public static String buildParallelSafeGuard(FlowNode curr, int indent, boolean isProcess, Set<Variable> usedVariables) throws Exception {
     	StringBuilder builder = new StringBuilder();
-        builder.append(Util.SPACE.repeat(indent + 1) + "List<ProcessInstance> processes = processService.getAllById(processid);\r\n");
+    	usedVariables.add(new Variable("processes", "List<ProcessInstance>"));
+        builder.append(Util.SPACE.repeat(indent + 1) + "processes = processService.getAllById(processid);\r\n");
         builder.append(Util.SPACE.repeat(indent + 1) + "if (!(");
         // Generate hasAllTaskStates check for all branches
         String parallelBranches = GenerateQuery.getPrior(curr, null, false);
         
         builder.append(parallelBranches);
         builder.append(")) {\n");
-        builder.append(Util.SPACE.repeat(indent + 2) + "res.put(\"status\", \"fail\");\r\n");
-        builder.append(Util.SPACE.repeat(indent + 2) + "res.put(\"message\", \"Parallel branches not complete yet\");\r\n");
-        builder.append(Util.SPACE.repeat(indent + 2) + "return res;\r\n");
+        builder.append(Util.SPACE.repeat(indent + 2) + "response.put(\"status\", \"FAIL\");\r\n");
+        builder.append(Util.SPACE.repeat(indent + 2) + "response.put(\"message\", \"Parallel branches not complete yet\");\r\n");
+        builder.append(isProcess ? Util.SPACE.repeat(indent + 2) + "return response;\r\n" : "");
         builder.append(Util.SPACE.repeat(indent + 1) + "}\r\n");
         
         return builder.toString();
@@ -629,18 +645,18 @@ public class GenerateQuery {
     	return Util.getAllAccessibleFileAsImport(bpmnName, targetPath);
     }
     
-    private static BPMN getOrGenerateBPMN(org.eclipse.bpmn2.FlowElementsContainer process, boolean save) throws Exception {
-		if (save && BPMNParser.getBPMN() != null) {
-			return BPMNParser.getBPMN();
-		} else {
-			if (save && process == null && BPMNParser.getBPMN() != null) {
-				return BPMNParser.getBPMN();
-			} else if (process != null) {
-				return BPMNParser.parse(process, save);
-			}
-			
-			return BPMNParser.getBPMN();
+    private static BPMN getOrGenerateBPMN(org.eclipse.bpmn2.FlowElementsContainer process) throws Exception {
+    	boolean isProcess = process instanceof org.eclipse.bpmn2.Process;
+    	if (isProcess && BPMNParser.getBPMNProcess() != null) {
+			return BPMNParser.getBPMNProcess();
+		} else if (!isProcess && BPMNParser.getBPMNSubProcess() != null && (process == null || BPMNParser.getBPMNSubProcess().getName().equals(process.getId()))) {
+			return BPMNParser.getBPMNSubProcess();
+		} else if (isProcess && process != null)  {
+			return BPMNParser.parse(process);
+		} else if (!isProcess && process != null)  {
+			return BPMNParser.parse(process);
 		}
+		return BPMNParser.getBPMNProcess();
     }
     
     private static void closeInclusiveIf(StringBuilder builder, int indent, int indentationIf) {

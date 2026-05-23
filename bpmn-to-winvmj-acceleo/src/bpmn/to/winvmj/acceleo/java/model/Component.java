@@ -19,7 +19,7 @@ public abstract class Component extends TaskImpl implements Comparable<Component
     protected FlowNode end;
     protected Component ownerComponent;
     
-    public abstract FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariable, int indent);
+    public abstract FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariable, int indent, boolean isProcess);
     
 	public List<TaskWrapper> getFirstTask() {
 		List<SequenceFlow> outs = getStart().getOutgoing();

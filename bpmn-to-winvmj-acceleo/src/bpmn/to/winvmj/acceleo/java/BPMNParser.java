@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.eclipse.bpmn2.*;
+import org.eclipse.bpmn2.Process;
 
 import bpmn.to.winvmj.acceleo.GenerateQuery;
 import bpmn.to.winvmj.acceleo.java.model.*;
@@ -21,18 +22,25 @@ public class BPMNParser {
     private static final String COMPONENT_STRING = "tc";
     private static int componentCount = 0;
     
-    private static BPMN bpmn;
+    private static BPMN bpmnProcess;
+    private static BPMN bpmnSubProcess;
     
-    public static BPMN getBPMN() {
-    	return bpmn;
+    public static BPMN getBPMNProcess() {
+    	return bpmnProcess;
+    }
+    
+    public static BPMN getBPMNSubProcess() {
+    	return bpmnSubProcess;
     }
 
-    public static BPMN parse(org.eclipse.bpmn2.FlowElementsContainer process, boolean save) throws Exception {
-    	System.out.println("[DEBUG] Parsing process " + process.getId());
+    public static BPMN parse(org.eclipse.bpmn2.FlowElementsContainer process) throws Exception {
+    	boolean isProcess = process instanceof Process;
     	BPMN temp = new BPMN();
         try {
             addElements(temp, process);
-            if (save) bpmn = temp;
+            temp.setName(process.getId());
+            if (isProcess) bpmnProcess = temp;
+            if (!isProcess) bpmnSubProcess = temp;
             return temp;
         } catch (Exception e) {
             e.printStackTrace();
@@ -1129,7 +1137,6 @@ public class BPMNParser {
     private static String printComponent(Component c) {
         StringBuilder sb = new StringBuilder();
         sb.append("Component ").append(c.getName()).append("\n");
-        System.out.println(c.getName());
         sb.append("  Entry: ").append(c.getIncoming().stream().map(x -> x.getSourceRef()).filter(x -> !x.equals(c)).map(x -> x.getName()).toList()).append("\n");
         for (FlowNode n : c.getElements()) {
             sb.append("  ").append(isBlankOrNull(n.getName()) ? n.getId() : n.getName()).append(" " + n.getClass() + " ").append("\n");

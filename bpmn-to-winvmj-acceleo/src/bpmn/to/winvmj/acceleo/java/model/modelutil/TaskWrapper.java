@@ -3,6 +3,7 @@ package bpmn.to.winvmj.acceleo.java.model.modelutil;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.bpmn2.Property;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.bpmn2.Task;
 import org.eclipse.bpmn2.impl.TaskImpl;
@@ -46,17 +47,20 @@ public class TaskWrapper extends TaskImpl implements Continuable, OwnedComponent
     public TaskType getTaskType()          { return taskType; }
     public void setTaskType(Task v)    { this.taskType = TaskType.getTaskType(v); }
     
+    
+    public List<Property> getProperties() {
+    	return delegate.getProperties();
+    }
+    
     public void setSubProcess(List<SubProcess> subProcesses) {
     	this.subProcesses = subProcesses;
     }
     
     public void addSubProcess(SubProcess subProcess) {
-    	System.out.println("addSubProcess " + this.subProcesses.size());
     	this.subProcesses.add(subProcess);
     }
 
     public List<SubProcess> getSubProcesses() {
-    	System.out.println("getSubProces " + this.subProcesses.size());
     	return this.subProcesses;
     }
     

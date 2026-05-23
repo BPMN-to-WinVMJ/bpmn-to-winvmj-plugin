@@ -22,7 +22,7 @@ public class RepeatComponent extends Component {
     }
     
     @Override
-    public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent) {
+    public FromStartToUserResult getFromStartToUser(String bpmnName, Set<Variable> usedVariables, int indent, boolean isProcess) {
     	StringBuilder builder = new StringBuilder();
         Set<FlowNode> visited = new HashSet<>();
         
@@ -49,7 +49,7 @@ public class RepeatComponent extends Component {
     	
         if (this.canContinue()) {
         	builder.append(Util.SPACE.repeat(indent) + "do {\r\n");
-        	GenerateQuery.buildStraightLine(builder, bpmnName, this.start.getOutgoing().get(0).getTargetRef(), visited, usedVariables, indent + 1);
+        	GenerateQuery.buildStraightLine(builder, bpmnName, this.start.getOutgoing().get(0).getTargetRef(), visited, usedVariables, indent + 1, isProcess);
         	
         	if (!exitBranch.isEmpty()) {
             	String joined = exitBranch.stream().collect(Collectors.joining(" || "));
@@ -63,7 +63,7 @@ public class RepeatComponent extends Component {
 	        
         	return new FromStartToUserResult(builder.toString(), true);
         } else {
-        	GenerateQuery.buildStraightLine(builder, bpmnName, this.start.getOutgoing().get(0).getTargetRef(), visited, usedVariables, indent);
+        	GenerateQuery.buildStraightLine(builder, bpmnName, this.start.getOutgoing().get(0).getTargetRef(), visited, usedVariables, indent, isProcess);
         	return new FromStartToUserResult(builder.toString(), false);
         }
     }

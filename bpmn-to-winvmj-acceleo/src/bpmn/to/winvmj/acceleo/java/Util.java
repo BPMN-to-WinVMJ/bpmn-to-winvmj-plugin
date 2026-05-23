@@ -321,6 +321,7 @@ public class Util {
 
     
     public static String removeWeirdChar(String s) {
+    	if (s == null) return null;
     	return s.replace("\"", "").replace("\\", "");
     }
 }
