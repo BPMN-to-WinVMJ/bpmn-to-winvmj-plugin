@@ -63,10 +63,11 @@ public class WhileComponent extends Component implements Looping {
             } else {
                 builder.append(Util.SPACE.repeat(indent + 1) + String.format("else if (%s) {\n", f.getName()));
             }
+            builder.append(Util.SPACE.repeat(indent + 2) + String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", Util.removeWeirdChar(f.getName())));
             
             canContinueInclusive &= GenerateQuery.buildStraightLine(builder, bpmnName, f.getTargetRef(), new HashSet<>(visited), usedVariables, indent + 2, isProcess);
         	
-            builder.append(Util.SPACE.repeat(indent +1) + "}\n");
+            builder.append(Util.SPACE.repeat(indent + 1) + "}\n");
         }
         boolean isEmpty = exitBranch.isEmpty();
         if (!isEmpty) {

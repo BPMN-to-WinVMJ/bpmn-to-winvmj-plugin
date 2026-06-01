@@ -36,7 +36,7 @@ public class RepeatComponent extends Component {
         List<String> exitBranch = parent.getOutgoing().stream().filter(x -> x.getName() != null).map(x -> x.getName()).toList();
         branches.addAll(exitBranch);
         
-    	String loopCondition = this.getEnd().getOutgoing().stream().map(SequenceFlow::getName).collect(Collectors.joining(" || "));
+    	String loopCondition = this.getEnd().getOutgoing().stream().filter(x -> x.getName() != null).map(SequenceFlow::getName).collect(Collectors.joining(" || "));
     	branches.addAll(this.getEnd().getOutgoing().stream().map(SequenceFlow::getName).toList());
     	
         for (String expression : branches) {

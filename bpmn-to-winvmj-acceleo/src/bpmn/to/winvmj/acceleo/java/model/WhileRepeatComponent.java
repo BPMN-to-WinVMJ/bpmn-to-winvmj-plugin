@@ -74,6 +74,7 @@ public class WhileRepeatComponent extends Component implements Looping {
 	            } else {
 	                builder.append(Util.SPACE.repeat(indent + 1) + String.format("else if (%s) {\r\n", f.getName()));
 	            }
+	            builder.append(Util.SPACE.repeat(indent + 1) + String.format("processService.upsert(new ProcessInstance(processid, \"%s\"));\r\n", f.getName(), Util.removeWeirdChar(f.getName())));
 	            
 	            canContinueInclusive &= GenerateQuery.buildStraightLine(builder, bpmnName, f.getTargetRef(), new HashSet<>(visited), usedVariables, indent + 2, isProcess);
 	        	

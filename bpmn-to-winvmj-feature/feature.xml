@@ -2,7 +2,7 @@
 <feature
 		id="bpmn.to.winvmj.feature"
 		label="bpmn.to.winvmj"
-		version="0.0.0">
+		version="2026.6.1">
 
    	<description>
       	Plugin for PRICES IDE to generate BPMN Diagrams and parse them into WinVMJ applications.
@@ -27,13 +27,5 @@
 	<plugin
 		id="varbpmn.to.bpmn.transformer"
 		version="0.0.0"/>
-
-   <plugin
-         id="varbpmn.to.bpmn.transformer"
-         version="0.0.0"/>
-
-   <plugin
-         id="bpmn.to.winvmj.plugin"
-         version="0.0.0"/>
 
 </feature>

@@ -10,7 +10,6 @@
 	varClasses : Sequence(String))]
 [comment @main /]
 [for (p : bpmn2::Process | defs.rootElements->select(e | e.oclIsKindOf(bpmn2::Process)))]
-[/]
 [file (outputPath + fileName.toUpperFirst().replaceAll(' ', '') + 'ResourceImpl.java', false, 'UTF-8')]
 [generateResourceImpl(p, fileName.toUpperFirst(), importPath, targetPath, varNames, varClasses)/]
 [/file]
