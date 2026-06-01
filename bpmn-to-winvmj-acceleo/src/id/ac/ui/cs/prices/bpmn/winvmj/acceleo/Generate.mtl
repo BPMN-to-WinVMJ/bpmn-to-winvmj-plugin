@@ -389,7 +389,7 @@ public abstract class [fileName.replaceAll(' ', '')/]ResourceFactory {
 	
 [query public getPrior(ut : bpmn2::Task, p : bpmn2::Process) : String =
   invoke(
-    'bpmn.to.winvmj.acceleo.GenerateQuery',
+    'id.ac.ui.cs.prices.bpmn.winvmj.acceleo.GenerateQuery',
     'getPrior(org.eclipse.bpmn2.FlowNode, org.eclipse.bpmn2.Process, java.lang.Boolean)',
     Sequence{ut, p, true}
   )
@@ -397,7 +397,7 @@ public abstract class [fileName.replaceAll(' ', '')/]ResourceFactory {
 	
 [query public getServiceTaskAfter(ut : bpmn2::Task, p : bpmn2::Process, bpmnName : String) : String =
   invoke(
-    'bpmn.to.winvmj.acceleo.GenerateQuery',
+    'id.ac.ui.cs.prices.bpmn.winvmj.acceleo.GenerateQuery',
     'getServiceTaskAfter(org.eclipse.bpmn2.FlowNode, org.eclipse.bpmn2.FlowElementsContainer, java.lang.String)',
     Sequence{ut, p, bpmnName}
   )
@@ -405,7 +405,7 @@ public abstract class [fileName.replaceAll(' ', '')/]ResourceFactory {
 
 [query public getSubProcessIn(ut : bpmn2::Task, p : bpmn2::Process, bpmnName : String) : String =
   invoke(
-    'bpmn.to.winvmj.acceleo.GenerateQuery',
+    'id.ac.ui.cs.prices.bpmn.winvmj.acceleo.GenerateQuery',
     'getSubProcessIn(org.eclipse.bpmn2.FlowNode, org.eclipse.bpmn2.Process, java.lang.String)',
     Sequence{ut, p, bpmnName}
   )
@@ -413,7 +413,7 @@ public abstract class [fileName.replaceAll(' ', '')/]ResourceFactory {
 
 [query public toValidVariableName(t : bpmn2::Task) : String =
   invoke(
-    'bpmn.to.winvmj.acceleo.GenerateQuery',
+    'id.ac.ui.cs.prices.bpmn.winvmj.acceleo.GenerateQuery',
     'toValidVariableName(java.lang.String)',
     Sequence{t.name}
   )
@@ -421,7 +421,7 @@ public abstract class [fileName.replaceAll(' ', '')/]ResourceFactory {
 
 [query public getTasksAfterStart(e: bpmn2::StartEvent, p : bpmn2::Process, unwrap : Boolean) : Set(bpmn2::Task) =
     invoke(
-    'bpmn.to.winvmj.acceleo.GenerateQuery',
+    'id.ac.ui.cs.prices.bpmn.winvmj.acceleo.GenerateQuery',
     'traverseForward(org.eclipse.bpmn2.FlowNode, org.eclipse.bpmn2.Process, java.lang.Boolean)',
     Sequence{e, p, unwrap}
   )
@@ -429,7 +429,7 @@ public abstract class [fileName.replaceAll(' ', '')/]ResourceFactory {
 
 [query public importAll(bpmnName: String, targetPath: String) : String =
     invoke(
-        'bpmn.to.winvmj.acceleo.GenerateQuery',
+        'id.ac.ui.cs.prices.bpmn.winvmj.acceleo.GenerateQuery',
         'importAll(java.lang.String, java.lang.String)',
         Sequence{bpmnName, targetPath}
     )->any(true).toString()

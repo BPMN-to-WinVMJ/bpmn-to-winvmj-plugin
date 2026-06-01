@@ -1,4 +1,4 @@
-package bpmn.to.winvmj.acceleo;
+package id.ac.ui.cs.prices.bpmn.winvmj.acceleo;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,26 +18,26 @@ import org.eclipse.bpmn2.StartEvent;
 import org.eclipse.bpmn2.SubProcess;
 import org.eclipse.bpmn2.Task;
 
-import bpmn.to.winvmj.acceleo.java.BPMNParser;
-import bpmn.to.winvmj.acceleo.java.Util;
-import bpmn.to.winvmj.acceleo.java.model.BPMN;
-import bpmn.to.winvmj.acceleo.java.model.Component;
-import bpmn.to.winvmj.acceleo.java.model.FlowComponent;
-import bpmn.to.winvmj.acceleo.java.model.RepeatComponent;
-import bpmn.to.winvmj.acceleo.java.model.SequenceComponent;
-import bpmn.to.winvmj.acceleo.java.model.SwitchComponent;
-import bpmn.to.winvmj.acceleo.java.model.Variable;
-import bpmn.to.winvmj.acceleo.java.model.WhileComponent;
-import bpmn.to.winvmj.acceleo.java.model.WhileRepeatComponent;
-import bpmn.to.winvmj.acceleo.java.model.modelutil.Continuable;
-import bpmn.to.winvmj.acceleo.java.model.modelutil.FromStartToUserResult;
-import bpmn.to.winvmj.acceleo.java.model.modelutil.GatewayType;
-import bpmn.to.winvmj.acceleo.java.model.modelutil.GatewayWrapper;
-import bpmn.to.winvmj.acceleo.java.model.modelutil.Looping;
-import bpmn.to.winvmj.acceleo.java.model.modelutil.OwnSubProcess;
-import bpmn.to.winvmj.acceleo.java.model.modelutil.OwnedComponent;
-import bpmn.to.winvmj.acceleo.java.model.modelutil.TaskType;
-import bpmn.to.winvmj.acceleo.java.model.modelutil.TaskWrapper;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.BPMNParser;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.Util;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.BPMN;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.Component;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.FlowComponent;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.RepeatComponent;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.SequenceComponent;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.SwitchComponent;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.Variable;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.WhileComponent;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.WhileRepeatComponent;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.modelutil.Continuable;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.modelutil.FromStartToUserResult;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.modelutil.GatewayType;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.modelutil.GatewayWrapper;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.modelutil.Looping;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.modelutil.OwnSubProcess;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.modelutil.OwnedComponent;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.modelutil.TaskType;
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.model.modelutil.TaskWrapper;
 
 public class GenerateQuery {
 	

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package bpmn.to.winvmj.acceleo;
+package id.ac.ui.cs.prices.bpmn.winvmj.acceleo;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
@@ -21,7 +21,7 @@ public class Activator extends Plugin {
     /**
      * The plug-in ID.
      */
-    public static final String PLUGIN_ID = "bpmn.to.winvmj.acceleo";
+    public static final String PLUGIN_ID = "id.ac.ui.cs.prices.bpmn.winvmj.acceleo";
 
     /**
      * The shared instance.

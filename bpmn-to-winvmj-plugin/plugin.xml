@@ -12,7 +12,7 @@
    <extension point="org.eclipse.ui.handlers">
       <handler
             commandId="bpmn.to.winvmj.plugin.commands.convert"
-            class="bpmn.to.winvmj.plugin.handler.OpenConverterHandler">
+            class="id.ac.ui.cs.prices.bpmn.winvmj.handler.OpenConverterHandler">
          <!-- Only activate handler when selection is a .bpmn2 file -->
          <activeWhen>
             <with variable="selection">

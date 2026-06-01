@@ -2,7 +2,7 @@
  * Entry point of the 'Generate' generation module.
  * @generated NOT
  *******************************************************************************/
-package bpmn.to.winvmj.acceleo;
+package id.ac.ui.cs.prices.bpmn.winvmj.acceleo;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +27,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
+
+import id.ac.ui.cs.prices.bpmn.winvmj.acceleo.java.BPMNParser;
 
 import org.eclipse.bpmn2.Bpmn2Package;
 import org.eclipse.bpmn2.util.Bpmn2ResourceFactoryImpl;
@@ -380,5 +382,13 @@ public class Generate extends AbstractAcceleoGenerator {
         URL location = clazz.getProtectionDomain().getCodeSource().getLocation();
         File file = new File(location.toURI());
         return file.getAbsolutePath();
+    }
+    
+    @Override
+    public void postGenerate(ResourceSet resourceSet) {
+        super.postGenerate(resourceSet);
+        
+        // Reset your parser static state here
+        BPMNParser.reset();
     }
 }

@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BPMN to WinVMJ Plugin
-Bundle-SymbolicName: bpmn.to.winvmj.plugin;singleton:=true
+Bundle-SymbolicName: id.ac.ui.cs.prices.bpmn.winvmj;singleton:=true
 Bundle-Version: 0.0.0.qualifier
-Bundle-Activator: bpmn.to.winvmj.plugin.Activator
+Bundle-Activator: id.ac.ui.cs.prices.bpmn.winvmj.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: 
  org.eclipse.ui,
@@ -16,8 +16,8 @@ Require-Bundle:
  org.eclipse.emf.ecore.xmi,
  org.eclipse.acceleo.engine,
  org.eclipse.core.resources,
- bpmn.to.winvmj.acceleo
+ id.ac.ui.cs.prices.bpmn.winvmj.acceleo
 Export-Package: 
- bpmn.to.winvmj.plugin,
- bpmn.to.winvmj.plugin.dialog,
- bpmn.to.winvmj.plugin.handler
+ id.ac.ui.cs.prices.bpmn.winvmj,
+ id.ac.ui.cs.prices.bpmn.winvmj.dialog,
+ id.ac.ui.cs.prices.bpmn.winvmj.handler

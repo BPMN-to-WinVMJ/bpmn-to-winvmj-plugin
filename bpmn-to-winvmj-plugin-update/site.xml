@@ -3,5 +3,5 @@
    <feature url="features/id.ac.ui.cs.prices.bpmn.winvmj.feature_2026.6.1.2.jar" id="id.ac.ui.cs.prices.bpmn.winvmj.feature" version="2026.6.1.2">
       <category name="bpmn to winvmj"/>
    </feature>
-   <category-def name="bpmn to winvmj" label="New Category 1"/>
+   <category-def name="bpmn to winvmj" label="bpmn to winvmj"/>
 </site>

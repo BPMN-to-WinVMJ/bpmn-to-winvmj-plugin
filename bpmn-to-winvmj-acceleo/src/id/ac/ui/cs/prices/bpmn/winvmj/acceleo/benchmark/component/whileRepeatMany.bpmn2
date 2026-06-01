@@ -68,7 +68,7 @@
       <bpmn2:outgoing>SF_1</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="SequenceFlow_3" sourceRef="StartEvent_1" targetRef="UserTask_2"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_5" name="c" sourceRef="GW_2" targetRef="EndEvent_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_5" sourceRef="GW_2" targetRef="EndEvent_1"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="Process_1">
@@ -179,9 +179,7 @@
         <di:waypoint xsi:type="dc:Point" x="671.0" y="165.0"/>
         <di:waypoint xsi:type="dc:Point" x="700.0" y="165.0"/>
         <di:waypoint xsi:type="dc:Point" x="730.0" y="165.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_6">
-          <dc:Bounds height="21.0" width="9.0" x="697.0" y="166.0"/>
-        </bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel id="BPMNLabel_6"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
