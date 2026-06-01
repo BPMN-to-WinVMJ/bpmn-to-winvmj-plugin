@@ -96,7 +96,7 @@ public class Generate extends AbstractAcceleoGenerator {
 
     // ── Constants ──────────────────────────────────────────────────────────────
 
-    public static final String MODULE_FILE_NAME = "/bpmn/to/winvmj/acceleo/Generate";
+    public static final String MODULE_FILE_NAME = "/id/ac/ui/cs/prices/bpmn/winvmj/acceleo/Generate";
     public static final String[] TEMPLATE_NAMES = { "generate" };
 
     private List<String> propertiesFiles = new ArrayList<>();

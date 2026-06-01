@@ -2,7 +2,7 @@
 <feature
       id="id.ac.ui.cs.prices.bpmn.winvmj.feature"
       label="id.ac.ui.cs.prices.bpmn.winvmj"
-      version="2026.6.1.2">
+      version="2026.6.1.3">
 
    <description>
       Plugin for PRICES IDE to generate BPMN Diagrams and parse them into WinVMJ applications.
