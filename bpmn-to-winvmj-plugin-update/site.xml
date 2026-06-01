@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/id.ac.ui.cs.prices.bpmn.winvmj.feature_2026.6.1.3.jar" id="id.ac.ui.cs.prices.bpmn.winvmj.feature" version="2026.6.1.3">
+   <feature url="features/id.ac.ui.cs.prices.bpmn.winvmj.feature_2026.6.1.4.jar" id="id.ac.ui.cs.prices.bpmn.winvmj.feature" version="2026.6.1.4">
       <category name="bpmn to winvmj"/>
    </feature>
    <category-def name="bpmn to winvmj" label="bpmn to winvmj"/>
