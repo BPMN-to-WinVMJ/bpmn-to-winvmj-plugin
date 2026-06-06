@@ -266,7 +266,7 @@ public class GenerateQuery {
         	// Current is gateway of a loop component
         	if (ownerLoop != null && curr.equals(((Component)ownerLoop).getStart())) {
         		Component c = (Component)ownerLoop;
-        		FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent, isProcess);
+        		FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent + indentIfInclusive, isProcess);
         		builder.append(result.getResult());
         		
         		curr = c;
@@ -283,9 +283,9 @@ public class GenerateQuery {
             	
         	}
         	if (curr instanceof Component co) {
-        		FromStartToUserResult result = co.getFromStartToUser(bpmnName, usedVariables, indent, isProcess);
+        		FromStartToUserResult result = co.getFromStartToUser(bpmnName, usedVariables, indent + indentIfInclusive, isProcess);
                 builder.append(result.getResult());
-                if (!result.getCanContinueInclusive() && Util.isInsideFlowComponent(curr)) {
+                if (!result.getCanContinueInclusive() || Util.isInsideSwitchInclusiveComponent(curr)) {
                 	builder.append(Util.SPACE.repeat(indent + indentIfInclusive) + "if (canContinue) {\r\n");
                 	indentIfInclusive += 1;
                 }
@@ -337,7 +337,7 @@ public class GenerateQuery {
                     return usedVariables.stream()
                     .map(entry -> {
                     		if (!(entry.getType() == null || "".equals(entry.getType()))) {
-                    			return String.format("%s %s = %s;\r\n", entry.getType(), entry.getName(), Util.getDefaultValue(entry.getType()));
+                    			return String.format("%s %s = %s;\r\n", entry.getType(), entry.getName(), Util.getDefaultValue(entry.getType(), entry.getValue()));
                     		}
                     		return "";
                 		}
@@ -362,7 +362,7 @@ public class GenerateQuery {
         // Loops break on un-continuable component, but that component might still have some call-able tasks
         if (curr instanceof Component c && !c.canContinue()) {
         	System.out.println("last current is component " + c.getClass());
-        	FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent, isProcess);
+        	FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent + indentIfInclusive, isProcess);
         	builder.append(result.getResult());
     	}
         
@@ -371,7 +371,7 @@ public class GenerateQuery {
         return usedVariables.stream()
         .map(entry -> {
 	    		if (!(entry.getType() == null || "".equals(entry.getType()) || entry.getName() == null || "".equals(entry.getName()))) {
-	    			return String.format("%s %s = %s;\r\n", entry.getType(), entry.getName(), Util.getDefaultValue(entry.getType()));
+	    			return String.format("%s %s = %s;\r\n", entry.getType(), entry.getName(), Util.getDefaultValue(entry.getType(), entry.getValue()));
 	    		}
 	    		return "";
 			}
@@ -530,21 +530,19 @@ public class GenerateQuery {
     	FlowNode curr = el;
     	
     	int indentIfInclusive = 0;
+    	boolean canContinueInclusive = true;
 
         while (curr != null && visited.add(curr)) {
         	
             // ------------------- First blocking element ends the branch -----------------
             // Found un-continuable component
             if (curr instanceof Component c) {
-            	FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent, isProcess);
+            	FromStartToUserResult result = c.getFromStartToUser(bpmnName, usedVariables, indent + indentIfInclusive, isProcess);
+            	canContinueInclusive &= result.getCanContinueInclusive();
                 builder.append(result.getResult());
-                if (!(curr instanceof SequenceComponent) && !result.getCanContinueInclusive() && Util.isInsideFlowComponent(curr)) {
+                if (!(c instanceof SequenceComponent) && !result.getCanContinueInclusive() && Util.isInsideSwitchInclusiveComponent(curr)) {
                 	builder.append(Util.SPACE.repeat(indent + indentIfInclusive) + "if (canContinue) {\r\n");
                 	indentIfInclusive += 1;
-                }
-                if (c instanceof Continuable con && !con.canContinue()) {
-                	closeInclusiveIf(builder, indent, indentIfInclusive);
-                	return result.getCanContinueInclusive() && Util.isInsideFlowComponent(curr);
                 }
             } 
             // Found un-continuable task
@@ -557,7 +555,7 @@ public class GenerateQuery {
             		}
             		return false;
             	}
-            	return true;
+            	return canContinueInclusive;
             }
             // ----------------------------------------------------------------------------
 
@@ -568,13 +566,12 @@ public class GenerateQuery {
             // on components, end objects have 0 outgoing elements
             if (curr.getOutgoing().isEmpty()) {
             	closeInclusiveIf(builder, indent, indentIfInclusive);
-            	return true;
+            	return canContinueInclusive;
             }
             
             // handle loops and forks and switches
             if (curr instanceof Gateway) {
-            	if (Util.isInsideFlowComponent(curr)) builder.append(Util.SPACE.repeat(indent + indentIfInclusive) + "if (canContinue) {\r\n");
-            	return true;
+            	return canContinueInclusive;
             }
 
             curr = curr.getOutgoing().get(0).getTargetRef();

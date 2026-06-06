@@ -225,7 +225,8 @@ public class Util {
         return variables;
     }
     
-    public static String getDefaultValue(String type) {
+    public static String getDefaultValue(String type, String value) {
+    	if (value != null) return value;
         if (type == null) return "null";
 
         // Strip generic (e.g. List<Long> -> List)

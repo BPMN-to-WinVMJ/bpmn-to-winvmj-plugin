@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Variable {
     private String name;
     private String type;
+    private String value;
 
     public Variable() {}
 
@@ -13,6 +14,12 @@ public class Variable {
         this.type = type;
     }
 
+    public Variable(String name, String type, String value) {
+        this.name = name;
+        this.type = type;
+        this.value = value;
+    }
+    
     public String getName() {
         return this.name;
     }
@@ -27,6 +34,14 @@ public class Variable {
 
     public void setType(String type) {
         this.type = type;
+    }
+    
+    public void setValue(String value) {
+        this.value= value;
+    }
+    
+    public String getValue() {
+        return this.value;
     }
 
     @Override

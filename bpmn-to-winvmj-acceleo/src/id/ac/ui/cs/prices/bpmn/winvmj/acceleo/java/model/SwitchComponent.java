@@ -53,7 +53,7 @@ public class SwitchComponent extends Component {
 
             if ((first || isInclusive) && !builderTemp.isEmpty()) {
                 builder.append(Util.SPACE.repeat(indent) + String.format("if (%s) {\r\n", f.getName()));
-                if (isInclusive) builder.append(Util.SPACE.repeat(indent + 1) + "boolean canContinue = true;\r\n");
+                if (isInclusive) usedVariables.add(new Variable("canContinue", "boolean", "true"));
                 first = false;
             } else if (!builderTemp.isEmpty()){
                 builder.append(Util.SPACE.repeat(indent) + String.format("else if (%s) {\r\n", f.getName()));
