@@ -67,7 +67,7 @@
 
     <!-- The default task with the jars used by this project -->
     <target name="Generate">
-        <java classname="bpmn.to.winvmj.acceleo.Generate" classpathref="bpmn.to.winvmj.acceleo.classpath">
+        <java classname="id.ac.ui.cs.prices.bpmn.winvmj.acceleo.Generate" classpathref="bpmn.to.winvmj.acceleo.classpath">
             <arg value="${model}"/>
             <arg value="${target}"/>
         </java>
@@ -78,7 +78,7 @@
         Keep in mind that having two versions of the same jar can create problems
     -->
     <target name="Generate.alljars">
-        <java classname="bpmn.to.winvmj.acceleo.Generate" classpathref="bpmn.to.winvmj.acceleo.classpath">
+        <java classname="id.ac.ui.cs.prices.bpmn.winvmj.acceleo.Generate" classpathref="bpmn.to.winvmj.acceleo.classpath">
             <arg value="${model}"/>
             <arg value="${target}"/>
         </java>

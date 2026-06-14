@@ -1,39 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-		id="bpmn.to.winvmj.feature"
-		label="bpmn.to.winvmj"
-		version="0.0.0">
+      id="id.ac.ui.cs.prices.bpmn.winvmj.feature"
+      label="id.ac.ui.cs.prices.bpmn.winvmj"
+      version="2026.6.1.4">
 
-   	<description>
-      	Plugin for PRICES IDE to generate BPMN Diagrams and parse them into WinVMJ applications.
-   	</description>
+   <description>
+      Plugin for PRICES IDE to generate BPMN Diagrams and parse them into WinVMJ applications.
+   </description>
 
-   	<copyright>
-		Copyright © 2024 PricesIDE. All rights reserved.
-   	</copyright>
+   <copyright>
+      Copyright © 2024 PricesIDE. All rights reserved.
+   </copyright>
 
-   	<license url="https://opensource.org/licenses/MIT">
-		MIT License - See LICENSE file for details.
-   	</license>
-
-   	<plugin
-		id="bpmn.to.winvmj.plugin"
-		version="0.0.0"/>
-
-   	<plugin
-		id="bpmn.to.winvmj.acceleo"
-		version="0.0.0"/>
-         
-	<plugin
-		id="varbpmn.to.bpmn.transformer"
-		version="0.0.0"/>
+   <license url="https://opensource.org/licenses/MIT">
+      MIT License - See LICENSE file for details.
+   </license>
 
    <plugin
-         id="varbpmn.to.bpmn.transformer"
+         id="id.ac.ui.cs.prices.bpmn.winvmj"
          version="0.0.0"/>
 
    <plugin
-         id="bpmn.to.winvmj.plugin"
+         id="id.ac.ui.cs.prices.bpmn.winvmj.acceleo"
+         version="0.0.0"/>
+
+   <plugin
+         id="varbpmn.to.bpmn.transformer"
          version="0.0.0"/>
 
 </feature>

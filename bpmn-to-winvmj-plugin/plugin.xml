@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="bpmn.to.winvmj.plugin.extension" name="BPMN to WinVMJ Extension" schema="schema/bpmn.to.winvmj.plugin.exsd"/>
+   <extension-point id="id.ac.ui.cs.prices.bpmn.winvmj.extension" name="BPMN to WinVMJ Extension" schema="schema/id.ac.ui.cs.prices.bpmn.winvmj.exsd"/>
 
    <extension point="org.eclipse.ui.commands">
       <command
-            id="bpmn.to.winvmj.plugin.commands.convert"
+            id="id.ac.ui.cs.prices.bpmn.winvmj.commands.convert"
             name="Convert BPMN to WinVMJ"/>
    </extension>
 
    <extension point="org.eclipse.ui.handlers">
       <handler
-            commandId="bpmn.to.winvmj.plugin.commands.convert"
-            class="bpmn.to.winvmj.plugin.handler.OpenConverterHandler">
+            commandId="id.ac.ui.cs.prices.bpmn.winvmj.commands.convert"
+            class="id.ac.ui.cs.prices.bpmn.winvmj.handler.OpenConverterHandler">
          <!-- Only activate handler when selection is a .bpmn2 file -->
          <activeWhen>
             <with variable="selection">
@@ -32,8 +32,8 @@
       <menuContribution
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <command
-               commandId="bpmn.to.winvmj.plugin.commands.convert"
-               id="bpmn.to.winvmj.plugin.menus.convertCommand"
+               commandId="id.ac.ui.cs.prices.bpmn.winvmj.commands.convert"
+               id="id.ac.ui.cs.prices.bpmn.winvmj.convertCommand"
                label="Convert BPMN to WinVMJ"
                icon="icons/burhan.png"
                style="push">
