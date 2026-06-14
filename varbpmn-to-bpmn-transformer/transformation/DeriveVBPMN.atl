@@ -59,11 +59,7 @@ helper context VBPMN!SequenceFlow def: isDerivableFlow : Boolean =
 
 -- Effective target after connector/skip handling (pre revision)
 helper context VBPMN!SequenceFlow def: getBaseDerivedTarget : VBPMN!FlowNode =
-	if not self.sourceRef.getConnectorTargetNode.oclIsUndefined() then
-		self.sourceRef.getConnectorTargetNode
-	else
-		self.targetRef.getNextValidTarget
-	endif;
+	self.targetRef.getNextValidTarget;
 
 -- True when another equivalent base-derived flow should be preferred (deterministic by lower id)
 helper context VBPMN!SequenceFlow def: hasPreferredBaseEquivalentFlow : Boolean =
@@ -314,8 +310,7 @@ helper context VBPMN!FlowNode def: shouldGenerateConnectorFlow : Boolean =
 	not self.isExcluded and
 	not self.isSkipped and
 	not self.isInExcludedContainer and
-	not self.getConnectorTargetNode.oclIsUndefined() and
-	self.outgoing->isEmpty();
+	not self.getConnectorTargetNode.oclIsUndefined();
 
 -- Collect generated connector-driven sequence flows for a process
 helper context VBPMN!Process def: generatedConnectorFlows : Sequence(BPMN!SequenceFlow) =
@@ -333,7 +328,8 @@ rule Definitions {
 		targetNamespace <- s.targetNamespace,
 		exporter <- s.exporter,
 		exporterVersion <- s.exporterVersion,
-		rootElements <- s.rootElements
+		rootElements <- s.rootElements,
+		diagrams <- s.diagrams
 	)
 }
 
@@ -350,9 +346,15 @@ rule Process {
 
 unique lazy rule ConnectorSequenceFlow {
 	from s : VBPMN!FlowNode (
-		s.shouldGenerateConnectorFlow and
-		not s.isSinglePathGateway and
-		not s.getConnectorTargetNode.getRevisedTarget.oclIsUndefined()
+		if s.shouldGenerateConnectorFlow then
+			if not s.isSinglePathGateway then
+				not s.getConnectorTargetNode.getRevisedTarget.oclIsUndefined()
+			else
+				false
+			endif
+		else
+			false
+		endif
 	)
 	to t : BPMN!SequenceFlow (
 		id <- 'SF_CONN_' + s.id + '_' + s.getConnectorName,
@@ -496,5 +498,156 @@ rule SubProcess {
 		name <- s.name,
 		triggeredByEvent <- s.triggeredByEvent,
 		flowElements <- s.flowElements
+	)
+}
+
+rule BPMNDiagram {
+	from s : VBPMN!BPMNDiagram
+	to t : BPMN!BPMNDiagram (
+		id <- s.id,
+		name <- s.name,
+		plane <- s.plane,
+		labelStyle <- s.labelStyle
+	)
+}
+
+rule BPMNPlane {
+	from s : VBPMN!BPMNPlane
+	to t : BPMN!BPMNPlane (
+		id <- s.id,
+		bpmnElement <- s.bpmnElement,
+		planeElement <- s.planeElement->union(
+			VBPMN!FlowNode.allInstancesFrom('IN')->select(fn |
+				if fn.shouldGenerateConnectorFlow then
+					if not fn.isSinglePathGateway then
+						not fn.getConnectorTargetNode.getRevisedTarget.oclIsUndefined()
+					else
+						false
+					endif
+				else
+					false
+				endif
+			)->collect(fn | thisModule.ConnectorBPMNEdge(fn))
+		)
+	)
+}
+
+rule BPMNShape {
+	from s : VBPMN!BPMNShape (
+		if s.bpmnElement.oclIsUndefined() then true else
+			not s.bpmnElement.isExcluded and
+			not s.bpmnElement.isSkipped and
+			not (if s.bpmnElement.oclIsKindOf(VBPMN!FlowNode) then s.bpmnElement.isSinglePathGateway else false endif)
+		endif
+	)
+	to t : BPMN!BPMNShape (
+		id <- s.id,
+		bpmnElement <- s.bpmnElement,
+		bounds <- s.bounds,
+		isExpanded <- s.isExpanded,
+		isHorizontal <- s.isHorizontal,
+		isMarkerVisible <- s.isMarkerVisible,
+		isMessageVisible <- s.isMessageVisible,
+		participantBandKind <- s.participantBandKind,
+		choreographyActivityShape <- s.choreographyActivityShape
+	)
+}
+
+rule BPMNEdge {
+	from s : VBPMN!BPMNEdge (
+		if s.bpmnElement.oclIsUndefined() then true else
+			if s.bpmnElement.oclIsKindOf(VBPMN!SequenceFlow) then
+				s.bpmnElement.isPrimaryDerivedFlow
+			else
+				true
+			endif
+		endif
+	)
+	to t : BPMN!BPMNEdge (
+		id <- s.id,
+		bpmnElement <- s.bpmnElement,
+		waypoint <- s.waypoint,
+		sourceElement <- s.sourceElement,
+		targetElement <- s.targetElement,
+		messageVisibleKind <- s.messageVisibleKind
+	)
+}
+
+unique lazy rule ConnectorBPMNEdge {
+	from s : VBPMN!FlowNode (
+		if s.shouldGenerateConnectorFlow then
+			if not s.isSinglePathGateway then
+				not s.getConnectorTargetNode.getRevisedTarget.oclIsUndefined()
+			else
+				false
+			endif
+		else
+			false
+		endif
+	)
+	to t : BPMN!BPMNEdge (
+		id <- 'BPMNEdge_SF_CONN_' + s.id + '_' + s.getConnectorTargetNode.getRevisedTarget.id,
+		bpmnElement <- thisModule.ConnectorSequenceFlow(s),
+		sourceElement <- VBPMN!BPMNShape.allInstancesFrom('IN')->any(shape | shape.bpmnElement = s),
+		targetElement <- VBPMN!BPMNShape.allInstancesFrom('IN')->any(shape | shape.bpmnElement = s.getConnectorTargetNode.getRevisedTarget),
+		waypoint <- Sequence {
+			thisModule.ConnectorWaypoint(VBPMN!BPMNShape.allInstancesFrom('IN')->any(shape | shape.bpmnElement = s)),
+			thisModule.ConnectorWaypoint(VBPMN!BPMNShape.allInstancesFrom('IN')->any(shape | shape.bpmnElement = s.getConnectorTargetNode.getRevisedTarget))
+		}
+	)
+}
+
+lazy rule ConnectorWaypoint {
+	from s : VBPMN!BPMNShape
+	to t : BPMN!Point (
+		x <- if s.bounds.oclIsUndefined() then 0.0 else s.bounds.x + (s.bounds.width / 2) endif,
+		y <- if s.bounds.oclIsUndefined() then 0.0 else s.bounds.y + (s.bounds.height / 2) endif
+	)
+}
+
+rule Bounds {
+	from s : VBPMN!Bounds
+	to t : BPMN!Bounds (
+		x <- s.x,
+		y <- s.y,
+		width <- s.width,
+		height <- s.height
+	)
+}
+
+rule Point {
+	from s : VBPMN!Point
+	to t : BPMN!Point (
+		x <- s.x,
+		y <- s.y
+	)
+}
+
+rule BPMNLabel {
+	from s : VBPMN!BPMNLabel
+	to t : BPMN!BPMNLabel (
+		id <- s.id,
+		bounds <- s.bounds,
+		labelStyle <- s.labelStyle
+	)
+}
+
+rule BPMNLabelStyle {
+	from s : VBPMN!BPMNLabelStyle
+	to t : BPMN!BPMNLabelStyle (
+		id <- s.id,
+		font <- s.font
+	)
+}
+
+rule Font {
+	from s : VBPMN!Font
+	to t : BPMN!Font (
+		name <- s.name,
+		size <- s.size,
+		isBold <- s.isBold,
+		isItalic <- s.isItalic,
+		isUnderline <- s.isUnderline,
+		isStrikeThrough <- s.isStrikeThrough
 	)
 }

@@ -176,21 +176,44 @@ public class DeriveAction implements IObjectActionDelegate {
 				int successCount = 0;
 				List<String> skippedMappings = new ArrayList<>();
 
+				List<FeatureMappingFile> allMappings = new ArrayList<>();
+				if (Files.exists(mappingDir)) {
+					try (Stream<Path> mappingFiles = Files.list(mappingDir)) {
+						mappingFiles.filter(Files::isRegularFile)
+							.filter(path -> path.getFileName().toString().toLowerCase().endsWith(".json"))
+							.forEach(path -> {
+								try {
+									allMappings.add(parseFeatureMappingFile(path));
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							});
+					}
+				}
+
 				for (Path inputBpmnPath : varBpmnFiles) {
 					String fileName = inputBpmnPath.getFileName().toString();
 					String baseName = fileName.substring(0, fileName.length() - ".bpmn2".length());
-					Path mappingPath = mappingDir.resolve(baseName + ".json");
-					if (!Files.exists(mappingPath)) {
-						skippedMappings.add(baseName + ".json");
+					
+					List<FeatureMappingFile> applicableMappings = new ArrayList<>();
+					for (FeatureMappingFile fmf : allMappings) {
+						if (fileName.equals(fmf.targetBPMN) && selectedConcreteFeatures.contains(fmf.feature)) {
+							applicableMappings.add(fmf);
+						}
+					}
+
+					if (applicableMappings.isEmpty()) {
+						skippedMappings.add(fileName + " (no mappings found/selected)");
 						continue;
 					}
 
-					Map<String, List<MappingEntry>> featureMappings = parseFeatureMappings(mappingPath);
+					applicableMappings.sort(Comparator.comparingInt(m -> m.priority));
+
 					Path derivedOutputPath = outDir.resolve(baseName + ".bpmn2");
 
 					Path tempVarBpmn = Files.createTempFile("varbpmn_", ".bpmn2");
 					try {
-						annotateVariability(inputBpmnPath, tempVarBpmn, selectedConcreteFeatures, featureMappings);
+						annotateVariability(inputBpmnPath, tempVarBpmn, applicableMappings);
 						runAtlDerivation(tempVarBpmn, derivedOutputPath);
 						successCount++;
 					} finally {
@@ -263,8 +286,7 @@ public class DeriveAction implements IObjectActionDelegate {
 
 	private void annotateVariability(Path inputBpmnPath,
 		Path outputBpmnPath,
-		List<String> selectedFeatures,
-		Map<String, List<MappingEntry>> featureMappings) throws Exception {
+		List<FeatureMappingFile> applicableMappings) throws Exception {
 
 		Document bpmnDocument = parseXml(inputBpmnPath);
 		Element definitions = bpmnDocument.getDocumentElement();
@@ -277,24 +299,12 @@ public class DeriveAction implements IObjectActionDelegate {
 		Set<String> allMappedIds = new HashSet<>();
 		Map<String, AnnotationUpdate> updatesById = new HashMap<>();
 
-		for (List<MappingEntry> entries : featureMappings.values()) {
-			for (MappingEntry entry : entries) {
-				if (!isBlank(entry.id)) {
-					allMappedIds.add(entry.id);
-				}
-			}
-		}
-
-		for (String feature : selectedFeatures) {
-			List<MappingEntry> entries = featureMappings.get(feature);
-			if (entries == null) {
-				continue;
-			}
-
-			for (MappingEntry entry : entries) {
+		for (FeatureMappingFile fmf : applicableMappings) {
+			for (MappingEntry entry : fmf.mappings) {
 				if (isBlank(entry.id)) {
 					continue;
 				}
+				allMappedIds.add(entry.id);
 
 				AnnotationUpdate update = updatesById.computeIfAbsent(entry.id, key -> new AnnotationUpdate());
 				if (entry.inclusionVariability != null) {
@@ -414,25 +424,31 @@ public class DeriveAction implements IObjectActionDelegate {
 		return features;
 	}
 
-	private Map<String, List<MappingEntry>> parseFeatureMappings(Path mappingPath) throws Exception {
+	private FeatureMappingFile parseFeatureMappingFile(Path mappingPath) throws Exception {
 		String json = Files.readString(mappingPath, StandardCharsets.UTF_8);
 		Object root = new JsonParser(json).parse();
 		if (!(root instanceof Map)) {
-			throw new Exception("Isi feature_to_var.json tidak valid: root harus object.");
+			throw new Exception("Isi feature_to_var.json tidak valid: root harus object. File: " + mappingPath);
 		}
 
-		Map<String, List<MappingEntry>> result = new LinkedHashMap<>();
 		Map<?, ?> rootMap = (Map<?, ?>) root;
+		FeatureMappingFile fmf = new FeatureMappingFile();
+		fmf.feature = safeString(rootMap.get("feature"));
+		fmf.targetBPMN = safeString(rootMap.get("targetBPMN"));
+		
+		Object prioObj = rootMap.get("priority");
+		if (prioObj instanceof Number) {
+			fmf.priority = ((Number) prioObj).intValue();
+		} else if (prioObj instanceof String) {
+			fmf.priority = Integer.parseInt((String) prioObj);
+		} else {
+			fmf.priority = 0;
+		}
 
-		for (Map.Entry<?, ?> featureEntry : rootMap.entrySet()) {
-			String featureName = safeString(featureEntry.getKey());
-			Object value = featureEntry.getValue();
-			if (!(value instanceof List)) {
-				continue;
-			}
-
-			List<MappingEntry> mappings = new ArrayList<>();
-			for (Object item : (List<?>) value) {
+		fmf.mappings = new ArrayList<>();
+		Object mappingsValue = rootMap.get("mappings");
+		if (mappingsValue instanceof List) {
+			for (Object item : (List<?>) mappingsValue) {
 				if (!(item instanceof Map)) {
 					continue;
 				}
@@ -459,13 +475,11 @@ public class DeriveAction implements IObjectActionDelegate {
 					}
 				}
 
-				mappings.add(entry);
+				fmf.mappings.add(entry);
 			}
-
-			result.put(featureName, mappings);
 		}
 
-		return result;
+		return fmf;
 	}
 
 	private Set<String> readAbstractFeatures(Path modelPath) throws IOException {
@@ -719,6 +733,13 @@ public class DeriveAction implements IObjectActionDelegate {
 		}
 		String str = String.valueOf(value);
 		return isBlank(str) ? null : str;
+	}
+
+	private static class FeatureMappingFile {
+		private String feature;
+		private String targetBPMN;
+		private int priority;
+		private List<MappingEntry> mappings;
 	}
 
 	private static class MappingEntry {
