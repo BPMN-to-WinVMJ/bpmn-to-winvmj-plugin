@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="Generate" name="bpmn.to.winvmj.acceleo">
-    <property name="ECLIPSE_HOME" value="../../../../../Users/Jim/Desktop/956444-PricesIDE-202604"/>
-    <property name="ECLIPSE_WORKSPACE" value="D:/Catatan Kuliah/Catatan Kuliah Semester 6/RSE/PricesIDE-REAL"/>
+    <property name="ECLIPSE_HOME" value="../../../../../213256-PricesIDE-202601"/>
+    <property name="ECLIPSE_WORKSPACE" value="../../../.."/>
 
     <!-- The classpath with only the dependencies used by the project -->
     <path id="bpmn.to.winvmj.acceleo.libraryclasspath">
         <pathelement location="${ECLIPSE_WORKSPACE}/bpmn.to.winvmj.acceleo/bin"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_17.0.9.v20231028-0858/jre/lib/jrt-fs.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.osgi.annotation.versioning_1.1.2.202109301733.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.osgi.annotation.bundle_2.0.0.202202082230.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.osgi.service.component.annotations_1.5.1.202212101352.jar"/>
