@@ -215,6 +215,7 @@ public class DeriveAction implements IObjectActionDelegate {
 					try {
 						annotateVariability(inputBpmnPath, tempVarBpmn, applicableMappings);
 						runAtlDerivation(tempVarBpmn, derivedOutputPath);
+						injectItemDefinitions(inputBpmnPath, derivedOutputPath);
 						successCount++;
 					} finally {
 						try {
@@ -282,6 +283,74 @@ public class DeriveAction implements IObjectActionDelegate {
 		}
 
 		extractor.extract(outModel, outputBpmnPath.toUri().toString());
+	}
+
+	private void injectItemDefinitions(Path inputBpmnPath, Path outputBpmnPath) throws Exception {
+		Document inputDoc = parseXml(inputBpmnPath);
+		Document outputDoc = parseXml(outputBpmnPath);
+
+		Element inputDefinitions = inputDoc.getDocumentElement();
+		Element outputDefinitions = outputDoc.getDocumentElement();
+
+		if (inputDefinitions == null || outputDefinitions == null) {
+			return;
+		}
+
+		List<Node> itemDefs = new ArrayList<>();
+		NodeList children = inputDefinitions.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			Node child = children.item(i);
+			if (child instanceof Element) {
+				Element childElement = (Element) child;
+				if ("itemDefinition".equals(childElement.getLocalName())) {
+					itemDefs.add(childElement);
+				}
+			}
+		}
+
+		if (itemDefs.isEmpty()) {
+			return;
+		}
+
+		Node firstProcess = null;
+		NodeList outChildren = outputDefinitions.getChildNodes();
+		for (int j = 0; j < outChildren.getLength(); j++) {
+			Node outChild = outChildren.item(j);
+			if (outChild instanceof Element && "process".equals(((Element) outChild).getLocalName())) {
+				firstProcess = outChild;
+				break;
+			}
+		}
+
+		for (Node itemDef : itemDefs) {
+			Node importedNode = outputDoc.importNode(itemDef, true);
+			if (firstProcess != null) {
+				outputDefinitions.insertBefore(importedNode, firstProcess);
+			} else {
+				outputDefinitions.appendChild(importedNode);
+			}
+		}
+
+		// Fix property itemSubjectRef
+		NodeList outProperties = outputDoc.getElementsByTagName("bpmn2:property");
+		if (outProperties.getLength() == 0) {
+			outProperties = outputDoc.getElementsByTagName("property");
+		}
+		for (int i = 0; i < outProperties.getLength(); i++) {
+			Node node = outProperties.item(i);
+			if (node instanceof Element) {
+				Element outProp = (Element) node;
+				String id = outProp.getAttribute("id");
+				if (id != null && !id.isEmpty()) {
+					Element inProp = findElementById(inputDoc, id);
+					if (inProp != null && inProp.hasAttribute("itemSubjectRef")) {
+						outProp.setAttribute("itemSubjectRef", inProp.getAttribute("itemSubjectRef"));
+					}
+				}
+			}
+		}
+
+		writeXml(outputDoc, outputBpmnPath);
 	}
 
 	private void annotateVariability(Path inputBpmnPath,

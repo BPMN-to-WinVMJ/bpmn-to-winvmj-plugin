@@ -340,6 +340,7 @@ rule Process {
 		id <- s.id,
 		name <- s.name,
 		isExecutable <- s.isExecutable,
+		properties <- s.properties,
 		flowElements <- s.flowElements->union(s.generatedConnectorFlows)
 	)
 }
@@ -446,12 +447,14 @@ rule Task {
 		not s.oclIsKindOf(VBPMN!UserTask) and
 		not s.oclIsKindOf(VBPMN!ManualTask) and
 		not s.oclIsKindOf(VBPMN!ReceiveTask) and
+		not s.oclIsKindOf(VBPMN!ScriptTask) and
 		not s.isExcluded and
 		not s.isInExcludedContainer and
 		not s.isSkipped
 	)
 	to t: BPMN!Task (
-		id <- s.id, name <- s.name
+		id <- s.id, name <- s.name,
+		properties <- s.properties
 	)
 }
 
@@ -462,7 +465,8 @@ rule ReceiveTask {
 		not s.isSkipped
 	)
 	to t: BPMN!ReceiveTask (
-		id <- s.id, name <- s.name	
+		id <- s.id, name <- s.name,
+		properties <- s.properties
 	)
 }
 
@@ -473,7 +477,20 @@ rule UserTask {
 		not s.isSkipped
 	)
 	to t: BPMN!UserTask (
-		id <- s.id, name <- s.name
+		id <- s.id, name <- s.name,
+		properties <- s.properties
+	)
+}
+
+rule ScriptTask {
+	from s: VBPMN!ScriptTask (
+		not s.isExcluded and
+		not s.isInExcludedContainer and
+		not s.isSkipped
+	)
+	to t: BPMN!ScriptTask (
+		id <- s.id, name <- s.name,
+		properties <- s.properties
 	)
 }
 
@@ -484,7 +501,8 @@ rule ManualTask {
 		not s.isSkipped
 	)
 	to t: BPMN!ManualTask (
-		id <- s.id, name <- s.name
+		id <- s.id, name <- s.name,
+		properties <- s.properties
 	)
 }
 
@@ -497,6 +515,7 @@ rule SubProcess {
 		id <- s.id,
 		name <- s.name,
 		triggeredByEvent <- s.triggeredByEvent,
+		properties <- s.properties,
 		flowElements <- s.flowElements
 	)
 }
@@ -649,5 +668,14 @@ rule Font {
 		isItalic <- s.isItalic,
 		isUnderline <- s.isUnderline,
 		isStrikeThrough <- s.isStrikeThrough
+	)
+}
+
+rule Property {
+	from s : VBPMN!Property
+	to t : BPMN!Property (
+		id <- s.id,
+		name <- s.name,
+		itemSubjectRef <- s.itemSubjectRef
 	)
 }
