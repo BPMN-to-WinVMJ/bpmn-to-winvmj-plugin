@@ -146,31 +146,21 @@ public class Clo_subcloResourceImpl extends Clo_subcloResourceComponent {
         Map<String, Object> response = new HashMap<>();
 		Map<String, Object> requestBody = vmjExchange.getPayload();
 
-        
-
 		String processid = (String) requestBody.get("processInstanceId");
 		if (vmjExchange.getHttpMethod().equals("POST")) {
 
-	        // Cek apakah step sebelumnya pernah dilakukan
-	        // This also allows user yang mundur page trus isi form ulang
-	        // karena langkah sebelum page ini pasti udh dilakukan
-	        // ini juga mencegah orang dari asal tembak api
 	        List<ProcessInstance> processes = processService.getAllById(processid);
-			
 			if (!(hasTaskState(processes, "gradeStudentAssessmentResult"))
 			) {
 				response.put("status", "FAIL");
 				response.put("message", "entryComponentGrades DENIED");
             	return response;
 			}
-
             response.put("status", "ok");
             response.put("message", "entryComponentGrades SUCCESS");
 
-            clo_subcloService.entryComponentGrades(requestBody, processid, response);
-            
+            clo_subcloService.entryComponentGrades(requestBody, processid, response);   
 		}
-
         return response;
     }
 
@@ -178,8 +168,6 @@ public class Clo_subcloResourceImpl extends Clo_subcloResourceComponent {
     public Map<String, Object> manageSubClo(VMJExchange vmjExchange) {
         Map<String, Object> response = new HashMap<>();
 		Map<String, Object> requestBody = vmjExchange.getPayload();
-
-        
 
         String processid = UUID.randomUUID().toString();
         processService.upsert(new ProcessInstance(processid, "manageSubClo"));
@@ -189,9 +177,6 @@ public class Clo_subcloResourceImpl extends Clo_subcloResourceComponent {
 		// From ScriptTask Map Sub-CLO to CLO
 		processService.upsert(new ProcessInstance(processid, "Map Sub-CLO to CLO"));
 		// TODO: implement 'map sub-clo to clo'
-		
-		
-		
 
         return response;
     }

@@ -1,4 +1,5 @@
 @echo off
+REM THIS THING DOESN'T WORK
 REM Script to sync Acceleo project to plugin and optionally commit/push to git
 REM Usage: sync-acceleo.bat [commit_message]
 REM Example: sync-acceleo.bat "Updated Acceleo templates"
