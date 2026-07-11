@@ -286,71 +286,74 @@ public class DeriveAction implements IObjectActionDelegate {
 	}
 
 	private void injectItemDefinitions(Path inputBpmnPath, Path outputBpmnPath) throws Exception {
-		Document inputDoc = parseXml(inputBpmnPath);
-		Document outputDoc = parseXml(outputBpmnPath);
+		String inputContent = Files.readString(inputBpmnPath, StandardCharsets.UTF_8);
+		String outputContent = Files.readString(outputBpmnPath, StandardCharsets.UTF_8);
+		boolean changed = false;
 
-		Element inputDefinitions = inputDoc.getDocumentElement();
-		Element outputDefinitions = outputDoc.getDocumentElement();
-
-		if (inputDefinitions == null || outputDefinitions == null) {
-			return;
+		// 1. Copy original itemDefinition tags exactly as they were
+		List<String> originalItemDefs = new ArrayList<>();
+		Matcher itemDefMatcher = Pattern.compile("<bpmn2:itemDefinition\\s+id=\"([^\"]+)\"[^>]*/>").matcher(inputContent);
+		while (itemDefMatcher.find()) {
+			String id = itemDefMatcher.group(1);
+			String fullTag = itemDefMatcher.group(0);
+			originalItemDefs.add(fullTag);
+			
+			// Erase any incomplete versions of this itemDefinition that EMF might have generated
+			String badTagRegex = "<bpmn2:itemDefinition\\s+id=\"" + Pattern.quote(id) + "\"[^>]*/>\\s*";
+			outputContent = outputContent.replaceAll(badTagRegex, "");
 		}
 
-		List<Node> itemDefs = new ArrayList<>();
-		NodeList children = inputDefinitions.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++) {
-			Node child = children.item(i);
-			if (child instanceof Element) {
-				Element childElement = (Element) child;
-				if ("itemDefinition".equals(childElement.getLocalName())) {
-					itemDefs.add(childElement);
-				}
+		if (!originalItemDefs.isEmpty()) {
+			StringBuilder injectStr = new StringBuilder();
+			for (String tag : originalItemDefs) {
+				injectStr.append("  ").append(tag).append("\n");
 			}
+			// Insert them right before the first <bpmn2:process
+			outputContent = outputContent.replaceFirst("<bpmn2:process", Matcher.quoteReplacement(injectStr.toString()) + "<bpmn2:process");
+			changed = true;
 		}
 
-		if (itemDefs.isEmpty()) {
-			return;
-		}
-
-		Node firstProcess = null;
-		NodeList outChildren = outputDefinitions.getChildNodes();
-		for (int j = 0; j < outChildren.getLength(); j++) {
-			Node outChild = outChildren.item(j);
-			if (outChild instanceof Element && "process".equals(((Element) outChild).getLocalName())) {
-				firstProcess = outChild;
-				break;
-			}
-		}
-
-		for (Node itemDef : itemDefs) {
-			Node importedNode = outputDoc.importNode(itemDef, true);
-			if (firstProcess != null) {
-				outputDefinitions.insertBefore(importedNode, firstProcess);
-			} else {
-				outputDefinitions.appendChild(importedNode);
-			}
-		}
-
-		// Fix property itemSubjectRef
-		NodeList outProperties = outputDoc.getElementsByTagName("bpmn2:property");
-		if (outProperties.getLength() == 0) {
-			outProperties = outputDoc.getElementsByTagName("property");
-		}
-		for (int i = 0; i < outProperties.getLength(); i++) {
-			Node node = outProperties.item(i);
-			if (node instanceof Element) {
-				Element outProp = (Element) node;
-				String id = outProp.getAttribute("id");
-				if (id != null && !id.isEmpty()) {
-					Element inProp = findElementById(inputDoc, id);
-					if (inProp != null && inProp.hasAttribute("itemSubjectRef")) {
-						outProp.setAttribute("itemSubjectRef", inProp.getAttribute("itemSubjectRef"));
+		// 2. Fix property itemSubjectRef mapping
+		Matcher propMatcher = Pattern.compile("<(?:bpmn2:)?property\\s+id=\"([^\"]+)\"([^>]*)/>").matcher(inputContent);
+		while (propMatcher.find()) {
+			String propId = propMatcher.group(1);
+			String propRest = propMatcher.group(2);
+			
+			Matcher refMatcher = Pattern.compile("itemSubjectRef=\"([^\"]+)\"").matcher(propRest);
+			if (refMatcher.find()) {
+				String subjectRef = refMatcher.group(1);
+				
+				// Find this property in the output file
+				String outPropRegex = "(<(?:bpmn2:)?property\\s+id=\"" + Pattern.quote(propId) + "\")([^>]*)/>";
+				Matcher outMatcher = Pattern.compile(outPropRegex).matcher(outputContent);
+				if (outMatcher.find()) {
+					String outPropPrefix = outMatcher.group(1);
+					String outPropRest = outMatcher.group(2);
+					
+					// Replace or inject itemSubjectRef correctly
+					if (outPropRest.contains("itemSubjectRef=")) {
+						outPropRest = outPropRest.replaceAll("itemSubjectRef=\"[^\"]+\"", "itemSubjectRef=\"" + subjectRef + "\"");
+					} else {
+						outPropRest = " itemSubjectRef=\"" + subjectRef + "\"" + outPropRest;
 					}
+					
+					outputContent = outputContent.substring(0, outMatcher.start()) 
+							+ outPropPrefix + outPropRest + "/>" 
+							+ outputContent.substring(outMatcher.end());
+					changed = true;
 				}
 			}
 		}
 
-		writeXml(outputDoc, outputBpmnPath);
+		// 3. Restore missing xs namespace
+		if (!outputContent.contains("xmlns:xs=")) {
+			outputContent = outputContent.replaceFirst("<bpmn2:definitions", "<bpmn2:definitions xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"");
+			changed = true;
+		}
+
+		if (changed) {
+			Files.writeString(outputBpmnPath, outputContent, StandardCharsets.UTF_8);
+		}
 	}
 
 	private void annotateVariability(Path inputBpmnPath,

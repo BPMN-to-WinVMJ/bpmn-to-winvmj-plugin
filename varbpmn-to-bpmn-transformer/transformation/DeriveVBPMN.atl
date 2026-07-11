@@ -679,3 +679,14 @@ rule Property {
 		itemSubjectRef <- s.itemSubjectRef
 	)
 }
+
+rule ItemDefinition {
+	from s : VBPMN!ItemDefinition
+	to t : BPMN!ItemDefinition (
+		id <- s.id,
+		isCollection <- s.isCollection,
+		itemKind <- s.itemKind,
+		structureRef <- s.structureRef
+	)
+}
+
