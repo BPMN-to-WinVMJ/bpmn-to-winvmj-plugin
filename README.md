@@ -1,5 +1,5 @@
 # Requirements
-Install via the update site: [bpmn-to-winvmj update site](https://gitlab.com/RSE-Lab-Fasilkom-UI/PricesIDE/priceside-update-site/-/tree/bpmn-to-winvmj?ref_type=heads) or run the project locally.
+Install via the update site: [bpmn-to-winvmj update site](https://prices.cs.ui.ac.id/update-site/bpmn-to-winvmj/) or run the project locally.
 
 # How to run the project locally
 To run this project, you must first be in an eclipse application.
