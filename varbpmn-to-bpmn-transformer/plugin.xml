@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+         id="varbpmn.to.bpmn.transformer.contribution">
+         <action
+               label="Derive varBPMN to BPMN"
+               class="varbpmn.to.bpmn.transformer.actions.DeriveAction"
+               menubarPath="additions"
+               enablesFor="1"
+               id="varbpmn.to.bpmn.transformer.action">
+         </action>
+      </objectContribution>
+   </extension>
+</plugin>

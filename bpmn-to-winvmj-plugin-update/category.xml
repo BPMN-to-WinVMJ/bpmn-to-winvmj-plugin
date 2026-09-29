@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="id.ac.ui.cs.prices.bpmn.winvmj.feature" version="0.0.0">
+      <category name="varbpmn_bpmn_winvmj_tool"/>
+   </feature>
+   <category-def name="varbpmn_bpmn_winvmj_tool" label="varBPMN support tool + BPMN to WinVMJ"/>
+</site>

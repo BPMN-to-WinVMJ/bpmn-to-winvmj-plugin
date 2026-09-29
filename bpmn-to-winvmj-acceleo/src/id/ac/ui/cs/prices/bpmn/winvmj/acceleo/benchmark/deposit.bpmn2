@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- origin at X=-120.0 Y=0.0 -->
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="_00Ks4EzlEfGwRcKQ6OZ3AQ" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.5.4.RC1-v20220528-0836-B1">
+  <bpmn2:process id="Process_1" name="Deposit Process" isExecutable="false">
+    <bpmn2:startEvent id="StartEvent_3" name="Start Event 3">
+      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:scriptTask id="Task_InitAmount" name="init int amount as (int) requestBody.get(&quot;amount&quot;)" scriptFormat="java">
+      <bpmn2:incoming>Flow_1</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_2</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:scriptTask id="Task_PutIdUser" name="requestBody.put(&quot;id_user&quot;, requestBody.get(&quot;targetUserId&quot;))" scriptFormat="java">
+      <bpmn2:incoming>Flow_2</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_3</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:scriptTask id="Task_GetAccount" name="HashMap&lt;String, Object> account = accountAccountsService.getAccount(requestBody)" scriptFormat="java">
+      <bpmn2:incoming>Flow_3</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_4</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:scriptTask id="Task_InitBalance" name="init int balance as (int) account.get(&quot;balance&quot;)" scriptFormat="java">
+      <bpmn2:incoming>Flow_4</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_5</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:scriptTask id="Task_InitCurrency" name="init String currency as (String) requestBody.get(&quot;currency&quot;)" scriptFormat="java">
+      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_6</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:exclusiveGateway id="Gateway_Currency" name="Exclusive Gateway" gatewayDirection="Diverging">
+      <bpmn2:incoming>Flow_6</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_7</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_8</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_9</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:scriptTask id="Task_Mult1" name="mult amount with 1" scriptFormat="java">
+      <bpmn2:incoming>Flow_7</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_10</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:scriptTask id="Task_Mult2" name="mult amount with 2" scriptFormat="java">
+      <bpmn2:incoming>Flow_8</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_11</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:scriptTask id="Task_Mult3" name="mult amount with 3" scriptFormat="java">
+      <bpmn2:incoming>Flow_9</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_12</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:exclusiveGateway id="Gateway_Merge" name="Exclusive Gateway" gatewayDirection="Converging">
+      <bpmn2:incoming>Flow_10</bpmn2:incoming>
+      <bpmn2:incoming>Flow_11</bpmn2:incoming>
+      <bpmn2:incoming>Flow_12</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_13</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:scriptTask id="Task_AddAmountToBalance" name="add amount to balance" scriptFormat="java">
+      <bpmn2:incoming>Flow_13</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_14</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:scriptTask id="Task_PutBalanceToAccount" name="put balance to account" scriptFormat="java">
+      <bpmn2:incoming>Flow_14</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_15</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:scriptTask id="Task_UpdateAccount" name="accountAccountsService.updateAccount(account)" scriptFormat="java">
+      <bpmn2:incoming>Flow_15</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_16</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:endEvent id="EndEvent_7" name="End Event 7">
+      <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_1" sourceRef="UserTask_1" targetRef="Task_InitAmount"/>
+    <bpmn2:sequenceFlow id="Flow_2" sourceRef="Task_InitAmount" targetRef="Task_PutIdUser"/>
+    <bpmn2:sequenceFlow id="Flow_3" sourceRef="Task_PutIdUser" targetRef="Task_GetAccount"/>
+    <bpmn2:sequenceFlow id="Flow_4" sourceRef="Task_GetAccount" targetRef="Task_InitBalance"/>
+    <bpmn2:sequenceFlow id="Flow_5" sourceRef="Task_InitBalance" targetRef="ScriptTask_5"/>
+    <bpmn2:sequenceFlow id="Flow_6" sourceRef="Task_InitCurrency" targetRef="Gateway_Currency"/>
+    <bpmn2:sequenceFlow id="Flow_7" name="currency equals (&quot;IDR&quot;)" sourceRef="Gateway_Currency" targetRef="Task_Mult1">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1">currency == &quot;IDR&quot;</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_8" name="currency equals (&quot;USD&quot;)" sourceRef="Gateway_Currency" targetRef="Task_Mult2">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_2">currency == &quot;USD&quot;</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_9" name="currency equals (&quot;JPY&quot;)" sourceRef="Gateway_Currency" targetRef="Task_Mult3">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3">currency == &quot;JPY&quot;</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_10" sourceRef="Task_Mult1" targetRef="Gateway_Merge"/>
+    <bpmn2:sequenceFlow id="Flow_11" sourceRef="Task_Mult2" targetRef="Gateway_Merge"/>
+    <bpmn2:sequenceFlow id="Flow_12" sourceRef="Task_Mult3" targetRef="Gateway_Merge"/>
+    <bpmn2:sequenceFlow id="Flow_13" sourceRef="Gateway_Merge" targetRef="Task_AddAmountToBalance"/>
+    <bpmn2:sequenceFlow id="Flow_14" sourceRef="Task_AddAmountToBalance" targetRef="Task_PutBalanceToAccount"/>
+    <bpmn2:sequenceFlow id="Flow_15" sourceRef="Task_PutBalanceToAccount" targetRef="Task_UpdateAccount"/>
+    <bpmn2:sequenceFlow id="Flow_16" sourceRef="Task_UpdateAccount" targetRef="ExclusiveGateway_2"/>
+    <bpmn2:scriptTask id="ScriptTask_2" name="init int accumulate as withdraw + 1">
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:scriptTask id="ScriptTask_4" name="init int accumulate as withdraw + amount">
+      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:inclusiveGateway id="InclusiveGateway_1" name="Inclusive Gateway 3" gatewayDirection="Diverging">
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
+    </bpmn2:inclusiveGateway>
+    <bpmn2:inclusiveGateway id="InclusiveGateway_2" name="Inclusive Gateway 4" gatewayDirection="Converging">
+      <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+    </bpmn2:inclusiveGateway>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="Exclusive Gateway 5" gatewayDirection="Diverging">
+      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="ScriptTask_6" targetRef="InclusiveGateway_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" name="accumulate > dailyLimit" sourceRef="ExclusiveGateway_1" targetRef="ExclusiveGateway_2"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" sourceRef="InclusiveGateway_1" targetRef="ScriptTask_2"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_5" sourceRef="ScriptTask_2" targetRef="InclusiveGateway_2"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_6" sourceRef="InclusiveGateway_1" targetRef="ScriptTask_4"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_7" sourceRef="ScriptTask_4" targetRef="InclusiveGateway_2"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_8" sourceRef="InclusiveGateway_2" targetRef="ExclusiveGateway_1"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_9" sourceRef="ExclusiveGateway_1" targetRef="Task_InitCurrency"/>
+    <bpmn2:scriptTask id="ScriptTask_5" name="init int dailyLimit as (int) accountAccount2Service.getAccount(requestBody).get(&quot;dailyLimit&quot;)">
+      <bpmn2:incoming>Flow_5</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:scriptTask id="ScriptTask_6" name="init int withdraw as (int) accountAccount2Service.getAccount(requestBody).get(&quot;withdraw&quot;)">
+      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_10" sourceRef="ScriptTask_5" targetRef="ScriptTask_6"/>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_2" name="Exclusive Gateway 2" gatewayDirection="Converging">
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:incoming>Flow_16</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_12" sourceRef="ExclusiveGateway_2" targetRef="EndEvent_7"/>
+    <bpmn2:userTask id="UserTask_1" name="deposit">
+      <bpmn2:incoming>SequenceFlow_13</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_13" sourceRef="StartEvent_3" targetRef="UserTask_1"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="BPMNShape_StartEvent_3" bpmnElement="StartEvent_3">
+        <dc:Bounds height="36.0" width="36.0" x="0.0" y="227.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="42.0" width="61.0" x="-12.0" y="263.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_InitAmount" bpmnElement="Task_InitAmount">
+        <dc:Bounds height="60.0" width="230.0" x="220.0" y="215.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="42.0" width="227.0" x="221.0" y="224.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_PutIdUser" bpmnElement="Task_PutIdUser">
+        <dc:Bounds height="60.0" width="260.0" x="480.0" y="215.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="63.0" width="258.0" x="481.0" y="214.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_GetAccount" bpmnElement="Task_GetAccount">
+        <dc:Bounds height="105.0" width="300.0" x="770.0" y="193.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_4" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="63.0" width="295.0" x="772.0" y="214.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_InitBalance" bpmnElement="Task_InitBalance">
+        <dc:Bounds height="60.0" width="210.0" x="1110.0" y="215.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="42.0" width="183.0" x="1123.0" y="224.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_InitCurrency" bpmnElement="Task_InitCurrency">
+        <dc:Bounds height="60.0" width="260.0" x="2530.0" y="205.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_6" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="42.0" width="255.0" x="2532.0" y="214.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Gateway_Currency" bpmnElement="Gateway_Currency" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="2855.0" y="210.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_7" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="42.0" width="80.0" x="2840.0" y="260.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_Mult1" bpmnElement="Task_Mult1">
+        <dc:Bounds height="50.0" width="160.0" x="3045.0" y="110.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_8" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="21.0" width="149.0" x="3050.0" y="124.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_Mult2" bpmnElement="Task_Mult2">
+        <dc:Bounds height="50.0" width="160.0" x="3030.0" y="211.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_9" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="21.0" width="149.0" x="3035.0" y="225.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_Mult3" bpmnElement="Task_Mult3">
+        <dc:Bounds height="50.0" width="160.0" x="3005.0" y="310.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_10" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="21.0" width="149.0" x="3010.0" y="324.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Gateway_Merge" bpmnElement="Gateway_Merge" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="3245.0" y="210.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_11" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="42.0" width="80.0" x="3230.0" y="260.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_AddAmountToBalance" bpmnElement="Task_AddAmountToBalance">
+        <dc:Bounds height="50.0" width="190.0" x="3380.0" y="210.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_12" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="21.0" width="182.0" x="3384.0" y="224.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_PutBalanceToAccount" bpmnElement="Task_PutBalanceToAccount">
+        <dc:Bounds height="50.0" width="190.0" x="3640.0" y="210.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_13" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="21.0" width="181.0" x="3644.0" y="224.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_UpdateAccount" bpmnElement="Task_UpdateAccount">
+        <dc:Bounds height="70.0" width="260.0" x="3870.0" y="200.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_14" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="42.0" width="212.0" x="3894.0" y="214.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EndEvent_7" bpmnElement="EndEvent_7">
+        <dc:Bounds height="36.0" width="36.0" x="4190.0" y="218.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="42.0" width="61.0" x="4178.0" y="254.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2" isExpanded="true">
+        <dc:Bounds height="74.0" width="211.0" x="1925.0" y="296.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_34" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="42.0" width="174.0" x="1943.0" y="312.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4" isExpanded="true">
+        <dc:Bounds height="76.0" width="211.0" x="1925.0" y="130.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_36" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="42.0" width="174.0" x="1943.0" y="147.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_InclusiveGateway_1" bpmnElement="InclusiveGateway_1" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="1815.0" y="220.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_37" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="63.0" width="79.0" x="1801.0" y="270.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_InclusiveGateway_2" bpmnElement="InclusiveGateway_2" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="2229.0" y="210.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_38" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="63.0" width="79.0" x="2215.0" y="260.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="2385.0" y="210.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_39" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="84.0" width="80.0" x="2370.0" y="260.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_5" bpmnElement="ScriptTask_5" isExpanded="true">
+        <dc:Bounds height="65.0" width="413.0" x="1069.0" y="398.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_48" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="42.0" width="411.0" x="1070.0" y="409.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_6" bpmnElement="ScriptTask_6" isExpanded="true">
+        <dc:Bounds height="69.0" width="340.0" x="1532.0" y="395.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_50" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="63.0" width="339.0" x="1532.0" y="398.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_2" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="4120.0" y="378.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_52" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="84.0" width="80.0" x="4105.0" y="428.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_UserTask_1" bpmnElement="UserTask_1" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="60.0" y="220.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_54" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="21.0" width="58.0" x="86.0" y="234.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_1" bpmnElement="Flow_1" sourceElement="BPMNShape_UserTask_1" targetElement="BPMNShape_Task_InitAmount">
+        <di:waypoint xsi:type="dc:Point" x="170.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="195.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="220.0" y="245.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_16"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_2" bpmnElement="Flow_2" sourceElement="BPMNShape_Task_InitAmount" targetElement="BPMNShape_Task_PutIdUser">
+        <di:waypoint xsi:type="dc:Point" x="450.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="465.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="480.0" y="245.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_17"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_3" bpmnElement="Flow_3" sourceElement="BPMNShape_Task_PutIdUser" targetElement="BPMNShape_Task_GetAccount">
+        <di:waypoint xsi:type="dc:Point" x="740.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="755.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="770.0" y="245.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_18"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_4" bpmnElement="Flow_4" sourceElement="BPMNShape_Task_GetAccount" targetElement="BPMNShape_Task_InitBalance">
+        <di:waypoint xsi:type="dc:Point" x="1070.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1090.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1110.0" y="245.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_19"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_5" bpmnElement="Flow_5" sourceElement="BPMNShape_Task_InitBalance" targetElement="BPMNShape_ScriptTask_5">
+        <di:waypoint xsi:type="dc:Point" x="1215.0" y="275.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1215.0" y="336.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1275.0" y="336.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1275.0" y="398.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_20"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_6" bpmnElement="Flow_6" sourceElement="BPMNShape_Task_InitCurrency" targetElement="BPMNShape_Gateway_Currency">
+        <di:waypoint xsi:type="dc:Point" x="2790.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2822.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2855.0" y="235.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_21"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_7" bpmnElement="Flow_7" sourceElement="BPMNShape_Gateway_Currency" targetElement="BPMNShape_Task_Mult1">
+        <di:waypoint xsi:type="dc:Point" x="2880.0" y="210.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2880.0" y="135.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3045.0" y="135.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_22">
+          <dc:Bounds height="63.0" width="78.0" x="2887.0" y="136.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_8" bpmnElement="Flow_8" sourceElement="BPMNShape_Gateway_Currency" targetElement="BPMNShape_Task_Mult2">
+        <di:waypoint xsi:type="dc:Point" x="2905.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2967.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3030.0" y="236.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_23">
+          <dc:Bounds height="63.0" width="78.0" x="2930.0" y="236.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_9" bpmnElement="Flow_9" sourceElement="BPMNShape_Gateway_Currency" targetElement="BPMNShape_Task_Mult3">
+        <di:waypoint xsi:type="dc:Point" x="2880.0" y="260.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2880.0" y="335.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3005.0" y="335.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_24">
+          <dc:Bounds height="63.0" width="78.0" x="2867.0" y="336.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_10" bpmnElement="Flow_10" sourceElement="BPMNShape_Task_Mult1" targetElement="BPMNShape_Gateway_Merge">
+        <di:waypoint xsi:type="dc:Point" x="3205.0" y="135.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3270.0" y="135.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3270.0" y="210.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_25"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_11" bpmnElement="Flow_11" sourceElement="BPMNShape_Task_Mult2" targetElement="BPMNShape_Gateway_Merge">
+        <di:waypoint xsi:type="dc:Point" x="3190.0" y="236.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3217.0" y="236.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3245.0" y="235.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_26"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_12" bpmnElement="Flow_12" sourceElement="BPMNShape_Task_Mult3" targetElement="BPMNShape_Gateway_Merge">
+        <di:waypoint xsi:type="dc:Point" x="3165.0" y="335.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3270.0" y="335.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3270.0" y="260.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_27"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_13" bpmnElement="Flow_13" sourceElement="BPMNShape_Gateway_Merge" targetElement="BPMNShape_Task_AddAmountToBalance">
+        <di:waypoint xsi:type="dc:Point" x="3295.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3337.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3380.0" y="235.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_28"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_14" bpmnElement="Flow_14" sourceElement="BPMNShape_Task_AddAmountToBalance" targetElement="BPMNShape_Task_PutBalanceToAccount">
+        <di:waypoint xsi:type="dc:Point" x="3570.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3605.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3640.0" y="235.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_29"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_15" bpmnElement="Flow_15" sourceElement="BPMNShape_Task_PutBalanceToAccount" targetElement="BPMNShape_Task_UpdateAccount">
+        <di:waypoint xsi:type="dc:Point" x="3830.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3850.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="3870.0" y="235.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_30"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Flow_16" bpmnElement="Flow_16" sourceElement="BPMNShape_Task_UpdateAccount" targetElement="BPMNShape_ExclusiveGateway_2">
+        <di:waypoint xsi:type="dc:Point" x="4130.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="4145.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="4145.0" y="378.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_31"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_ScriptTask_6" targetElement="BPMNShape_InclusiveGateway_1">
+        <di:waypoint xsi:type="dc:Point" x="1702.0" y="395.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1702.0" y="280.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1758.0" y="280.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1758.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1815.0" y="245.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_41"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_ExclusiveGateway_2">
+        <di:waypoint xsi:type="dc:Point" x="2410.0" y="260.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2410.0" y="403.0"/>
+        <di:waypoint xsi:type="dc:Point" x="4120.0" y="403.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_42">
+          <dc:Bounds height="63.0" width="97.0" x="3146.0" y="404.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_InclusiveGateway_1" targetElement="BPMNShape_ScriptTask_2">
+        <di:waypoint xsi:type="dc:Point" x="1840.0" y="270.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1840.0" y="333.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1925.0" y="333.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_43"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_InclusiveGateway_2">
+        <di:waypoint xsi:type="dc:Point" x="2136.0" y="333.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2254.0" y="333.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2254.0" y="260.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_44"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_InclusiveGateway_1" targetElement="BPMNShape_ScriptTask_4">
+        <di:waypoint xsi:type="dc:Point" x="1840.0" y="220.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1840.0" y="168.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1925.0" y="168.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_45"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_InclusiveGateway_2">
+        <di:waypoint xsi:type="dc:Point" x="2136.0" y="168.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2254.0" y="168.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2254.0" y="210.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_46"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_InclusiveGateway_2" targetElement="BPMNShape_ExclusiveGateway_1">
+        <di:waypoint xsi:type="dc:Point" x="2279.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2332.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2385.0" y="235.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_47"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_Task_InitCurrency">
+        <di:waypoint xsi:type="dc:Point" x="2435.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2482.0" y="235.0"/>
+        <di:waypoint xsi:type="dc:Point" x="2530.0" y="235.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_49"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_ScriptTask_5" targetElement="BPMNShape_ScriptTask_6">
+        <di:waypoint xsi:type="dc:Point" x="1482.0" y="430.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1507.0" y="430.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1532.0" y="429.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_51"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_ExclusiveGateway_2" targetElement="BPMNShape_EndEvent_7">
+        <di:waypoint xsi:type="dc:Point" x="4170.0" y="403.0"/>
+        <di:waypoint xsi:type="dc:Point" x="4208.0" y="403.0"/>
+        <di:waypoint xsi:type="dc:Point" x="4208.0" y="254.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_53"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_13" sourceElement="BPMNShape_StartEvent_3" targetElement="BPMNShape_UserTask_1">
+        <di:waypoint xsi:type="dc:Point" x="36.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="48.0" y="245.0"/>
+        <di:waypoint xsi:type="dc:Point" x="60.0" y="245.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_55"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
+      <dc:Font name="arial" size="9.0"/>
+    </bpmndi:BPMNLabelStyle>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
